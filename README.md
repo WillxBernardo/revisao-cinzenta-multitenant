@@ -247,7 +247,9 @@ A pasta `scripts/testes/` tem um teste offline, que roda as coletas contra respo
 - **Scripts** (`scripts/`): licença MIT (ver [`LICENSE`](LICENSE)).
 - **Protocolo, documentação e codificação:** licença CC BY 4.0 (ver [`LICENSE-CC-BY-4.0`](LICENSE-CC-BY-4.0)). Ela cobre o `protocolo.md`, os READMEs (`README.md`, `dados/README.md` e `scripts/testes/README.md`) e as colunas de decisão e de codificação:
   - no `dados/triagem.csv`: `decisao_f1`, `decisao_f2`, `criterio_exclusao` e `justificativa`;
-  - no `dados/extracao.csv`: `papel_relator`, `estrategia`, `etapa`, `tipo_problema`, `polaridade`, `metrica_relacionada`, `motivo_escolha`, `desfecho`, `cr1` a `cr5`, `observacao` e `gerado_por_agente`.
+  - no `dados/extracao.csv`: `papel_relator`, `estrategia`, `etapa`, `tipo_problema`, `polaridade`, `metrica_relacionada`, `motivo_escolha`, `desfecho`, `cr1` a `cr5`, `observacao` e `gerado_por_agente`;
+  - no `dados/validacao_cega.csv`: `estrategia`, `etapa`, `tipo_problema` e `polaridade`;
+  - o `dados/validacao.csv`, por inteiro.
 - **Relatos coletados:** o conteúdo dos relatos pertence aos seus autores e às plataformas de origem, e segue os termos de uso de cada uma (no Stack Exchange, licenças CC BY-SA). Isso inclui as respostas brutas em `dados/brutos/` e os títulos, trechos e citações nos CSVs. O conteúdo está reproduzido aqui apenas como registro da pesquisa e não é coberto pelas licenças acima.
 
 ## Como citar
