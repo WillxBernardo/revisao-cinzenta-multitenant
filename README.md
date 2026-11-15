@@ -55,6 +55,7 @@ Todos foram registrados em 2026-11-15. O texto completo, com a justificativa de 
 ├── protocolo.md                 # pré-registro e desvios (seção 13)
 ├── README.md
 ├── LICENSE                      # MIT, para os scripts
+├── LICENSE-CC-BY-4.0            # CC BY 4.0, para protocolo, documentação e codificação
 ├── requirements.txt
 ├── .env                         # credenciais; não versionado
 ├── scripts/
@@ -235,7 +236,7 @@ A pasta `scripts/testes/` tem um teste offline, que roda as coletas contra respo
 
 ## Limitações
 
-- **Validação limitada.** Não houve segundo codificador independente, e a validação recodificou só 5 itens (4 após a D7a). A concordância foi alta em `etapa`, moderada em `estrategia` e baixa em `tipo_problema`: κ = 0,01 na análise principal e 0,65 na secundária (`dados/validacao.csv`).
+- **Validação limitada.** Não houve segundo codificador independente, e a validação recodificou só 5 itens (4 após a D7a). A concordância foi alta em `etapa`, moderada em `estrategia` (κ = 0,47 com os 5 itens e 0,60 sem o I0729) e baixa em `tipo_problema` (κ = 0,01 com os 5 itens e 0,07 sem o I0729 na análise principal; 0,65 na análise secundária). Os valores estão em `dados/validacao.csv`.
 - **Corpus pequeno e concentrado.** Dos 17 itens, 14 vêm do GitHub e 4 do mesmo projeto (`debezium/dbz`). Por isso, os resultados são reportados por item e por projeto.
 - **Cobertura limitada pelas buscas.** Cada busca coleta até 100 resultados, e no Debezium só a primeira página (D1). As fontes também mudam com o tempo: os brutos estão versionados, e 14 itens foram arquivados no Wayback Machine.
 - **Viés para problemas.** Todos os 17 incluídos têm polaridade `problema`. Os achados mostram a existência e a natureza dos problemas, não a sua frequência.
@@ -243,10 +244,14 @@ A pasta `scripts/testes/` tem um teste offline, que roda as coletas contra respo
 
 ## Licença e direitos
 
-Os scripts em `scripts/` são distribuídos sob a licença MIT (ver [`LICENSE`](LICENSE)).
-
-O conteúdo dos relatos coletados pertence aos seus autores e às plataformas de origem, e segue os termos de uso de cada uma (no Stack Exchange, licenças CC BY-SA). Isso inclui as respostas brutas em `dados/brutos/` e os títulos, trechos e citações nos CSVs. O conteúdo está reproduzido aqui apenas como registro da pesquisa.
+- **Scripts** (`scripts/`): licença MIT (ver [`LICENSE`](LICENSE)).
+- **Protocolo, documentação e codificação:** licença CC BY 4.0 (ver [`LICENSE-CC-BY-4.0`](LICENSE-CC-BY-4.0)). Ela cobre o `protocolo.md`, os READMEs (`README.md`, `dados/README.md` e `scripts/testes/README.md`) e as colunas de decisão e de codificação:
+  - no `dados/triagem.csv`: `decisao_f1`, `decisao_f2`, `criterio_exclusao` e `justificativa`;
+  - no `dados/extracao.csv`: `papel_relator`, `estrategia`, `etapa`, `tipo_problema`, `polaridade`, `metrica_relacionada`, `motivo_escolha`, `desfecho`, `cr1` a `cr5`, `observacao` e `gerado_por_agente`.
+- **Relatos coletados:** o conteúdo dos relatos pertence aos seus autores e às plataformas de origem, e segue os termos de uso de cada uma (no Stack Exchange, licenças CC BY-SA). Isso inclui as respostas brutas em `dados/brutos/` e os títulos, trechos e citações nos CSVs. O conteúdo está reproduzido aqui apenas como registro da pesquisa e não é coberto pelas licenças acima.
 
 ## Como citar
 
 W. B. da Silva, "revisao-cinzenta-multitenant: protocolo, dados e scripts da revisão de literatura cinzenta," repositório GitHub, 2026. [Online]. Disponível: https://github.com/WillxBernardo/revisao-cinzenta-multitenant
+
+A versão citada no artigo será marcada com uma tag no momento da entrega.
