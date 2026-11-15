@@ -1,0 +1,6 @@
+id_item,estrategia,etapa,tipo_problema,polaridade
+I0452,esquema_por_tenant,ingestao,evolucao_esquema;consolidacao_tenants,problema
+I0729,hibrida,geracao;armazenamento;servico,desempenho_origem;custo,problema
+I0893,banco_por_tenant,ingestao,desempenho_ferramenta,problema
+I0894,esquema_por_tenant,ingestao,desempenho_ferramenta,problema
+I2105,banco_por_tenant,servico,multiplicacao_modelos;config_manual_novo_tenant,problema

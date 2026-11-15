@@ -1,33 +1,55 @@
-linha_tipo,amostra,id_item,variavel,metodo,original,validacao,concordancia_exata,so_original,so_validacao,fora_do_codebook,n_unidades,concordancia,kappa
-item,,I0452,estrategia,,esquema_por_tenant,nao_informado,não,esquema_por_tenant,nao_informado,nao_informado,,,
-item,,I0452,polaridade,,problema,problema,sim,,,,,,
-item,,I0452,etapa,,ingestao,ingestao,sim,,,,,,
-item,,I0452,tipo_problema,,consolidacao_tenants;evolucao_esquema,compatibilidade_esquema,não,consolidacao_tenants;evolucao_esquema,compatibilidade_esquema,compatibilidade_esquema,,,
-item,,I0729,estrategia,,hibrida,nao_informado,não,hibrida,nao_informado,nao_informado,,,
-item,,I0729,polaridade,,problema,problema,sim,,,,,,
-item,,I0729,etapa,,armazenamento;geracao;servico,armazenamento;servico,não,geracao,,,,,
-item,,I0729,tipo_problema,,custo;desempenho_origem,desempenho_banco;isolamento_recursos,não,custo;desempenho_origem,desempenho_banco;isolamento_recursos,desempenho_banco;isolamento_recursos,,,
-item,,I0893,estrategia,,banco_por_tenant,banco_por_tenant,sim,,,,,,
-item,,I0893,polaridade,,problema,problema,sim,,,,,,
-item,,I0893,etapa,,ingestao,ingestao,sim,,,,,,
-item,,I0893,tipo_problema,,desempenho_ferramenta,consumo_memoria;multiplicacao_metadados,não,desempenho_ferramenta,consumo_memoria;multiplicacao_metadados,consumo_memoria;multiplicacao_metadados,,,
-item,,I0894,estrategia,,esquema_por_tenant,esquema_por_tenant,sim,,,,,,
-item,,I0894,polaridade,,problema,problema,sim,,,,,,
-item,,I0894,etapa,,ingestao,ingestao,sim,,,,,,
-item,,I0894,tipo_problema,,desempenho_ferramenta,desempenho_ferramenta,sim,,,,,,
-item,,I2105,estrategia,,banco_por_tenant,banco_por_tenant,sim,,,,,,
-item,,I2105,polaridade,,problema,misto,não,problema,misto,,,,
-item,,I2105,etapa,,servico,servico,sim,,,,,,
-item,,I2105,tipo_problema,,config_manual_novo_tenant;multiplicacao_modelos,complexidade_configuracao;governanca_isolamento,não,config_manual_novo_tenant;multiplicacao_modelos,complexidade_configuracao;governanca_isolamento,complexidade_configuracao,,,
-resumo,5_itens,,estrategia,kappa_nominal_por_item,,,,,,,5,0.600,0.474
-resumo,5_itens,,polaridade,kappa_nominal_por_item,,,,,,,5,0.800,0.000
-resumo,5_itens,,etapa,concordancia_exata_por_item,,,,,,,5,0.800,
-resumo,5_itens,,etapa,categoria_presente_ausente (4 categorias),,,,,,,20,0.950,0.886
-resumo,5_itens,,tipo_problema,concordancia_exata_por_item,,,,,,,5,0.200,
-resumo,5_itens,,tipo_problema,categoria_presente_ausente (14 categorias),,,,,,,70,0.800,0.012
-resumo,4_itens_sem_I0729,,estrategia,kappa_nominal_por_item,,,,,,,4,0.750,0.600
-resumo,4_itens_sem_I0729,,polaridade,kappa_nominal_por_item,,,,,,,4,0.750,0.000
-resumo,4_itens_sem_I0729,,etapa,concordancia_exata_por_item,,,,,,,4,1.000,
-resumo,4_itens_sem_I0729,,etapa,categoria_presente_ausente (4 categorias),,,,,,,16,1.000,1.000
-resumo,4_itens_sem_I0729,,tipo_problema,concordancia_exata_por_item,,,,,,,4,0.250,
-resumo,4_itens_sem_I0729,,tipo_problema,categoria_presente_ausente (14 categorias),,,,,,,56,0.821,0.067
+linha_tipo,amostra,id_item,variavel,metodo,original,validacao,consolidada,concordancia_exata,so_original,so_validacao,fora_do_codebook,n_unidades,concordancia,kappa
+item,,I0452,estrategia,,esquema_por_tenant,nao_informado,esquema_por_tenant,não,esquema_por_tenant,nao_informado,nao_informado,,,
+item,,I0452,polaridade,,problema,problema,problema,sim,,,,,,
+item,,I0452,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item,,I0452,tipo_problema,,consolidacao_tenants;evolucao_esquema,compatibilidade_esquema,evolucao_esquema;consolidacao_tenants,não,consolidacao_tenants;evolucao_esquema,compatibilidade_esquema,compatibilidade_esquema,,,
+item,,I0729,estrategia,,hibrida,nao_informado,excluído (D7a),não,hibrida,nao_informado,nao_informado,,,
+item,,I0729,polaridade,,problema,problema,excluído (D7a),sim,,,,,,
+item,,I0729,etapa,,armazenamento;geracao;servico,armazenamento;servico,excluído (D7a),não,geracao,,,,,
+item,,I0729,tipo_problema,,custo;desempenho_origem,desempenho_banco;isolamento_recursos,excluído (D7a),não,custo;desempenho_origem,desempenho_banco;isolamento_recursos,desempenho_banco;isolamento_recursos,,,
+item,,I0893,estrategia,,banco_por_tenant,banco_por_tenant,banco_por_tenant,sim,,,,,,
+item,,I0893,polaridade,,problema,problema,problema,sim,,,,,,
+item,,I0893,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item,,I0893,tipo_problema,,desempenho_ferramenta,consumo_memoria;multiplicacao_metadados,desempenho_ferramenta,não,desempenho_ferramenta,consumo_memoria;multiplicacao_metadados,consumo_memoria;multiplicacao_metadados,,,
+item,,I0894,estrategia,,esquema_por_tenant,esquema_por_tenant,esquema_por_tenant,sim,,,,,,
+item,,I0894,polaridade,,problema,problema,problema,sim,,,,,,
+item,,I0894,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item,,I0894,tipo_problema,,desempenho_ferramenta,desempenho_ferramenta,desempenho_ferramenta,sim,,,,,,
+item,,I2105,estrategia,,banco_por_tenant,banco_por_tenant,banco_por_tenant,sim,,,,,,
+item,,I2105,polaridade,,problema,misto,problema,não,problema,misto,,,,
+item,,I2105,etapa,,servico,servico,servico,sim,,,,,,
+item,,I2105,tipo_problema,,config_manual_novo_tenant;multiplicacao_modelos,complexidade_configuracao;governanca_isolamento,multiplicacao_modelos;config_manual_novo_tenant,não,config_manual_novo_tenant;multiplicacao_modelos,complexidade_configuracao;governanca_isolamento,complexidade_configuracao,,,
+resumo,5_itens,,estrategia,kappa_nominal_por_item,,,,,,,,5,0.600,0.474
+resumo,5_itens,,polaridade,kappa_nominal_por_item,,,,,,,,5,0.800,0.000
+resumo,5_itens,,etapa,concordancia_exata_por_item,,,,,,,,5,0.800,
+resumo,5_itens,,etapa,categoria_presente_ausente (4 categorias),,,,,,,,20,0.950,0.886
+resumo,5_itens,,tipo_problema,concordancia_exata_por_item,,,,,,,,5,0.200,
+resumo,5_itens,,tipo_problema,categoria_presente_ausente (14 categorias),,,,,,,,70,0.800,0.012
+resumo,4_itens_sem_I0729,,estrategia,kappa_nominal_por_item,,,,,,,,4,0.750,0.600
+resumo,4_itens_sem_I0729,,polaridade,kappa_nominal_por_item,,,,,,,,4,0.750,0.000
+resumo,4_itens_sem_I0729,,etapa,concordancia_exata_por_item,,,,,,,,4,1.000,
+resumo,4_itens_sem_I0729,,etapa,categoria_presente_ausente (4 categorias),,,,,,,,16,1.000,1.000
+resumo,4_itens_sem_I0729,,tipo_problema,concordancia_exata_por_item,,,,,,,,4,0.250,
+resumo,4_itens_sem_I0729,,tipo_problema,categoria_presente_ausente (14 categorias),,,,,,,,56,0.821,0.067
+item_secundario,,I0452,estrategia,,esquema_por_tenant,nao_informado,esquema_por_tenant,não,esquema_por_tenant,nao_informado,nao_informado,,,
+item_secundario,,I0452,polaridade,,problema,problema,problema,sim,,,,,,
+item_secundario,,I0452,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item_secundario,,I0452,tipo_problema,,consolidacao_tenants;evolucao_esquema,evolucao_esquema,evolucao_esquema;consolidacao_tenants,não,consolidacao_tenants,,,,,
+item_secundario,,I0893,estrategia,,banco_por_tenant,banco_por_tenant,banco_por_tenant,sim,,,,,,
+item_secundario,,I0893,polaridade,,problema,problema,problema,sim,,,,,,
+item_secundario,,I0893,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item_secundario,,I0893,tipo_problema,,desempenho_ferramenta,desempenho_ferramenta,desempenho_ferramenta,sim,,,,,,
+item_secundario,,I0894,estrategia,,esquema_por_tenant,esquema_por_tenant,esquema_por_tenant,sim,,,,,,
+item_secundario,,I0894,polaridade,,problema,problema,problema,sim,,,,,,
+item_secundario,,I0894,etapa,,ingestao,ingestao,ingestao,sim,,,,,,
+item_secundario,,I0894,tipo_problema,,desempenho_ferramenta,desempenho_ferramenta,desempenho_ferramenta,sim,,,,,,
+item_secundario,,I2105,estrategia,,banco_por_tenant,banco_por_tenant,banco_por_tenant,sim,,,,,,
+item_secundario,,I2105,polaridade,,problema,misto,problema,não,problema,misto,,,,
+item_secundario,,I2105,etapa,,servico,servico,servico,sim,,,,,,
+item_secundario,,I2105,tipo_problema,,config_manual_novo_tenant;multiplicacao_modelos,config_manual_novo_tenant;governanca_isolamento,multiplicacao_modelos;config_manual_novo_tenant,não,multiplicacao_modelos,governanca_isolamento,,,,
+resumo_secundario,4_itens_sem_I0729_mapeado,,estrategia,kappa_nominal_por_item,,,,,,,,4,0.750,0.600
+resumo_secundario,4_itens_sem_I0729_mapeado,,polaridade,kappa_nominal_por_item,,,,,,,,4,0.750,0.000
+resumo_secundario,4_itens_sem_I0729_mapeado,,etapa,concordancia_exata_por_item,,,,,,,,4,1.000,
+resumo_secundario,4_itens_sem_I0729_mapeado,,etapa,categoria_presente_ausente (2 categorias),,,,,,,,8,1.000,1.000
+resumo_secundario,4_itens_sem_I0729_mapeado,,tipo_problema,concordancia_exata_por_item,,,,,,,,4,0.500,
+resumo_secundario,4_itens_sem_I0729_mapeado,,tipo_problema,categoria_presente_ausente (6 categorias),,,,,,,,24,0.875,0.647
