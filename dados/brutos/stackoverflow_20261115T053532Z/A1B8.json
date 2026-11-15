@@ -1,0 +1,85 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A1B8",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:35:49+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database per tenant\"",
+  "termo_b": "pipeline",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"database per tenant\" pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/59253835/how-to-initialize-scoped-dependencies-for-consumers-using-masstransit-filters"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22database+per+tenant%22+pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:35:49+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:35:49 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "c#",
+              "asp.net-core",
+              "masstransit"
+            ],
+            "owner": {
+              "account_id": 17270840,
+              "reputation": 53,
+              "user_id": 12506598,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/a388a3cd835a977c4e1f93f93819f2c8?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Brando Caserotti",
+              "link": "https://stackoverflow.com/users/12506598/brando-caserotti"
+            },
+            "is_answered": true,
+            "view_count": 3037,
+            "answer_count": 2,
+            "score": 4,
+            "last_activity_date": 1576015294,
+            "creation_date": 1575912525,
+            "last_edit_date": 1575924613,
+            "question_id": 59253835,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/59253835/how-to-initialize-scoped-dependencies-for-consumers-using-masstransit-filters",
+            "title": "How to initialize scoped dependencies for consumers using MassTransit filters?",
+            "body": "<p>I would like to initialize some dependencies resolved from the MassTransit serviceProvider in the same way Asp.Net Core does with the pipeline's middlewares.</p>\n\n<p>In particular I would like to inspect the incoming message before the consumer is called and extract the tenant from it (I'm currently working on a multitenant web application with single database per tenant).</p>\n\n<p>With this informations I need to initialize some scoped instances (Ef Core DbContext for example).</p>\n\n<p>I know that I can inject them in the Consumer through constructor but this means that I must do that everytime I write a new one, so I suppose that a filter should be the right place (correct me if I'm wrong).</p>\n\n<p>The problem raises when I need to access the current consumer scope to resolve the dependencies that I need. I was thinking that the behavior of the MassTransit' pipeline was similar to the Asp.Net one regarding middleware injection but I was probably wrong. </p>\n\n<p>I haven't found any documentation on how to do that clearly without cluttering the code of the filter, so any suggestion is going to be really appreciated.</p>\n\n<p>This is the filter that I need to modify:</p>\n\n<pre><code>public class TenantContextInitializerFilter&lt;T&gt; : IFilter&lt;T&gt; where T : class, ConsumeContext\n{\n    public void Probe(ProbeContext context) { }\n\n    public async Task Send(T context, IPipe&lt;T&gt; next)\n    {\n        //Resolve scoped instance here and do something before Consumer is called\n        var connectionStringProvider =  scope.GetService&lt;IConnectionStringProvider&gt;();\n\n        await next.Send(context);\n    }\n}\n\n\npublic class RegistrationsDeliveredEventConsumer : IConsumer&lt;IRegistrationsDelivered&gt;\n{\n    private readonly IConnectionStringProvider _connectionStringProvider;\n\n    public RegistrationsDeliveredEventConsumer(IConnectionStringProvider connectionStringProvider)\n    {\n        //This should be the same instance that has been resolved in the filter' Send() method\n        _connectionStringProvider = connectionStringProvider;\n    }\n\n    public async Task Consume(ConsumeContext&lt;IRegistrationsDelivered&gt; context)\n    {\n\n    }\n}\n</code></pre>\n\n<p>This is a simplified example of my code but this should be enough</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9988,
+        "total": 1
+      }
+    }
+  ]
+}

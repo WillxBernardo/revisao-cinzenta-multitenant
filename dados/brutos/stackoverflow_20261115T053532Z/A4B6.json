@@ -1,0 +1,113 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A4B6",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:36:46+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per tenant\"",
+  "termo_b": "\"data warehouse\"",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"schema per tenant\" \"data warehouse\"&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 2,
+  "n_coletados": 2,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/34154359/how-to-create-users-with-limited-read-only-rights-in-multitenant-data-warehouse",
+    "https://stackoverflow.com/questions/72406800/i-have-multiple-structurally-identical-schemas-in-postgres-is-there-a-way-to"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22schema+per+tenant%22+%22data+warehouse%22&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:36:47+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:36:47 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "sql-server",
+              "view",
+              "database-schema"
+            ],
+            "owner": {
+              "account_id": 6500111,
+              "reputation": 1,
+              "user_id": 5031273,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/20a91466e31b9f392973a01c4cae6f99?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Gyan garg",
+              "link": "https://stackoverflow.com/users/5031273/gyan-garg"
+            },
+            "is_answered": false,
+            "view_count": 47,
+            "closed_date": 1449738163,
+            "answer_count": 0,
+            "score": 0,
+            "last_activity_date": 1449573129,
+            "creation_date": 1449573129,
+            "question_id": 34154359,
+            "link": "https://stackoverflow.com/questions/34154359/how-to-create-users-with-limited-read-only-rights-in-multitenant-data-warehouse",
+            "closed_reason": "Duplicate",
+            "title": "How to create users with limited read-only rights in Multitenant Data warehouse with one schema per tenant with views only in MS SQl server 2014",
+            "body": "<p>I want to create a data warehouse where data for all tenants are stored in tables under dbo schema. and now I want to create separate schema per tenant so I can create separate users. along with I wish to create views in these tenant specific schema for relevant data only. users created for these schema will have read-only rights on these schemas. Now problem occurs when I create user and grant right on their specific schema but not on dbo. as views created in any schema are reading data from dbo internaly so sql statements gets failed saying that user doesn't have permission on dbo schema. If I grant permission on dbo schema then user gets access to all data.</p>\n\n<p>Can I somehow make it possible to keep data stored centralized and users created for any schema with specific access.</p>\n"
+          },
+          {
+            "tags": [
+              "postgresql"
+            ],
+            "owner": {
+              "account_id": 957438,
+              "reputation": 945,
+              "user_id": 982492,
+              "user_type": "registered",
+              "accept_rate": 100,
+              "profile_image": "https://www.gravatar.com/avatar/f8ae2646a7f37aae2d227037c6e30d1c?s=256&d=identicon&r=PG",
+              "display_name": "Tim Pigden",
+              "link": "https://stackoverflow.com/users/982492/tim-pigden"
+            },
+            "is_answered": true,
+            "view_count": 383,
+            "accepted_answer_id": 72408345,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1653668388,
+            "creation_date": 1653660901,
+            "question_id": 72406800,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/72406800/i-have-multiple-structurally-identical-schemas-in-postgres-is-there-a-way-to",
+            "title": "I have multiple, structurally identical schemas in postgres. Is there a way to &quot;code-share&quot; views and queries",
+            "body": "<p>In my multi-tenant postgres database, I have a schema per tenant for my data warehouse with the same tables in each.\nI wish to create views and queries for these tables. If I were programming I would practice DRY and structure my code so that all of these were parameterised by the tenant. How do I achieve a similar structure in postgres?</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9963,
+        "total": 2
+      }
+    }
+  ]
+}

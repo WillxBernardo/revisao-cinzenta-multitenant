@@ -1,0 +1,355 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A8B8",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:38:13+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "pipeline",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"tenant_id\" pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 10,
+  "n_coletados": 10,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/74611149/terraform-adf-to-db-connectivity-issue-when-tenant-id-is-provided-in-ls-config",
+    "https://stackoverflow.com/questions/74270183/fail-to-retrieve-a-secret-from-azure-ad",
+    "https://stackoverflow.com/questions/79539483/is-there-a-way-to-create-snowpipe-or-ingestion-in-snowflake-for-a-public-azure-b",
+    "https://stackoverflow.com/questions/78656294/azure-devops-pipelines-environment-variables-not-available-in-dotnet-test-comma",
+    "https://stackoverflow.com/questions/73181018/failed-to-discover-available-identity-versions-when-contacting-http-127-0-0-1",
+    "https://stackoverflow.com/questions/74940753/using-variables-to-obtain-token-via-azure-cli",
+    "https://stackoverflow.com/questions/10328811/asp-net-mvc-application-with-plugin-and-multitenancy-support-with-separate-appdo",
+    "https://stackoverflow.com/questions/55531484/authenticating-with-rbac-service-principal-causes-403-audience-validation-failed",
+    "https://stackoverflow.com/questions/77372598/who-gets-email-warnings-about-deprecated-arm-api-usage",
+    "https://stackoverflow.com/questions/31203760/openstack-unable-to-upload-the-image-to-the-image-service"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22tenant_id%22+pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:38:14+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:38:14 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "azure",
+              "terraform",
+              "azure-data-factory",
+              "terraform-provider-azure"
+            ],
+            "owner": {
+              "account_id": 6720914,
+              "reputation": 558,
+              "user_id": 5180980,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/30804a604a028cb5f6f8027709016ab3?s=256&d=identicon&r=PG",
+              "display_name": "Jaydeep Soni",
+              "link": "https://stackoverflow.com/users/5180980/jaydeep-soni"
+            },
+            "is_answered": false,
+            "view_count": 564,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1669967249,
+            "creation_date": 1669710951,
+            "question_id": 74611149,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/74611149/terraform-adf-to-db-connectivity-issue-when-tenant-id-is-provided-in-ls-config",
+            "title": "Terraform - ADF to DB connectivity issue when tenant_id is provided in LS configuration - azurerm_data_factory_linked_service_azure_sql_database",
+            "body": "<h3>Terraform Version</h3>\n<p>1.2.3</p>\n<h3>AzureRM Provider Version</h3>\n<p>v3.13.0</p>\n<h3>Affected Resource(s)/Data Source(s)</h3>\n<p>Azure data factory, SQL Database</p>\n<h3>Terraform Configuration Files</h3>\n<pre><code>resource &quot;azurerm_data_factory_linked_service_azure_sql_database&quot; &quot;sqldatabase_linked_service_10102022&quot; {\n  count = (var.subResourcesInfo.sqlDatabaseName != &quot;&quot;) ? 1 : 0\n  depends_on = [azurerm_data_factory_integration_runtime_azure.autoresolve_integration_runtime,\n  azurerm_data_factory_managed_private_endpoint.sqlserver_managed_endpoint]\n\n  name            = &quot;AzureSqlDatabase10102022&quot;\n  data_factory_id = azurerm_data_factory.datafactory.id\n\n  integration_runtime_name = &quot;AutoResolveIntegrationRuntime&quot;\n  use_managed_identity     = true\n  connection_string = format(&quot;Integrated Security=False;Data Source=%s.database.windows.net;Initial Catalog=%s;&quot;,\n    var.subResourcesInfo.sqlServerName,\n  var.subResourcesInfo.sqlDatabaseName)\n}\n</code></pre>\n<h3>Expected Behaviour</h3>\n<p>Issue is ADF to DB connectivity, error:</p>\n<p>Operation on target DWH_DF_aaa failed: {'StatusCode':'DFExecutorUserError','Message':'Job failed due to reason: com.microsoft.dataflow.broker.InvalidOperationException: Only one valid authentication should be used for AzureSqlDatabase. ServicePrincipalAuthentication is invalid. One or two of servicePrincipalId/key/tenant is missing.','Details':''}</p>\n<p>When we created this LS using TF, we get tenant=&quot;&quot; in ADF LS Json file which we suspect that causing issue of above error.</p>\n<p>When we created the same LS directly on ADF UI, then there is no field of tenant=&quot;&quot; in its json file, and if we use this LS in dataflow/pipeline then communication works from ADF to DB.</p>\n<p>Expected behavior should be, if we don't provide tenant_id parameter in TF code then in json also should not show tenant=&quot;&quot; which then works for connectivity.</p>\n"
+          },
+          {
+            "tags": [
+              "azure",
+              "azure-pipelines",
+              "devops"
+            ],
+            "owner": {
+              "account_id": 14363296,
+              "reputation": 55,
+              "user_id": 10375072,
+              "user_type": "registered",
+              "profile_image": "https://lh5.googleusercontent.com/-81gMDK_sMys/AAAAAAAAAAI/AAAAAAAAAAA/APUIFaPs1eGH-LNdpCyxsoGHV6dZraZAaQ/mo/s256-rj/photo.jpg",
+              "display_name": "vinilka8",
+              "link": "https://stackoverflow.com/users/10375072/vinilka8"
+            },
+            "is_answered": false,
+            "view_count": 201,
+            "answer_count": 0,
+            "score": 0,
+            "last_activity_date": 1667260461,
+            "creation_date": 1667260461,
+            "question_id": 74270183,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/74270183/fail-to-retrieve-a-secret-from-azure-ad",
+            "title": "Fail to retrieve a secret from Azure AD",
+            "body": "<p>Please help, getting the next error in the Azure DevOps pipeline running on the Self-Hosted agent,\nI am trying to get the keys from KV using AzureKeyVault task in pipeline settings, but facing timeout error</p>\n<p>##[error]Get secrets failed. Error: Request timeout: /&lt;tenant_id&gt;/oauth2/token/.</p>\n<p><a href=\"https://i.sstatic.net/CSWeT.png\" rel=\"nofollow noreferrer\">enter image description here</a></p>\n<p>No more logs or info :(</p>\n"
+          },
+          {
+            "tags": [
+              "azure",
+              "snowflake-cloud-data-platform",
+              "blob",
+              "pipeline",
+              "snowpipe"
+            ],
+            "owner": {
+              "account_id": 4714578,
+              "reputation": 41,
+              "user_id": 3814130,
+              "user_type": "registered",
+              "profile_image": "https://i.sstatic.net/voHyJ.jpg?s=256",
+              "display_name": "MinaB",
+              "link": "https://stackoverflow.com/users/3814130/minab"
+            },
+            "is_answered": false,
+            "view_count": 99,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1743150436,
+            "creation_date": 1743092736,
+            "question_id": 79539483,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/79539483/is-there-a-way-to-create-snowpipe-or-ingestion-in-snowflake-for-a-public-azure-b",
+            "title": "Is there a way to create Snowpipe or Ingestion in Snowflake for a public Azure Blob dataset?",
+            "body": "<p>I have done Snowpipe before for a azure Blob before, but since it was private I had access to tenant_id and all authentications. Maybe the question seems backward but when a storage is public, Can we create a data pipeline based on it?\nI've ingested the data to an external storage in Snowflake, and from there tried to create a pipe to copy data from External to raw table. It still ask for credentials.</p>\n<pre><code>    CREATE OR REPLACE STAGE &lt;name&gt;_stage\n    URL = 'azure://azureopendatastorage.blob.core.windows.net/&lt;&gt;'\n    FILE_FORMAT = (TYPE = PARQUET);\n</code></pre>\n<pre><code>    CREATE OR REPLACE PIPE raw_pipe\n    AUTO_INGEST = TRUE\n    AS\n    COPY INTO nyc_raw\n    FROM @&lt;name&gt;_stage\n    PATTERN = '.*\\.parquet$'\n    FILE_FORMAT = (TYPE = 'PARQUET')\n    ON_ERROR = 'CONTINUE';\n</code></pre>\n"
+          },
+          {
+            "tags": [
+              ".net",
+              "powershell",
+              "azure-devops",
+              "azure-pipelines",
+              "cicd"
+            ],
+            "owner": {
+              "account_id": 32151142,
+              "reputation": 35,
+              "user_id": 24949814,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/d9ee6c016dd05992b662c33c1132557c?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Kevin James",
+              "link": "https://stackoverflow.com/users/24949814/kevin-james"
+            },
+            "is_answered": true,
+            "view_count": 498,
+            "accepted_answer_id": 78656320,
+            "answer_count": 1,
+            "score": 1,
+            "last_activity_date": 1719067818,
+            "creation_date": 1719065406,
+            "last_edit_date": 1719067387,
+            "question_id": 78656294,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/78656294/azure-devops-pipelines-environment-variables-not-available-in-dotnet-test-comma",
+            "title": "Azure DevOps Pipelines: Environment Variables Not Available in dotnet test Command",
+            "body": "<p>I'm using Azure DevOps and have an AzureCLI task set up to run integration tests with the <code>dotnet test</code> command. I'm encountering an issue where environment variables set in the task do not seem to be available when <code>dotnet test</code> is executed.</p>\n<p>Here is the relevant part of my pipeline configuration:</p>\n<pre class=\"lang-yaml prettyprint-override\"><code>- task: AzureCLI@2\n  displayName: 'Run Integration Tests Inside AZ CLI'\n  inputs:\n    azureSubscription: ${{ parameters.azureServiceConnection }}\n    scriptType: pscore\n    scriptLocation: 'inlineScript'\n    addSpnToEnvironment: true\n    inlineScript: |\n      # Commands to set environment variables\n      Write-Host &quot;##vso[task.setvariable variable=TENANT_ID;issecret=true]$(tenantId)&quot;\n      ...\n\n      $env:TENANT_ID = &quot;$(tenantId)&quot;\n      ...\n\n      # Running dotnet test\n      dotnet test --configuration $(buildConfiguration) ...\n</code></pre>\n<p>The variables like TENANT_ID are set using ##vso[task.setvariable] and also attempted to be set in the script's session scope using $env: for use in the same script. However, these variables do not seem to be accessible or correctly passed to the dotnet test command.</p>\n<p>What could be causing this issue, and how can I ensure that these environment variables are correctly passed to and accessible by the dotnet test command within the same Azure CLI task?</p>\n<p>Please note, I require the dotnet test to be inside of the AzureCLI@2 task, to make use of the new <a href=\"https://learn.microsoft.com/en-us/dotnet/api/azure.identity.azurepipelinescredential?view=azure-dotnet-preview\" rel=\"nofollow noreferrer\">AzurePipelinesCredential </a> from the Azure Identity SDK and I would like to have these variables be kept as secret (masked / redacted from logs)</p>\n"
+          },
+          {
+            "tags": [
+              "openstack-swift"
+            ],
+            "owner": {
+              "account_id": 20237874,
+              "reputation": 1,
+              "user_id": 14842493,
+              "user_type": "registered",
+              "profile_image": "https://lh4.googleusercontent.com/-B-sgwKHXHII/AAAAAAAAAAI/AAAAAAAAC28/AMZuucn4R-lOQNHFIEOJCrgWNyPetplW7Q/s96-c/s256-rj/photo.jpg",
+              "display_name": "SHUBHENDU SAURAV",
+              "link": "https://stackoverflow.com/users/14842493/shubhendu-saurav"
+            },
+            "is_answered": false,
+            "view_count": 249,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1659420480,
+            "creation_date": 1659247278,
+            "last_edit_date": 1659248402,
+            "question_id": 73181018,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/73181018/failed-to-discover-available-identity-versions-when-contacting-http-127-0-0-1",
+            "title": "Failed to discover available identity versions when contacting http://127.0.0.1:35357/v3. Attempting to parse version from URL. Unauthorized(HTTP 401)",
+            "body": "<p>I am using openstack container to enable integration testing against swift</p>\n<p>The container used is : <a href=\"https://hub.docker.com/r/jeantil/openstack-swift-keystone-docker/\" rel=\"nofollow noreferrer\">https://hub.docker.com/r/jeantil/openstack-swift-keystone-docker/</a></p>\n<p>And the steps followed are : <a href=\"https://github.com/jeantil/openstack-swift-keystone-docker\" rel=\"nofollow noreferrer\">https://github.com/jeantil/openstack-swift-keystone-docker</a></p>\n<p>The configuration is working fine on local and open internet(concourse pipeline job)</p>\n<p><strong>But when I am using the same in concourse pipeline job on INTRANET, I am getting the below error:</strong></p>\n<p>Failed to discover available identity versions when contacting <a href=\"http://127.0.0.1:35357/v3\" rel=\"nofollow noreferrer\">http://127.0.0.1:35357/v3</a>. Attempting to parse version from URL.\nUnauthorized (HTTP 401)</p>\n<p>I am getting this error while creating a new service or even loading user lists:</p>\n<p>Example:</p>\n<p>openstack endpoint create --region RegionOne object-store internal <a href=\"http://127.0.0.1:8080/v1/KEY_%%5C(tenant_id%5C)s\" rel=\"nofollow noreferrer\">http://127.0.0.1:8080/v1/KEY_%\\(tenant_id\\)s</a></p>\n<p>openstack endpoint create --region RegionOne object-store admin <a href=\"http://127.0.0.1:8080/v1\" rel=\"nofollow noreferrer\">http://127.0.0.1:8080/v1</a></p>\n<p>openstack user list</p>\n<p>Is it due to some proxy related configuration, because everything is working fine if I am running this concourse job on internet</p>\n"
+          },
+          {
+            "tags": [
+              "bash",
+              "azure",
+              "curl"
+            ],
+            "owner": {
+              "account_id": 27374230,
+              "reputation": 3,
+              "user_id": 20879826,
+              "user_type": "registered",
+              "profile_image": "https://lh3.googleusercontent.com/a/AEdFTp49RRuCsjb20tJjrdsuTs6qMy8wyGG3ckUYf16_=k-s256",
+              "display_name": "vskhc",
+              "link": "https://stackoverflow.com/users/20879826/vskhc"
+            },
+            "is_answered": true,
+            "view_count": 613,
+            "accepted_answer_id": 74940852,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1672234078,
+            "creation_date": 1672233516,
+            "last_edit_date": 1672233921,
+            "question_id": 74940753,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/74940753/using-variables-to-obtain-token-via-azure-cli",
+            "title": "Using variables to obtain TOKEN via Azure CLI",
+            "body": "<p>I am currently trying to get a Token for Authenticating towards Azure API via Github workflow bash step.\nThe values of the two variables are coming from Azure Keyvault and thats why i need to pass them in form of variables.</p>\n<p>The command that i am using is the following:</p>\n<pre><code>- run: |\n\nTOKEN=$(curl -X POST \\\n            -d 'grant_type=client_credentials&amp;client_id=${user}&amp;client_secret=${password}&amp;resource=https%3A%2F%2Fmanagement.azure.com%2F' \\\n            https://login.microsoftonline.com/${tenant_id}/oauth2/token | jq -r '.access_token')\n\n</code></pre>\n<p>The value of TOKEN is always null.</p>\n<p>If i try the same command, but use the values instead of variables ${user} and ${password} the token is created.</p>\n<pre><code>TOKEN=$(curl -X POST \\\n            -d 'grant_type=client_credentials&amp;client_id=**MYUSER**&amp;client_secret=**MYPASSWORD**&amp;resource=https%3A%2F%2Fmanagement.azure.com%2F' \\\n            https://login.microsoftonline.com/${tenant_id}/oauth2/token | jq -r '.access_token')\n\n</code></pre>\n<p>Interesting is that only the 2 variables ${user} and ${password} are not being picked up, the variable for {tenant_id} works.</p>\n<p>Why i cannot use the variables inside of grant_type=client_credentials&amp;client_id=<strong>${user}</strong>&amp;client_secret=<strong>${password}</strong>&amp;resource=https%3A%2F%2Fmanagement.azure.com%2F'</p>\n<p>This works in Azure Devops Pipeline , but not in Github Workflows</p>\n<pre><code></code></pre>\n"
+          },
+          {
+            "tags": [
+              "asp.net-mvc",
+              "asp.net-mvc-3",
+              "serialization",
+              "mef",
+              "appdomain"
+            ],
+            "owner": {
+              "account_id": 1066291,
+              "reputation": 201,
+              "user_id": 1066774,
+              "user_type": "registered",
+              "accept_rate": 0,
+              "profile_image": "https://www.gravatar.com/avatar/6e01ffa15536521fe69727e0d9e984d1?s=256&d=identicon&r=PG",
+              "display_name": "untoldex",
+              "link": "https://stackoverflow.com/users/1066774/untoldex"
+            },
+            "is_answered": true,
+            "view_count": 1900,
+            "answer_count": 2,
+            "score": 5,
+            "last_activity_date": 1336140594,
+            "creation_date": 1335424513,
+            "question_id": 10328811,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/10328811/asp-net-mvc-application-with-plugin-and-multitenancy-support-with-separate-appdo",
+            "title": "ASP.NET MVC application with plugin and multitenancy support with separate AppDomains?",
+            "body": "<p><strong>Problem</strong></p>\n\n<p>I have an ASP.NET MVC 3 application with the <strong>plug-in/module architecture</strong> and <strong>multi-tenancy support</strong>. MEF is used to resolve dependencies  and load pluggable parts.</p>\n\n<p>Each module consists of controllers, views, and other objects (phisically it's one assembly). Modules are loaded into tenants.</p>\n\n<p>The simple configuration might look like this:</p>\n\n<p><strong>Tenant 1:</strong></p>\n\n<ul>\n<li>Module A, version 1.0 (ModuleA.dll)</li>\n<li>Module B, version 1.0 (ModuleB.dll)</li>\n</ul>\n\n<p><strong>Tenant 2:</strong></p>\n\n<ul>\n<li>Module B, version 1.0 (ModuleB.dll)</li>\n</ul>\n\n<p>Dll's for different modules and different versions are stored separately in different physical locations.\nAnd application is running on one AppDomain (default one).</p>\n\n<p>However, if we would like to do configuration where different tenants use different module versions, we encounter problem with loading the same assembly in different version. Which means that scenario below is not fully working because during resolving types from ModuleB we got composition mismatch exception (version 1.0 and 1.5 was loaded into MEF but only one assembly has been loaded into AppDomain by assembly loader).</p>\n\n<p><strong>Tenant 1:</strong></p>\n\n<ul>\n<li>Module A, version 1.0 (ModuleA.dll)</li>\n<li>Module B, version 1.0 (ModuleB.dll)</li>\n</ul>\n\n<p><strong>Tenant 2:</strong></p>\n\n<ul>\n<li>Module A, version 1.5 (ModuleB.dll)</li>\n</ul>\n\n<p><strong>Solution?</strong></p>\n\n<p>So we came up with one solution, which is to <strong>load different tenants and theirs modules/assemblies into separate AppDomains</strong>. Meaning that from our example Tenant1 and Tenant2 are loaded into AppDomain1 and AppDomain2. In ASP.NET MVC pipeline we hooked up into controller factory in order to choose proper app domain, which would look like this:</p>\n\n<ul>\n<li>Request is handled by default AppDomain (the one that web application started)</li>\n<li>Controller factory\n<ul>\n<li>Takes Tenant_Id from the request and resolves proper controller from proper AppDomain (we have Tenant_Id->Tenant->AppDomain relation)\n<ul>\n<li>Returns ControllerProxy (which is a proxy class that implements IController and inherits MarshalByRefObject to be able to pass controller between different App Domians)</li>\n</ul></li>\n</ul></li>\n<li>Action Invoker\n<ul>\n<li>Proper action is invoked on controller proxy object and right now execution takes place in underlying app domian</li>\n<li><strong>And here we bumped into problem</strong> because action invoker is not able to pass not serializable RequestContext to another app domain (in other words controllerProxy.Execute(RequestContext context) is throwing exception about serialization)</li>\n</ul></li>\n</ul>\n\n<p><strong>Question(s):</strong></p>\n\n<ul>\n<li>How to pass RequestContext (non serializable object) between app domains in a nice way?</li>\n<li>Is it possible to hook up into another step in the pipeline to redirect execution to underlying app domain (before controller factory?)</li>\n<li>Or any ideas about another solution for this problem? </li>\n</ul>\n"
+          },
+          {
+            "tags": [
+              "java",
+              "azure-blob-storage",
+              "adal",
+              "azure-cli",
+              "adal4j"
+            ],
+            "owner": {
+              "account_id": 3289145,
+              "reputation": 117,
+              "user_id": 2767835,
+              "user_type": "registered",
+              "accept_rate": 89,
+              "profile_image": "https://www.gravatar.com/avatar/0f4635fa8b04f30e84bb10e63f13ebf8?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "heuts",
+              "link": "https://stackoverflow.com/users/2767835/heuts"
+            },
+            "is_answered": true,
+            "view_count": 507,
+            "accepted_answer_id": 55569463,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1554713247,
+            "creation_date": 1554453815,
+            "last_edit_date": 1554460485,
+            "question_id": 55531484,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/55531484/authenticating-with-rbac-service-principal-causes-403-audience-validation-failed",
+            "title": "Authenticating with rbac Service Principal causes 403 Audience validation failed. Audience did not match",
+            "body": "<p>Authenticating with rbac Service Principal causes 403 Audience validation failed. Audience did not match</p>\n\n<p>I am trying to give an application access to a blob storage container but with minimum required permissions (Read / Write)</p>\n\n<p>Using the azure cli i have done the following steps to attempt this:</p>\n\n<pre><code>az group create -l ${LOCATION} -n ${RESOURCE_GROUP_NAME}\n\naz role definition create --role-definition rw-blob-role.json\n\nrw-blob-role.json:\n{\n  \"assignableScopes\": [\n    \"/subscriptions/{{SUBSCRIPTION_ID}}\"\n  ],\n  \"description\": \"Custom role to allow for read and write access to Azure Storage blob containers and data\",\n  \"name\": \"{{APP_RW_ROLE_NAME}}\",\n  \"permissions\": [\n    {\n      \"actions\": [\n        \"Microsoft.Storage/storageAccounts/blobServices/containers/read\",\n        \"Microsoft.Storage/storageAccounts/blobServices/containers/write\"\n      ],\n      \"dataActions\": [\n        \"Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read\",\n        \"Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write\"\n      ],\n      \"notActions\": [],\n      \"notDataActions\": []\n    }\n  ],\n  \"type\": \"Microsoft.Authorization/roleDefinitions\"\n}\n\n\naz ad sp create-for-rbac --name ${AZ_SERVICE_PRINCIPAL_NAME} --password ${APP_CLIENT_SECRET}\n\naz role assignment delete --assignee ${AZ_SERVICE_PRINCIPAL_NAME} --role Contributor\n\naz role assignment create --assignee ${AZ_SERVICE_PRINCIPAL_NAME} --role ${APP_RW_ROLE_NAME}\n\naz storage account create --name ${STORAGE_ACCOUNT_NAME} --resource-group ${RESOURCE_GROUP_NAME} --location ${LOCATION} --kind BlobStorage --sku ${STORAGE_ACCOUNT_SKU} --access-tier ${STORAGE_ACCOUNT_ACCESS_TIER}\n\naz storage container create --name ${BLOB_STORAGE_CONTAINER} --account-name ${STORAGE_ACCOUNT_NAME} --public-access off\n</code></pre>\n\n<p>From this i save the following properties to use by my application:<br>\n - TENANT_ID=\"$(az account show --output tsv --query tenantId)\"<br>\n - CLIENT_ID=\"$(az ad sp list --spn ${AZ_SERVICE_PRINCIPAL_NAME} --output tsv --query [0].appId)\"<br>\n - Client secret: ${APP_CLIENT_SECRET}<br>\n - Resource: ${AZ_SERVICE_PRINCIPAL_NAME}<br>\n - Storage Account name: ${STORAGE_ACCOUNT_NAME}<br>\n - Container name: ${BLOB_STORAGE_CONTAINER}  </p>\n\n<p>Using com.microsoft.azure:adal4j i acquire a token:</p>\n\n<pre><code>public AuthenticationResult getToken() {\n    ExecutorService service = Executors.newFixedThreadPool(1);\n    ClientCredential credential = new ClientCredential(CLIENT_ID, APP_CLIENT_SECRET);\n    String authorityTenantUrl = String.format(https://login.microsoftonline.com/%s/oauth2/token, TENANT_ID);\n\n    AuthenticationContext context;\n    AuthenticationResult result;\n    try {\n      context = new AuthenticationContext(authorityTenantUrl, true, service);\n      Future&lt;AuthenticationResult&gt; future = context.acquireToken(AZ_SERVICE_PRINCIPAL_NAME, credential, null);\n      result = future.get();\n    } catch (Exception e) {\n      throw new RuntimeException(e);\n    } finally {\n      service.shutdown();\n    }\n\n    if (result == null) {\n      throw new RuntimeException(\"authentication result was null\");\n    }\n\n    return result;\n}\n</code></pre>\n\n<p>Using the accessToken from the AuthenticationResult and com.microsoft.azure:azure-storage-blob i attempt to fetch a blob:</p>\n\n<pre><code>TokenCredentials credential = new TokenCredentials(accessToken);\nHttpPipeline pipeline = StorageURL.createPipeline(credentials, new PipelineOptions());\nServiceURL serviceURL = new ServiceURL(\"https://STORAGE_ACCOUNT_NAME.blob.core.windows.net\", pipeline);\nContainerURL containerURL = serviceURL.createContainerURL(BLOB_STORAGE_CONTAINER);\nBlockBlobURL blobURL = containerURL.createBlockBlobURL(identifier);\nByteBuffer byteBuffer = FlowableUtil.collectBytesInBuffer(blobURL.download().blockingGet().body(new ReliableDownloadOptions())).blockingGet();\n</code></pre>\n\n<p>This causes a StorageException:</p>\n\n<pre><code>&lt;Error&gt;\n  &lt;Code&gt;AuthenticationFailed&lt;/Code&gt;\n  &lt;Message&gt;Server failed to authenticate the request. Make sure the value of Authorization header is formed correctly including the signature.&lt;/Message&gt;\n  &lt;AuthenticationErrorDetail&gt;Audience validation failed. Audience did not match.&lt;/AuthenticationErrorDetail&gt;\n&lt;/Error&gt;\n</code></pre>\n\n<p>I am pretty sure the problem is the AZ_SERVICE_PRINCIPAL_NAME passed to adal4j on acquireToken() but i have no idea what the correct value is. I have tried using the CLIENT_ID and other properties on the Tenant AD and Service Principal.</p>\n"
+          },
+          {
+            "tags": [
+              "azure",
+              "azure-resource-manager",
+              "subscription"
+            ],
+            "owner": {
+              "account_id": 7580588,
+              "reputation": 69,
+              "user_id": 5751390,
+              "user_type": "registered",
+              "profile_image": "https://i.sstatic.net/aYtxj.jpg?s=256",
+              "display_name": "bsailer",
+              "link": "https://stackoverflow.com/users/5751390/bsailer"
+            },
+            "is_answered": true,
+            "view_count": 367,
+            "answer_count": 1,
+            "score": -1,
+            "last_activity_date": 1698663244,
+            "creation_date": 1698395346,
+            "last_edit_date": 1698663244,
+            "question_id": 77372598,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/77372598/who-gets-email-warnings-about-deprecated-arm-api-usage",
+            "title": "Who gets email warnings about deprecated ARM API usage",
+            "body": "<p>I'm using Terraform and a Gitlab pipeline to create some <strong>container apps</strong> resources in azure. Modifying some of them during runtime with <strong><code>azure-cli</code></strong>. The credentials I am using to actually do the modifications are <strong>tenant_id/subcription_id/client_id/client_secret where client_id and client_secret belong to an App principal.</strong></p>\n<p>Now, I received an email from Azure with the content:</p>\n<blockquote>\n<p>`Retirement of Azure Container Apps API versions 2022-06-01-preview and 2022-11-01-preview</p>\n<p>You're receiving this notice because you currently use Azure Resource  Manager API version 2022-06-01-preview or 2022-11-01-preview to manage Azure Container Apps.</p>\n<p>Starting on 16 November 2023, you won't be able to manage Azure  Container Apps using version 2022-06-01-preview or 2022-11-01-preview of the Azure Resource Manager API.</p>\n<p>Required action:-\nIf you're using Azure Resource Manager API version 2022-06-01-preview or 2022-11-01-preview to manage Azure Container Apps, please update your API requests to use version 2023-04-01-preview or later. Management operations using the retired API versions may fail after the retirement date.`</p>\n</blockquote>\n<p>This information is very useful, <strong>however I would like to understand why my email address is the recipient.</strong> This email address belongs to an <strong>azure account that has owner-role</strong> in the <strong>subscription</strong>, However there are <strong>other people that share this role with me (or have contributor role)</strong> but <strong>did not receive the same email.</strong></p>\n<p>I was the original developer creating the system but by now I'm only accidentally still in the subscription, another team (the other contributors in the subscription) are in charge of maintenance for the system.</p>\n<p><em><strong>Which action actually initiates the sending of this email and how can I configure/have influence on who is actually getting this email?</strong></em></p>\n<p><em><strong>EDIT:\nThanks to the answer @SiddheshDesai and digging once more, it turned out that the other account having the &quot;Owner&quot;-role also received the message, only the ones with &quot;Contributor&quot; didn't.</strong></em></p>\n"
+          },
+          {
+            "tags": [
+              "image",
+              "authentication",
+              "openstack",
+              "credentials"
+            ],
+            "owner": {
+              "account_id": 6568440,
+              "reputation": 1,
+              "user_id": 5077256,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/adfe66c0aee7f578c8498194ac015db8?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Kevin Bulka",
+              "link": "https://stackoverflow.com/users/5077256/kevin-bulka"
+            },
+            "is_answered": true,
+            "view_count": 4419,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1437123626,
+            "creation_date": 1435917034,
+            "last_edit_date": 1435928329,
+            "question_id": 31203760,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/31203760/openstack-unable-to-upload-the-image-to-the-image-service",
+            "title": "(Openstack) Unable to upload the image to the Image Service",
+            "body": "<p>i'm new to Openstack and trying to build my own Openstack-environment.\nAfter following the \"OpenStack Installation Guide for Red Hat Enterprise Linux 7, CentOS 7, and Fedora 20\" (on Fedora 21), I faced a problem at uploading cirrOS to the Image-Service.</p>\n\n<p>My Openstack-version, refering to this command: \"[root@localhost ~]# keystone-manage --version\" should be\n2014.2.2</p>\n\n<p>After I try to upload the image I get this output:</p>\n\n<pre><code>ADMIN-OPENRC.SH:\n\nexport OS_TENANT_NAME=admin\nexport OS_USERNAME=admin\nexport OS_PASSWORD=MYPASS\nexport OS_AUTH_URL=http://controller:35357/v2.0\n</code></pre>\n\n<blockquote>\n  <p>[root@localhost ~]# source admin-openrc.sh  [root@localhost ~]# glance\n  --debug image-create  --name \"cirros-0.3.3-x86_64\" --file /tmp/images/cirros-0.3.3-x86_64-disk.img  --disk-format qcow2\n  --container-format bare --is-public True --progress curl -i -X POST -H 'Accept-Encoding: gzip, deflate' -H 'x-image-meta-container_format:\n  bare' -H 'Accept: <em>/</em>' -H 'X-Auth-Token:\n  {SHA1}726116102202fa50ff0c064ca3cadb86b65fe997' -H 'x-image-meta-size:\n  13200896' -H 'Connection: keep-alive' -H 'x-image-meta-is_public:\n  True' -H 'User-Agent: python-glanceclient' -H 'Content-Type:\n  application/octet-stream' -H 'x-image-meta-disk_format: qcow2' -H\n  'x-image-meta-name: cirros-0.3.3-x86_64'\n  <code>http://controller:9292/v1/images</code> [=============================>]\n  100% Request returned failure status 401. Invalid OpenStack Identity\n  credentials.</p>\n</blockquote>\n\n<p>I have to mention that i can get a token from keystone without problems:</p>\n\n<blockquote>\n  <p>[root@localhost ~]# keystone token-get\n  <br>+-----------+----------------------------------+ <br>|  Property |\n  Value               |\n  <br>+-----------+----------------------------------+ <br>|  expires  |\n  2015-07-03T10:26:38Z       | <br>|     id    |\n  96299e7c355d43a9b8e5b7f47a4d4cdd | <br>| tenant_id |\n  425de1784b644473b6f1cffe874992c5 | <br>|  user_id  |\n  0a85326e1c744d449327894b6a276b5d |\n  <br>+-----------+----------------------------------+</p>\n</blockquote>\n\n<pre><code>Here are my config files:\n\nGLANCE-API.CONF &amp; GLANCE-REGISTRY.CONF\nconnection=mysql://glance:MYPASS@controller/glance\n[keystone_authtoken]\nauth_uri = http://controller:5000/v2.0\nidentity_uri = http://controller:35357\nadmin_tenant_name = service\nadmin_user = glance\nadmin_password = MYPASS\n\nKEYSTONE.CONF\nconnection=mysql://keystone:MYPASS@controller/keystone &lt;/b&gt;\n\n\nHere is my api.log:\n/var/log/glance/api.log\n2015-07-03 11:15:00.763 3447 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:15:01.266 3447 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:15:02.269 3447 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:15:04.273 3447 ERROR keystonemiddleware.auth_token [-] HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:15:04.274 3447 WARNING keystonemiddleware.auth_token [-] Authorization failed for token\n2015-07-03 11:15:04.274 3447 INFO keystonemiddleware.auth_token [-] Invalid user token - deferring reject downstream\n2015-07-03 11:15:04.327 3447 INFO glance.wsgi.server [-] 192.168.13.92 - - [03/Jul/2015 11:15:04] \"POST /v1/images HTTP/1.1\" 401 571 3.579172\n2015-07-03 11:30:29.083 3446 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:30:29.587 3446 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:30:30.591 3446 WARNING keystonemiddleware.auth_token [-] Retrying on HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:30:32.595 3446 ERROR keystonemiddleware.auth_token [-] HTTP connection exception: Unable to establish connection to http://controller:35357/\n2015-07-03 11:30:32.595 3446 WARNING keystonemiddleware.auth_token [-] Authorization failed for token\n2015-07-03 11:30:32.595 3446 INFO keystonemiddleware.auth_token [-] Invalid user token - deferring reject downstream\n2015-07-03 11:30:32.649 3446 INFO glance.wsgi.server [-] 192.168.13.92 - - [03/Jul/2015 11:30:32] \"POST /v1/images HTTP/1.1\" 401 571 3.581761\n</code></pre>\n\n<p>Thanks for your effort\nKevin</p>\n\n<p>--------------------------EDIT-----------------------------\nFull Glance-Registry.conf:</p>\n\n<pre><code>[DEFAULT]\n# Show more verbose log output (sets INFO log level output)\nverbose=True\n\n# Show debugging output in logs (sets DEBUG log level output)\n#debug=False\n\n# Address to bind the registry server\n#bind_host=0.0.0.0\n\n# Port the bind the registry server to\n#bind_port=9191\n\n# Log to this file. Make sure you do not set the same log file for both the API\n# and registry servers!\n#\n# If `log_file` is omitted and `use_syslog` is false, then log messages are\n# sent to stdout as a fallback.\n#log_file=/var/log/glance/registry.log\n\n# Backlog requests when creating socket\n#backlog=4096\n\n# TCP_KEEPIDLE value in seconds when creating socket.\n# Not supported on OS X.\n#tcp_keepidle=600\n\n# API to use for accessing data. Default value points to sqlalchemy\n# package.\n#data_api=glance.db.sqlalchemy.api\n\n# The number of child process workers that will be\n# created to service Registry requests. The default will be\n# equal to the number of CPUs available. (integer value)\n#workers=None\n\n# Enable Registry API versions individually or simultaneously\n#enable_v1_registry=True\n#enable_v2_registry=True\n\n# Limit the api to return `param_limit_max` items in a call to a container. If\n# a larger `limit` query param is provided, it will be reduced to this value.\n#api_limit_max=1000\n\n# If a `limit` query param is not provided in an api request, it will\n# default to `limit_param_default`\n#limit_param_default=25\n\n# Role used to identify an authenticated user as administrator\n#admin_role=admin\n\n# Whether to automatically create the database tables.\n# Default: False\n#db_auto_create=False\n\n# Enable DEBUG log messages from sqlalchemy which prints every database\n# query and response.\n# Default: False\n#sqlalchemy_debug=True\n\n# ================= Syslog Options ============================\n\n# Send logs to syslog (/dev/log) instead of to file specified\n# by `log_file`\n#use_syslog=False\n\n# Facility to use. If unset defaults to LOG_USER.\n#syslog_log_facility=LOG_LOCAL1\n\n# ================= SSL Options ===============================\n\n# Certificate file to use when starting registry server securely\n#cert_file=/path/to/certfile\n\n# Private key file to use when starting registry server securely\n#key_file=/path/to/keyfile\n\n# CA certificate file to use to verify connecting clients\n#ca_file=/path/to/cafile\n\n# ============ Notification System Options =====================\n\n# Driver or drivers to handle sending notifications. Set to\n# 'messaging' to send notifications to a message queue.\nnotification_driver = noop\n\n# Default publisher_id for outgoing notifications.\n# default_publisher_id = image.localhost\n\n# Messaging driver used for 'messaging' notifications driver\n# rpc_backend = 'rabbit'\n\n# Configuration options if sending notifications via rabbitmq (these are\n# the defaults)\n#rabbit_host=localhost\n#rabbit_port=5672\n#rabbit_use_ssl=false\n#rabbit_userid=guest\n#rabbit_password=guest\n#rabbit_virtual_host=/\n#rabbit_notification_exchange=glance\n#rabbit_notification_topic=notifications\n#rabbit_durable_queues=False\n\n# Configuration options if sending notifications via Qpid (these are\n# the defaults)\n#qpid_notification_exchange=glance\n#qpid_notification_topic=notifications\n#qpid_hostname=localhost\n#qpid_port=5672\n#qpid_username=\n#qpid_password=\n#qpid_sasl_mechanisms=\n#qpid_reconnect_timeout=0\n#qpid_reconnect_limit=0\n#qpid_reconnect_interval_min=0\n#qpid_reconnect_interval_max=0\n#qpid_reconnect_interval=0\n#qpid_heartbeat=5\n# Set to 'ssl' to enable SSL\n#qpid_protocol=tcp\n#qpid_tcp_nodelay=True\n\n\n# ================= Database Options ==========================\n\n[database]\n# The file name to use with SQLite (string value)\n#sqlite_db=glance.sqlite\n\n# If True, SQLite uses synchronous mode (boolean value)\n#sqlite_synchronous=True\n\n# The backend to use for db (string value)\n# Deprecated group/name - [DEFAULT]/db_backend\n#backend=sqlalchemy\n\n# The SQLAlchemy connection string used to connect to the\n# database (string value)\n# Deprecated group/name - [DEFAULT]/sql_connection\n# Deprecated group/name - [DATABASE]/sql_connection\n# Deprecated group/name - [sql]/connection\nconnection = mysql://glance:MYPASS@controller/glance\n\n# The SQL mode to be used for MySQL sessions. This option,\n# including the default, overrides any server-set SQL mode. To\n# use whatever SQL mode is set by the server configuration,\n# set this to no value. Example: mysql_sql_mode= (string\n# value)\n#mysql_sql_mode=TRADITIONAL\n\n# Timeout before idle sql connections are reaped (integer\n# value)\n# Deprecated group/name - [DEFAULT]/sql_idle_timeout\n# Deprecated group/name - [DATABASE]/sql_idle_timeout\n# Deprecated group/name - [sql]/idle_timeout\n#idle_timeout=3600\n\n# Minimum number of SQL connections to keep open in a pool\n# (integer value)\n# Deprecated group/name - [DEFAULT]/sql_min_pool_size\n# Deprecated group/name - [DATABASE]/sql_min_pool_size\n#min_pool_size=1\n\n# Maximum number of SQL connections to keep open in a pool\n# (integer value)\n# Deprecated group/name - [DEFAULT]/sql_max_pool_size\n# Deprecated group/name - [DATABASE]/sql_max_pool_size\n#max_pool_size=&lt;None&gt;\n\n# Maximum db connection retries during startup. (setting -1\n# implies an infinite retry count) (integer value)\n# Deprecated group/name - [DEFAULT]/sql_max_retries\n# Deprecated group/name - [DATABASE]/sql_max_retries\n#max_retries=10\n\n# Interval between retries of opening a sql connection\n# (integer value)\n# Deprecated group/name - [DEFAULT]/sql_retry_interval\n# Deprecated group/name - [DATABASE]/reconnect_interval\n#retry_interval=10\n\n# If set, use this value for max_overflow with sqlalchemy\n# (integer value)\n# Deprecated group/name - [DEFAULT]/sql_max_overflow\n# Deprecated group/name - [DATABASE]/sqlalchemy_max_overflow\n#max_overflow=&lt;None&gt;\n\n# Verbosity of SQL debugging information. 0=None,\n# 100=Everything (integer value)\n# Deprecated group/name - [DEFAULT]/sql_connection_debug\n#connection_debug=0\n\n# Add python stack traces to SQL as comment strings (boolean\n# value)\n# Deprecated group/name - [DEFAULT]/sql_connection_trace\n#connection_trace=False\n\n# If set, use this value for pool_timeout with sqlalchemy\n# (integer value)\n# Deprecated group/name - [DATABASE]/sqlalchemy_pool_timeout\n#pool_timeout=&lt;None&gt;\n\n# Enable the experimental use of database reconnect on\n# connection lost (boolean value)\n#use_db_reconnect=False\n\n# seconds between db connection retries (integer value)\n#db_retry_interval=1\n\n# Whether to increase interval between db connection retries,\n# up to db_max_retry_interval (boolean value)\n#db_inc_retry_interval=True\n\n# max seconds between db connection retries, if\n# db_inc_retry_interval is enabled (integer value)\n#db_max_retry_interval=10\n\n# maximum db connection retries before error is raised.\n# (setting -1 implies an infinite retry count) (integer value)\n#db_max_retries=20\n\n[keystone_authtoken]\nauth_uri = http://controller:5000/v2.0\nidentity_uri = http://controller:35357\nadmin_tenant_name = service\nadmin_user = glance\nadmin_password = MYPASS\n\n[paste_deploy]\n# Name of the paste configuration file that defines the available pipelines\n#config_file=/usr/share/glance/glance-registry-dist-paste.ini\n\n# Partial name of a pipeline in your paste configuration file with the\n# service name removed. For example, if your paste section name is\n# [pipeline:glance-registry-keystone], you would configure the flavor below\n# as 'keystone'.\nflavor=keystone\n\n[profiler]\n# If False fully disable profiling feature.\n#enabled=False\n\n# If False doesn't trace SQL requests.\n#trace_sqlalchemy=False\n</code></pre>\n\n<p>Glance-Api.conf:</p>\n\n<pre><code>[paste_deploy]\n# Name of the paste configuration file that defines the available pipelines\n#config_file=/usr/share/glance/glance-api-dist-paste.ini\n\n# Partial name of a pipeline in your paste configuration file with the\n# service name removed. For example, if your paste section name is\n# [pipeline:glance-api-keystone], you would configure the flavor below\n# as 'keystone'.\nflavor=keystone\n</code></pre>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9925,
+        "total": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A5B9",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:37:14+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema-per-tenant\"",
+  "termo_b": "connector",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"schema-per-tenant\" connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/56361176/mysql-jdbc-driver-failed-to-create-schema-with-hyphen"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22schema-per-tenant%22+connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:37:15+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:37:14 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "mysql",
+              "jdbc"
+            ],
+            "owner": {
+              "account_id": 4730206,
+              "reputation": 674,
+              "user_id": 3826068,
+              "user_type": "registered",
+              "accept_rate": 45,
+              "profile_image": "https://www.gravatar.com/avatar/fae24e8b5004ab312145dedb3110e97d?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Michal",
+              "link": "https://stackoverflow.com/users/3826068/michal"
+            },
+            "is_answered": false,
+            "view_count": 1455,
+            "answer_count": 1,
+            "score": 3,
+            "last_activity_date": 1656707346,
+            "creation_date": 1559134432,
+            "last_edit_date": 1656707346,
+            "question_id": 56361176,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/56361176/mysql-jdbc-driver-failed-to-create-schema-with-hyphen",
+            "title": "MySQL JDBC driver failed to create schema with hyphen",
+            "body": "<p>I have an application with schema per tenant architecture. But when the tentant name contains hyphen, schema creation failed.\nThe datasource creation:</p>\n\n<pre><code>HikariDataSource ds = new HikariDataSource();\nds.setUsername(username);\nds.setPassword(password);\nds.setJdbcUrl(\"jdbc:mysql://localhost:3306/tenant-test\");\nds.setDriverClassName(\"com.mysql.cj.jdbc.Driver\");\nds.addDataSourceProperty( \"allowMultiQueries\" , \"true\" );\nds.addDataSourceProperty( \"autoReconnect\" , \"true\" );\nds.addDataSourceProperty( \"characterEncoding\" , \"UTF-8\" );\nds.addDataSourceProperty( \"useUnicode\" , \"true\" );\nds.addDataSourceProperty( \"createDatabaseIfNotExist\" , \"true\" );\nds.getConnection(); // exception thrown here\n</code></pre>\n\n<p>Is there any property I have to set? When schema exists, everything works fine. Also schema without hyphen is created successfully. Based on the stack trace, it looks like an issue in mysql jdbc driver.</p>\n\n<p>Exception stack trace:</p>\n\n<pre><code>Caused by: java.sql.SQLNonTransientConnectionException: Could not create connection to database server. Attempted reconnect 3 times. Giving up.\n    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:110) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:73) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.ConnectionImpl.connectWithRetries(ConnectionImpl.java:905) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:830) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.ConnectionImpl.&lt;init&gt;(ConnectionImpl.java:455) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.pool.HikariPool.&lt;init&gt;(HikariPool.java:115) ~[HikariCP-3.2.0.jar:na]\n    at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-3.2.0.jar:na]\n    at org.flywaydb.core.internal.jdbc.JdbcUtils.openConnection(JdbcUtils.java:56) ~[flyway-core-5.2.4.jar:na]\n    ... 54 common frames omitted\nCaused by: com.mysql.cj.exceptions.CJException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-test' at line 1\n    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_144]\n    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_144]\n    at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_144]\n    at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_144]\n    at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:129) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:816) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:741) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeProtocol.sendCommand(NativeProtocol.java:671) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeProtocol.changeDatabase(NativeProtocol.java:543) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeAuthenticationProvider.proceedHandshakeWithPluggableAuthentication(NativeAuthenticationProvider.java:706) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeAuthenticationProvider.connect(NativeAuthenticationProvider.java:202) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1449) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.NativeSession.connect(NativeSession.java:165) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n    at com.mysql.cj.jdbc.ConnectionImpl.connectWithRetries(ConnectionImpl.java:849) ~[mysql-connector-java-8.0.14.jar:8.0.14]\n</code></pre>\n\n<p><strong>EDIT:</strong></p>\n\n<p>I think it's a bug. I looked into mysql connector sources and I found out that the db name is not quoted...</p>\n\n<p>NativeProtocol.java, row 542:</p>\n\n<pre><code>if (this.getPropertySet().getBooleanProperty(PropertyKey.createDatabaseIfNotExist).getValue()) {\n                sendCommand(this.commandBuilder.buildComQuery(getSharedSendPacket(), \"CREATE DATABASE IF NOT EXISTS \" + database), false, 0);\n...\n</code></pre>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9951,
+        "total": 1
+      }
+    }
+  ]
+}

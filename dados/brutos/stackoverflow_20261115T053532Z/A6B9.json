@@ -1,0 +1,87 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A6B9",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:37:35+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per customer\"",
+  "termo_b": "connector",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"schema per customer\" connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/39891158/spring-webmvc-4-3-3-release-spring-data-1-10-3-release-hibernate-5-2-2-final"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22schema+per+customer%22+connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:37:35+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:37:35 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "mysql",
+              "spring",
+              "hibernate",
+              "jpa",
+              "multi-tenant"
+            ],
+            "owner": {
+              "account_id": 8839306,
+              "reputation": 75,
+              "user_id": 6602247,
+              "user_type": "registered",
+              "profile_image": "https://i.sstatic.net/gm4Sf.jpg?s=256",
+              "display_name": "Arun S",
+              "link": "https://stackoverflow.com/users/6602247/arun-s"
+            },
+            "is_answered": false,
+            "view_count": 114,
+            "answer_count": 0,
+            "score": 1,
+            "last_activity_date": 1475744251,
+            "creation_date": 1475742424,
+            "last_edit_date": 1475744251,
+            "question_id": 39891158,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/39891158/spring-webmvc-4-3-3-release-spring-data-1-10-3-release-hibernate-5-2-2-final",
+            "title": "Spring WebMVC 4.3.3.Release + Spring Data 1.10.3 Release + Hibernate 5.2.2 Final + MySQL 5.7 - Multi-Tenancy Issue",
+            "body": "<p>I am trying to resolve a problem related to multi-tenancy of the SpringWebMVC application that is being developed.</p>\n\n<p>Need to create a schema on the fly for every customer who signs up. Once they sign in, all the transactions that they do should be against that schema.</p>\n\n<p>For this I tried to leverage the Hibernate 5 Multi-Tenancy. It works fine - till generating the schema per customer. The application starts with the common schema definition, creates all the entity tables there for the common schema as mentioned in <code>@Table</code> and then before populating the tables (using entity definitions for that schema) tries to insert the data to the <code>schema.table</code> and throws the error that the <code>schema.table</code> is not available.</p>\n\n<p>I am using the class that extends <code>AbstractDataSourceBasedMultiTenantConnectionProviderImpl</code> to provide the <code>Environment.MULTI_TENANT_CONNECTION_PROVIDER</code> through object reference by <code>@Autowired</code> injection. The <code>CurrentTenantIdentifierResolver</code> interface is implemented by a class to provide the object reference to <code>Environment.MULTI_TENANT_IDENTIFIER_RESOLVER</code> through <code>@Autowired</code> injection.</p>\n\n<p>Not sure why Hibernate / JPA provider is not able to populate the tables for the schema which is getting created on the fly. The JPAProperties are as below:</p>\n\n<pre><code>Properties jpaProperties = new Properties();\njpaProperties.put(\"javax.persistence.schema-generation.database.action\", \"create-drop\");\njpaProperties.put(\"javax.persistence.create-database-schemas\", true);\njpaProperties.put(Environment.HBM2DDL_AUTO, \"create-drop\");\njpaProperties.put(Environment.DEFAULT_SCHEMA, \"base_schema\");\njpaProperties.put(Environment.MULTI_TENANT, \"SCHEMA\");\njpaProperties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, applicationCurrentTenantIdentifierResolver);\njpaProperties.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, applicationMultiTenantConnectionProvider);\njpaProperties.put(Environment.FORMAT_SQL, true);\njpaProperties.put(\"spring.jpa.hibernate.naming_strategy\", \"org.hibernate.cfg.ImprovedNamingStrategy\");\njpaProperties.put(Environment.USE_SQL_COMMENTS, true);\njpaProperties.put(Environment.GENERATE_STATISTICS, true);\njpaProperties.put(\"hbm2dll.create_namespaces\", true);\n</code></pre>\n\n<p>And the <code>HibernateVendorAdapter</code> has the following values:</p>\n\n<pre><code>HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();\nvendorAdapter.setDatabasePlatform(\"org.hibernate.dialect.MySQL5InnoDBDialect\");\nvendorAdapter.setShowSql(true);\nvendorAdapter.setGenerateDdl(true);\nvendorAdapter.setDatabase(Database.MYSQL);\n</code></pre>\n\n<p>The POM has the following libraries:</p>\n\n<p>Properties: </p>\n\n<pre><code>&lt;properties&gt;\n  &lt;project.mysql.connector.version&gt;5.1.30&lt;/project.mysql.connector.version&gt;\n  &lt;project.hibernate.version&gt;5.2.2.Final&lt;/project.hibernate.version&gt;\n  &lt;project.spring.orm.version&gt;4.3.3.RELEASE&lt;/project.spring.orm.version&gt;\n  &lt;project.spring.data.jpa.version&gt;1.10.3.RELEASE&lt;/project.spring.data.jpa.version&gt;\n&lt;/properties&gt;\n</code></pre>\n\n<p>And dependencies:</p>\n\n<pre><code>&lt;dependency&gt;\n   &lt;groupId&gt;mysql&lt;/groupId&gt;\n   &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;\n   &lt;version&gt;${project.mysql.connector.version}&lt;/version&gt;\n&lt;/dependency&gt;\n&lt;dependency&gt;\n   &lt;groupId&gt;org.hibernate&lt;/groupId&gt;\n   &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;\n   &lt;version&gt;${project.hibernate.version}&lt;/version&gt;\n&lt;/dependency&gt;\n&lt;dependency&gt;\n   &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;\n   &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;\n   &lt;version&gt;${project.spring.data.jpa.version}&lt;/version&gt;\n&lt;/dependency&gt;\n&lt;dependency&gt;\n   &lt;groupId&gt;org.springframework&lt;/groupId&gt;\n   &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;\n   &lt;version&gt;${project.spring.orm.version}&lt;/version&gt;\n&lt;/dependency&gt;\n</code></pre>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9942,
+        "total": 1
+      }
+    }
+  ]
+}

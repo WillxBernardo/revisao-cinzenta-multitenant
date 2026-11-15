@@ -1,0 +1,147 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A8B1",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:37:58+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "ingestion",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"tenant_id\" ingestion&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 3,
+  "n_coletados": 3,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/79539483/is-there-a-way-to-create-snowpipe-or-ingestion-in-snowflake-for-a-public-azure-b",
+    "https://stackoverflow.com/questions/78800022/adding-global-attributes-to-opentelemetry-metrics",
+    "https://stackoverflow.com/questions/63489669/azure-data-explorer-partitioning-strategy"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22tenant_id%22+ingestion&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:37:58+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:37:58 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "azure",
+              "snowflake-cloud-data-platform",
+              "blob",
+              "pipeline",
+              "snowpipe"
+            ],
+            "owner": {
+              "account_id": 4714578,
+              "reputation": 41,
+              "user_id": 3814130,
+              "user_type": "registered",
+              "profile_image": "https://i.sstatic.net/voHyJ.jpg?s=256",
+              "display_name": "MinaB",
+              "link": "https://stackoverflow.com/users/3814130/minab"
+            },
+            "is_answered": false,
+            "view_count": 99,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1743150436,
+            "creation_date": 1743092736,
+            "question_id": 79539483,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/79539483/is-there-a-way-to-create-snowpipe-or-ingestion-in-snowflake-for-a-public-azure-b",
+            "title": "Is there a way to create Snowpipe or Ingestion in Snowflake for a public Azure Blob dataset?",
+            "body": "<p>I have done Snowpipe before for a azure Blob before, but since it was private I had access to tenant_id and all authentications. Maybe the question seems backward but when a storage is public, Can we create a data pipeline based on it?\nI've ingested the data to an external storage in Snowflake, and from there tried to create a pipe to copy data from External to raw table. It still ask for credentials.</p>\n<pre><code>    CREATE OR REPLACE STAGE &lt;name&gt;_stage\n    URL = 'azure://azureopendatastorage.blob.core.windows.net/&lt;&gt;'\n    FILE_FORMAT = (TYPE = PARQUET);\n</code></pre>\n<pre><code>    CREATE OR REPLACE PIPE raw_pipe\n    AUTO_INGEST = TRUE\n    AS\n    COPY INTO nyc_raw\n    FROM @&lt;name&gt;_stage\n    PATTERN = '.*\\.parquet$'\n    FILE_FORMAT = (TYPE = 'PARQUET')\n    ON_ERROR = 'CONTINUE';\n</code></pre>\n"
+          },
+          {
+            "tags": [
+              "c#",
+              ".net",
+              "metrics",
+              "open-telemetry"
+            ],
+            "owner": {
+              "account_id": 34368715,
+              "reputation": 21,
+              "user_id": 26533153,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/f7f9efde9665555c8d792fbbc46d8a95?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Adri",
+              "link": "https://stackoverflow.com/users/26533153/adri"
+            },
+            "is_answered": true,
+            "view_count": 3181,
+            "answer_count": 3,
+            "score": 2,
+            "last_activity_date": 1739035067,
+            "creation_date": 1722031520,
+            "last_edit_date": 1722366103,
+            "question_id": 78800022,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/78800022/adding-global-attributes-to-opentelemetry-metrics",
+            "title": "Adding global attributes to OpenTelemetry metrics",
+            "body": "<p>I am using OpenTelemetry's Metrics to get information about my environment.</p>\n<p>I have several tenants that will use OpenTelemetry and will all be ingested into Prometheus and then Grafana.</p>\n<p>I would like to differentiate between each one by adding some king of label/tag/attribute.</p>\n<p>I am using the configuration below, but when I expose the /metrics endpoint using the <code>UseOpenTelemetryPrometheusScrapingEndpoint</code> extension method, the attribute is not shown.</p>\n<pre><code>    services.AddOpenTelemetry()\n        .WithMetrics(opts =&gt;\n        {\n            opts.ConfigureResource(resourceBuilder =&gt;\n                {\n                    resourceBuilder.AddTelemetrySdk();\n                    resourceBuilder.AddService(serviceName: &quot;tenant_service_config&quot;);\n                    resourceBuilder.AddAttributes(new Dictionary&lt;string, object&gt; { [&quot;tenant_id&quot;] = 2 });\n                })\n                .AddMeter(meters.MetricName)\n                .AddAspNetCoreInstrumentation()\n                .AddProcessInstrumentation()\n                .AddRuntimeInstrumentation();\n</code></pre>\n<p>However, if I manually create a Metric and add a tag, it does show up in the /metrics endpoint</p>\n<p><code>_userLoginCounter.Add(1, new KeyValuePair&lt;string, object&gt;(&quot;tenant.id&quot;, tenantId));</code></p>\n<p>*** Clarification ***</p>\n<p>I am able to get my custom metric to show up in Prometheus. What I need help with, is getting the &quot;tenant_id&quot; attribute/tag/label to show up in all of the built-in instrumentation (<code>AspNetCoreInstrumentation</code>, <code>ProcessInstrumentation</code>, and <code>RuntimeInstrumentation</code>)</p>\n"
+          },
+          {
+            "tags": [
+              "aggregate",
+              "partitioning",
+              "azure-data-explorer",
+              "cardinality"
+            ],
+            "owner": {
+              "account_id": 4413976,
+              "reputation": 187,
+              "user_id": 3596100,
+              "user_type": "registered",
+              "profile_image": "https://graph.facebook.com/100001838794778/picture?type=large",
+              "display_name": "user3596100",
+              "link": "https://stackoverflow.com/users/3596100/user3596100"
+            },
+            "is_answered": true,
+            "view_count": 1064,
+            "accepted_answer_id": 63490151,
+            "answer_count": 1,
+            "score": 1,
+            "last_activity_date": 1597851266,
+            "creation_date": 1597848718,
+            "last_edit_date": 1597849201,
+            "question_id": 63489669,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/63489669/azure-data-explorer-partitioning-strategy",
+            "title": "Azure Data Explorer partitioning strategy",
+            "body": "<p>I have a table in Azure Data Explorer that collects data from IoT sensors. In the near future it will collect millions of records each day. So to get the best query performance I am looking into setting a partitioning policy: <a href=\"https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/partitioningpolicy\" rel=\"nofollow noreferrer\">https://learn.microsoft.com/en-us/azure/data-explorer/kusto/management/partitioningpolicy</a></p>\n<p>My table has 5 important columns: TenantId, DeviceId, SensorId, Value, Timestamp</p>\n<p>The combination of (TenantId, DeviceId, VariableId) makes a sensor globally unique, and almost all queries will contain a part that says TenantId = 'xx' and DeviceId = 'xx' and VariableId = 'xx'. All these columns are of type string, and have a high-cardinality (10.000+ Tenants, 1000+ DeviceIds, 10.000+ VariableIds)</p>\n<p>Two questions:</p>\n<ol>\n<li><p>Would it be wise to apply partitioning on this table based on one or more of the string columns? It complies with the advice in the documentation that says:</p>\n<ul>\n<li>The majority of queries use equality filters (==, in()).</li>\n<li>The majority of queries aggregate/join on a specific string-typed column of large-dimension (cardinality of 10M or higher) such as an application_ID, a tenant_ID, or a user_ID.</li>\n</ul>\n</li>\n</ol>\n<p>But later on the page, for the MaxPartitionCount they say that it should be not higher than 1024 and lower than the cardinality of the column. As I have high-cardinality columns this does not comply, so I am a bit confused.</p>\n<ol start=\"2\">\n<li>Would it be best to concat the string columns before ingestion and partition on the new column? Or only on TenantId for example?</li>\n</ol>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9932,
+        "total": 3
+      }
+    }
+  ]
+}

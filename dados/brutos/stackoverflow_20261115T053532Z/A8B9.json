@@ -1,0 +1,207 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A8B9",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:38:16+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "connector",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"tenant_id\" connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 5,
+  "n_coletados": 5,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/79761837/powerapps-snowflake-connector-bad-gateway",
+    "https://stackoverflow.com/questions/36982669/bluemix-spark-as-a-service-and-tableau-9-3",
+    "https://stackoverflow.com/questions/77742868/batchexecute-command-fails-for-sql-server-and-jdbc-connectors-in-ballerina",
+    "https://stackoverflow.com/questions/61796329/querying-bookings-api-using-microsoft-graph-isnt-working",
+    "https://stackoverflow.com/questions/47038382/get-information-about-who-installed-a-microsoft-teams-bot-app"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22tenant_id%22+connector&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:38:16+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:38:16 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "snowflake-cloud-data-platform",
+              "power-automate",
+              "powerapps"
+            ],
+            "owner": {
+              "account_id": 29429371,
+              "reputation": 13,
+              "user_id": 22549352,
+              "user_type": "registered",
+              "profile_image": "https://lh3.googleusercontent.com/a/ACg8ocKvMIuW06sswtLoq9CCgjniapaFzrap_ngGnlnqqXy73A=k-s256",
+              "display_name": "YAHO5",
+              "link": "https://stackoverflow.com/users/22549352/yaho5"
+            },
+            "is_answered": true,
+            "view_count": 782,
+            "answer_count": 2,
+            "score": 0,
+            "last_activity_date": 1760630642,
+            "creation_date": 1757588804,
+            "question_id": 79761837,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/79761837/powerapps-snowflake-connector-bad-gateway",
+            "title": "PowerApps-Snowflake Connector - Bad Gateway",
+            "body": "<p>Good day!</p>\n<p>I am trying to create a PowerApp-Snowflake connector.\nI followed the officials steps provided by Snowflake:</p>\n<ol>\n<li><a href=\"https://docs.snowflake.com/en/connectors/microsoft/powerapps/configure-oauth\" rel=\"nofollow noreferrer\">https://docs.snowflake.com/en/connectors/microsoft/powerapps/configure-oauth</a></li>\n<li><a href=\"https://docs.snowflake.com/en/connectors/microsoft/powerapps/create-oauth-client\" rel=\"nofollow noreferrer\">https://docs.snowflake.com/en/connectors/microsoft/powerapps/create-oauth-client</a></li>\n<li><a href=\"https://docs.snowflake.com/en/connectors/microsoft/powerapps/collect-azure-ad-info\" rel=\"nofollow noreferrer\">https://docs.snowflake.com/en/connectors/microsoft/powerapps/collect-azure-ad-info</a></li>\n<li><a href=\"https://docs.snowflake.com/en/connectors/microsoft/powerapps/create-security-integration\" rel=\"nofollow noreferrer\">https://docs.snowflake.com/en/connectors/microsoft/powerapps/create-security-integration</a></li>\n</ol>\n<p>Regarding number 1/point 11\nIn the Manifest requestedAccessTokenVersion is set to &quot;1&quot;</p>\n<p>Regarding number 4, there is already an existing Security Integration, so I just modified it using ALTER statement:</p>\n<ul>\n<li>added EXTERNAL_OAUTH_JWS_KEYS_URL --&gt; &quot;https://login.microsoftonline.com/&lt;tenant_id&gt;/discovery/v2.0/keys&quot;</li>\n<li>added EXTERNAL_OAUTH_AUDIENCE_LIST --&gt; &quot;api://xxxxxx&quot;</li>\n<li>EXTERNAL_OAUTH_TOKEN_USER_MAPPING_CLAIM --&gt; &quot;sub&quot;</li>\n</ul>\n<p>And doing above, I keep getting &quot;Bad Gateway&quot;...</p>\n<p>I followed some troubleshooting, provided also by Snowflake\n<a href=\"https://docs.snowflake.com/en/connectors/microsoft/powerapps/validate-entra-auth\" rel=\"nofollow noreferrer\">https://docs.snowflake.com/en/connectors/microsoft/powerapps/validate-entra-auth</a>\nThe token is generated successfully.</p>\n<ul>\n<li>Validation result: passed</li>\n<li>Issuer: matches what I have in the Security Integration</li>\n<li>Extracted user claim token: it matches what the User (created for the connector) has in LOGIN_NAME</li>\n</ul>\n<p>And here we are, not sure how to proceed further...</p>\n<p>When trying to create the connector I provide the following:</p>\n<ul>\n<li>Snowflake SaaS URL: company-company.snowflakecomputing.com</li>\n<li>Resource URL: api://xxxxx</li>\n</ul>\n<p>I am trying to create Service Principal Authentication type (NOT delegated).</p>\n<p>Any suggestions?</p>\n"
+          },
+          {
+            "tags": [
+              "apache-spark",
+              "ibm-cloud",
+              "apache-spark-sql",
+              "tableau-api"
+            ],
+            "owner": {
+              "account_id": 8363722,
+              "reputation": 1,
+              "user_id": 6281143,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/db2d927ef02a71a46eb397d133857ccc?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "alan",
+              "link": "https://stackoverflow.com/users/6281143/alan"
+            },
+            "is_answered": false,
+            "view_count": 100,
+            "answer_count": 1,
+            "score": -1,
+            "last_activity_date": 1462194095,
+            "creation_date": 1462192719,
+            "question_id": 36982669,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/36982669/bluemix-spark-as-a-service-and-tableau-9-3",
+            "title": "Bluemix Spark as a Service and Tableau 9.3",
+            "body": "<p>I am running Tableau 9.3(trial software) on a Mac and have downloaded and installed the SimbaSparkODBC connector for Spark. \nI have tried using the Service Credentials on Bluemix for Spark as a Service using no Authentication, user name, user name and password, user name and password(SSL) - port is 10000</p>\n\n<p>for user name I have tried using both tenant_id and tenant_id_full from the credentials. I have also tried hiveuser</p>\n\n<p>for password I have used tenant_secret when using either tenant_id or tenant_id_full as the user name.</p>\n\n<p>in a scala notebook I imported scala.sys.process._ to verify host ip I also tried to use netstat to verify port 10000 is listening but I couldn't see the port</p>\n\n<p>any help is greatly appreciated</p>\n"
+          },
+          {
+            "tags": [
+              "sql",
+              "sql-server",
+              "ballerina",
+              "ballerina-swan-lake"
+            ],
+            "owner": {
+              "account_id": 16422128,
+              "reputation": 58,
+              "user_id": 11863089,
+              "user_type": "registered",
+              "profile_image": "https://i.sstatic.net/apxXj.jpg?s=256",
+              "display_name": "Nipuna Madhushan",
+              "link": "https://stackoverflow.com/users/11863089/nipuna-madhushan"
+            },
+            "is_answered": false,
+            "view_count": 71,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1704187365,
+            "creation_date": 1704132535,
+            "last_edit_date": 1704187365,
+            "question_id": 77742868,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/77742868/batchexecute-command-fails-for-sql-server-and-jdbc-connectors-in-ballerina",
+            "title": "BatchExecute command fails for SQL Server and JDBC connectors in Ballerina",
+            "body": "<p>When trying out batch execute command in SQL Server for an array of insert queries, the operation fails with following error message in Ballerina:</p>\n<blockquote>\n<p>Error while executing batch command starting with: 'INSERT INTO IDN_CLAIM_PROPERTY (LOCAL_CLAIM_ID, PROPERTY_NAME, PROPERTY_VALUE, TENANT_ID) \\n VALUES ( ? ,  ? ,  ? ,  ? )'. The statement must be executed before any results can be obtained..</p>\n</blockquote>\n<p>This does not happen when using MySQL and H2 databases?</p>\n<p>Any specific reason for this?</p>\n"
+          },
+          {
+            "tags": [
+              "http",
+              "azure-active-directory",
+              "microsoft-graph-api",
+              "power-automate"
+            ],
+            "owner": {
+              "account_id": 18581561,
+              "reputation": 53,
+              "user_id": 13540987,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/b4d8349487a1e45596a533f3c922787e?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Shafeel Mohammed",
+              "link": "https://stackoverflow.com/users/13540987/shafeel-mohammed"
+            },
+            "is_answered": true,
+            "view_count": 1205,
+            "accepted_answer_id": 61812318,
+            "answer_count": 2,
+            "score": 1,
+            "last_activity_date": 1649878599,
+            "creation_date": 1589455975,
+            "last_edit_date": 1649878599,
+            "question_id": 61796329,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/61796329/querying-bookings-api-using-microsoft-graph-isnt-working",
+            "title": "Querying Bookings API using Microsoft Graph isnt working",
+            "body": "<p>I am trying to use Microsoft flow to retrieve Microsoft Bookings data. Im doing this by using the HTTP with azure AD connector. I have set up all permissions. it was working perfectly fine before till yesterday the connector said i'm unauthorized to retrieve the data. i can't even hit <a href=\"https://graph.microsoft.com/beta/bookingBusinesses/page_id/appointments\" rel=\"nofollow noreferrer\">https://graph.microsoft.com/beta/bookingBusinesses/page_id/appointments</a> anymore. Is there some issue with Microsoft ??? or is there an issue on my side.i’ve used graph explorer and im able to successfully retrieve the bookings api.  could someone provide some feedback as this is becoming business critical as i need to obtain the data for reporting. Or maybe guide me on how i can retrieve an access token that never expires. It would be much appreciated if someone can really help me out. I've attached a screenshot of my flow failing. \n<a href=\"https://i.sstatic.net/O6AMq.png\" rel=\"nofollow noreferrer\">Screenshot of HTTP with Azure AD failing </a>. I've just also found out that i can query <a href=\"https://graph.microsoft.com/beta\" rel=\"nofollow noreferrer\">https://graph.microsoft.com/beta</a> but i cant hit the BookingBusinesses api \n<br> </p>\n\n<p><a href=\"https://i.sstatic.net/8kEuI.png\" rel=\"nofollow noreferrer\">Screen shot of https://graph.microsoft.com/beta working using connector</a></p>\n\n<p>What i have already tried: <br></p>\n\n<ul>Deleted the connection and created it again </ul>\n\n<ul>Created a connection using another account  </ul>\n\n<p><ul>Created App registrations and used the Client_id, tenant_id and client_secret to Created a connection using the HTTP request. but still doesn't work </ul>\n<a href=\"https://i.sstatic.net/XEYR7.png\" rel=\"nofollow noreferrer\">Screenshot of HTTP Request Connector, but this still failed</a></p>\n\n<p><a href=\"https://i.sstatic.net/yPiE9.png\" rel=\"nofollow noreferrer\">App registration Permissions</a></p>\n"
+          },
+          {
+            "tags": [
+              "c#",
+              "azure",
+              "oauth-2.0",
+              "botframework",
+              "microsoft-teams"
+            ],
+            "owner": {
+              "account_id": 6170500,
+              "reputation": 1874,
+              "user_id": 4808901,
+              "user_type": "registered",
+              "accept_rate": 43,
+              "profile_image": "https://www.gravatar.com/avatar/1c11139eb40c5cb371cfccaaffdc0ef0?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "Abdul Mateen Mohammed",
+              "link": "https://stackoverflow.com/users/4808901/abdul-mateen-mohammed"
+            },
+            "is_answered": true,
+            "view_count": 2224,
+            "accepted_answer_id": 47509000,
+            "answer_count": 2,
+            "score": 3,
+            "last_activity_date": 1511782611,
+            "creation_date": 1509461759,
+            "last_edit_date": 1509721417,
+            "question_id": 47038382,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/47038382/get-information-about-who-installed-a-microsoft-teams-bot-app",
+            "title": "Get information about who installed a Microsoft Teams Bot App",
+            "body": "<p>We've built a bot application using Microsoft Bot Framework (C# &amp; Azure) and used Microsoft Teams Channel on dev.botframework.com to enable our bot on MSTeams using sideloading, but this bot is going to be a commercial one, so we need a way to make it accessible only to our customers.</p>\n\n<ol>\n<li><p>During the installation of the bot app on ms teams is there any event that is raised when someone installs our app where we can hook a redirection URL or a callback to receive the information on \"who installed our app (the user info, their team info, their company info, etc.)\" I came across a commercial app <a href=\"https://marketplace.atlassian.com/plugins/jira-microsoft-teams-connector/cloud/overview\" rel=\"nofollow noreferrer\">Microsoft Teams Jira Connector</a> but couldn't figure out how they commercialised it.</p></li>\n<li><p>The installation should be launched from within our application so that we can map the licensing, customer &amp; team/tenant details together for an admin purchasing on behalf of their company.</p></li>\n</ol>\n\n<p>What I've tried so far,</p>\n\n<p>On the bot code-end, we're getting <code>tenant_id</code> so I was searching to retrieve similar info when the bot is added/installed to Microsoft teams but I've not been able to find much.</p>\n\n<p>Thinking OAuth might help as Slack uses it to provide access to user's workspace information, I've tried <a href=\"https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-protocols-oauth-code\" rel=\"nofollow noreferrer\">OAuth 2.0</a> &amp; <a href=\"https://learn.microsoft.com/en-gb/azure/active-directory/develop/active-directory-v2-protocols-oauth-code\" rel=\"nofollow noreferrer\">v2.0 Protocols OAuth 2.0</a> I'm getting an <code>access_token</code> but don't see any API's to call in order to get team/tenant information.</p>\n\n<p><strong>EDIT</strong>: If I could get tenant_id or their ms teams information using OAuth and API's the process will become simple, it is as follows</p>\n\n<ol>\n<li><p>In our website we will ask the user to click a button to grant access to their ms teams using OAuth and using the access_token we will get their ms teams information and store it on our end mapped to a particular company.</p></li>\n<li><p>When a user sends a message we will ask them to click authenticate/activate license button in card, if the team info coming from user matches with a record in our database then he is a valid user and we activate a license.</p></li>\n</ol>\n\n<p>Will Microsoft Graph API be useful here?, <a href=\"https://microsoftteams.uservoice.com/forums/555103-public/suggestions/16972258-developer-api-to-read-create-teams-and-channels-in\" rel=\"nofollow noreferrer\">MS teams developer API</a> seems to be in development</p>\n\n<p>Please provide your suggestions on this.</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9924,
+        "total": 5
+      }
+    }
+  ]
+}

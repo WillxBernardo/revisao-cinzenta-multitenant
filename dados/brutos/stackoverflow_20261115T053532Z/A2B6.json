@@ -1,0 +1,86 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A2B6",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:36:05+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database-per-tenant\"",
+  "termo_b": "\"data warehouse\"",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"database-per-tenant\" \"data warehouse\"&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22database-per-tenant%22+%22data+warehouse%22&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:36:05+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:36:05 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "azure",
+              "powerbi",
+              "multi-tenant",
+              "powerbi-embedded"
+            ],
+            "owner": {
+              "account_id": 13068463,
+              "reputation": 397,
+              "user_id": 9518627,
+              "user_type": "registered",
+              "profile_image": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s256-rj/photo.jpg",
+              "display_name": "anonuser1",
+              "link": "https://stackoverflow.com/users/9518627/anonuser1"
+            },
+            "is_answered": true,
+            "view_count": 3497,
+            "accepted_answer_id": 58631588,
+            "answer_count": 1,
+            "score": 1,
+            "last_activity_date": 1572506237,
+            "creation_date": 1572450334,
+            "question_id": 58629089,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+            "title": "Multi-tenancy in Power BI Embedded",
+            "body": "<p>I have a multi-tenant web application and I am using a database per tenant approach. The web application will also use Power BI Embedded to show reports based on the data for that particular tenant and all reports for each tenant will have the same format but the data source will be different.</p>\n\n<p>From what I've seen, there is not straightforward way to implement multi-tenancy in Power BI, such as passing the data source as parameter. I managed to find two ways how to make Power BI embedded multi-tenant. Either use row-level security which would mean that I need to have a single data warehouse for all the tenant's data, and this is not an option for me. The other option would be having a workspace per tenant.</p>\n\n<p>For the second option I would have a template workspace from which a copy will be created for each new tenant. This tutorial here describes how to do it: <a href=\"https://powerbi.microsoft.com/fr-fr/blog/duplicate-workspaces-using-the-power-bi-rest-apis-a-step-by-step-tutorial/\" rel=\"nofollow noreferrer\">https://powerbi.microsoft.com/fr-fr/blog/duplicate-workspaces-using-the-power-bi-rest-apis-a-step-by-step-tutorial/</a> .</p>\n\n<p>Can the same thing be done through the Power BI C# SDK? I would also need to change the data source used per workspace. How can I do this for all reports in my workspace?</p>\n\n<p>Finally, has someone discovered an easier way how to implement multi-tenancy with Power BI embedded or is this it?</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9981,
+        "total": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A3B8",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:36:30+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database per customer\"",
+  "termo_b": "pipeline",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"database per customer\" pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22database+per+customer%22+pipeline&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:36:30+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:36:30 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "sql-server",
+              "postgresql",
+              "azure-data-factory",
+              "parameterization"
+            ],
+            "owner": {
+              "account_id": 24004280,
+              "reputation": 1,
+              "user_id": 17988684,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/e95047e0aa93d1ac0e9d9cd3f07489c5?s=256&d=identicon&r=PG",
+              "display_name": "BobL",
+              "link": "https://stackoverflow.com/users/17988684/bobl"
+            },
+            "is_answered": false,
+            "view_count": 362,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1649334164,
+            "creation_date": 1642724618,
+            "last_edit_date": 1642778837,
+            "question_id": 70794987,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+            "title": "80 Postgres databases in Azure Data Factory to copy into",
+            "body": "<p>I'm using Azure Data factory,\nI'm using SQLServer as source and Postgres as target. Goal is to copy 30 tables from SQLServer, with transformation, to 30 tables in Postgres. Hard part is I have 80 databases from and to, all with the exact same layout but different data. Its one database per customer so 80 customers each with their own databases.</p>\n<p>Linked Services doesn't allow parameters for Postgres.\nI have one dataset per source and target using parameters for schema and table names.\nI have one pipeline per table with SQLServer source and Postgres target.\nI can parameterize the SQLServer source in linked service but not Postgres\nProblem is how can I copy 80 source databases to 80 target databases without adding 80 target linked services and 80 target datasets? Plus I'd have to repeat all 30 pipelines per target database.</p>\n<p>BTW I'm only familiar with the UI, however anything else that does the job is acceptable.\nAny help would be appreciated.</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9970,
+        "total": 1
+      }
+    }
+  ]
+}

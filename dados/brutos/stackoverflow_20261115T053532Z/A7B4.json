@@ -1,0 +1,85 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A7B4",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:37:44+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"shared schema\" tenant",
+  "termo_b": "ETL",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"shared schema\" tenant ETL&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22shared+schema%22+tenant+ETL&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:37:44+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:37:44 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "sql-server",
+              "etl",
+              "partitioning",
+              "multi-tenant"
+            ],
+            "owner": {
+              "account_id": 1488543,
+              "reputation": 31,
+              "user_id": 1396233,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/b4811602efcab2f844556bd4c441677f?s=256&d=identicon&r=PG",
+              "display_name": "Ron Frum",
+              "link": "https://stackoverflow.com/users/1396233/ron-frum"
+            },
+            "is_answered": false,
+            "view_count": 368,
+            "answer_count": 0,
+            "score": 3,
+            "last_activity_date": 1428613200,
+            "creation_date": 1428613200,
+            "question_id": 29548901,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+            "title": "Should I partition by tenant or group of tenants for offline data store?",
+            "body": "<p>I'm in the process of designing an offline data store to be used to improve performance of lists and reports in an ASP.NET application. We are considering adopting SQL Server partitioning and am looking for some guidance around the number of partitions to use.</p>\n\n<p>The offline data store will use be multi-tenant using the <a href=\"https://msdn.microsoft.com/en-us/library/aa479086.aspx#mlttntda_tbhp\" rel=\"nofollow\">shared database, shared schema</a> approach and SQL Server 2014. It contains a TenantID column that uses the uniqueidentifier datatype.</p>\n\n<p>On a regular schedule schedule throughout the day, an ETL process consisting of several SSIS packages will pull data from the source databases into the offline data store. A single instance of the offline data store will need to pull from 500-1,000 single-tenant SQL Server source databases. This process takes between 1-2 minutes.</p>\n\n<p>Ideally, we'd like to be able to run the ETL process for multiple tenants at a time to help minimize the latency of the data store. In some preliminary testing with a handful of tenants, we encountered a number of deadlocks writing to the destination tables in the offline data store. To get around this, we tried implementing partitioning on the TenantID column using the below partition function which creates 16 partitions based on the TenantID:</p>\n\n<pre><code>    CREATE PARTITION FUNCTION tenant_range (uniqueidentifier) \n    AS RANGE RIGHT FOR VALUES \n    ( \n    '00000000-0000-0000-0000-000000000000', \n    '00000000-0000-0000-0000-100000000000', \n    '00000000-0000-0000-0000-200000000000', \n    '00000000-0000-0000-0000-300000000000', \n    '00000000-0000-0000-0000-400000000000', \n    '00000000-0000-0000-0000-500000000000', \n    '00000000-0000-0000-0000-600000000000', \n    '00000000-0000-0000-0000-700000000000', \n    '00000000-0000-0000-0000-800000000000', \n    '00000000-0000-0000-0000-900000000000', \n    '00000000-0000-0000-0000-a00000000000', \n    '00000000-0000-0000-0000-b00000000000', \n    '00000000-0000-0000-0000-c00000000000', \n    '00000000-0000-0000-0000-d00000000000', \n    '00000000-0000-0000-0000-e00000000000', \n    '00000000-0000-0000-0000-f00000000000'\n )\n</code></pre>\n\n<p>This worked and eliminated the blocking during the ETL process. We have the ability in our scheduling service to ensure that no two tenants in the same partition run the ETL process at the same time. Since all of our tables already contain a TenantID and all queries to the database filter on TenantID, I've been able to verify that those queries are enjoying some performance benefits from partition elimination.</p>\n\n<p>We're currently debating whether to continue using the above partition function or to create a separate partition for each tenant. This would require us to alter the partition function and call SPLIT RANGE when we onboard a new tenant, which should be feasible. This would eliminate the randomness of the current partitioning function, since I have no control over how many tenants would fall into a given partition since the tenant IDs are assigned randomly. However, I'm concerned about the amount of overhead that we would eventually introduce by creating 1,000 partitions. Some tenants would be very small while others would be much larger. I'm expecting their footprint in the offline data store to range from 50 MB to 5 GB. </p>\n\n<p>Should I go ahead and partition by the individual tenant IDs or keep the current strategy and expand the number of partitions as needed? Any guidance would be appreciated.</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9938,
+        "total": 1
+      }
+    }
+  ]
+}

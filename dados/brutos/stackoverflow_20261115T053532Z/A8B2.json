@@ -1,0 +1,84 @@
+{
+  "id_busca": "stackoverflow_20261115T053532Z_A8B2",
+  "id_execucao": "stackoverflow_20261115T053532Z",
+  "fonte": "stackoverflow",
+  "script": "scripts/coleta_stackoverflow.py",
+  "commit_head": "546173a864f11edba45ff4983edfaf508533c8ca",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:38:00+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "CDC",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"tenant_id\" CDC&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "stackoverflow",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://stackoverflow.com/questions/73978491/cassandra-undefined-column-name-tenant-id-in-table-catalog-products"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22tenant_id%22+CDC&site=stackoverflow&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:38:00+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:38:00 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "java",
+              "spring-boot",
+              "cassandra"
+            ],
+            "owner": {
+              "account_id": 13850253,
+              "reputation": 33,
+              "user_id": 9998349,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/71e2ba78a5320f9f8e3baf528e795aa0?s=256&d=identicon&r=PG&f=y&so-version=2",
+              "display_name": "NBE",
+              "link": "https://stackoverflow.com/users/9998349/nbe"
+            },
+            "is_answered": false,
+            "view_count": 663,
+            "answer_count": 0,
+            "score": 0,
+            "last_activity_date": 1670832880,
+            "creation_date": 1665080773,
+            "question_id": 73978491,
+            "content_license": "CC BY-SA 4.0",
+            "link": "https://stackoverflow.com/questions/73978491/cassandra-undefined-column-name-tenant-id-in-table-catalog-products",
+            "title": "Cassandra: Undefined column name tenant_id in table catalog.products",
+            "body": "<p>I am using Cassandra 4.0.x with spring boot, I create my table with two primary key, one clustering and one partition. However, whenever I try to query some data I get an error saying that the column is not defined</p>\n<pre><code>Undefined column name tenant_id in table catalog.products; nested exception is com.datastax.oss.driver.api.core.servererrors.InvalidQueryException: Undefined column name tenant_id in table catalog.products\n</code></pre>\n<p><strong>Here is my table definition and the executed query</strong>:</p>\n<pre><code>cqlsh:catalog&gt; DESCRIBE products ;\n\nCREATE TABLE catalog.products (\n    &quot;TENANT_ID&quot; text,\n    &quot;CODE&quot; text,\n    &quot;CREATION_TS&quot; timestamp,\n    &quot;EAN&quot; text,\n    &quot;MANCODE&quot; text,\n    &quot;MAXOQTE&quot; int,\n    &quot;MINOQTE&quot; int,\n    &quot;MODIFIED_TS&quot; timestamp,\n    &quot;OFFLINEDATE&quot; date,\n    &quot;ONLINEDATE&quot; date,\n    &quot;P_TENANT_ID&quot; text,\n    &quot;REFCODE&quot; text,\n    &quot;SVHC&quot; text,\n    &quot;TYPNAME&quot; text,\n    &quot;TYPNAMESEO&quot; text,\n    &quot;LOCDESCRIP&quot; map&lt;text, text&gt;,\n    &quot;LOCNAME&quot; map&lt;text, text&gt;,\n    &quot;LOCNAMESEO&quot; map&lt;text, text&gt;,\n    &quot;PARENTS&quot; set&lt;text&gt;,\n    &quot;SHORTDESC&quot; map&lt;text, text&gt;,\n    PRIMARY KEY (&quot;TENANT_ID&quot;, &quot;CODE&quot;)\n) WITH CLUSTERING ORDER BY (&quot;CODE&quot; ASC)\n    AND additional_write_policy = '99p'\n    AND bloom_filter_fp_chance = 0.01\n    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}\n    AND cdc = false\n    AND comment = ''\n    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}\n    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}\n    AND crc_check_chance = 1.0\n    AND default_time_to_live = 0\n    AND extensions = {}\n    AND gc_grace_seconds = 864000\n    AND max_index_interval = 2048\n    AND memtable_flush_period_in_ms = 0\n    AND min_index_interval = 128\n    AND read_repair = 'BLOCKING'\n    AND speculative_retry = '99p';\n\nCREATE INDEX pp_tenant_id_idx ON catalog.products (&quot;P_TENANT_ID&quot;);\n\nCREATE INDEX pr_ean_idx ON catalog.products (&quot;EAN&quot;);\n\nCREATE INDEX pr_mancode_idx ON catalog.products (&quot;MANCODE&quot;);\n\nCREATE INDEX pr_offlinedate_idx ON catalog.products (&quot;OFFLINEDATE&quot;);\n\nCREATE INDEX pr_onlinedate_idx ON catalog.products (&quot;ONLINEDATE&quot;);\n\nCREATE INDEX pr_refcode_idx ON catalog.products (&quot;REFCODE&quot;);\n\nCREATE INDEX pr_typname_idx ON catalog.products (&quot;TYPNAME&quot;);\n\nCREATE INDEX pr_typnameseo_idx ON catalog.products (&quot;TYPNAMESEO&quot;);\ncqlsh:catalog&gt; \n</code></pre>\n<p><strong>Executed (generated) query</strong>:</p>\n<pre><code>SELECT * FROM products WHERE TENANT_ID='19001' AND code='11015383' AND onlinedate &lt;= toDate(now()) AND offlinedate &gt;= toDate(now()) ALLOW FILTERING;\n</code></pre>\n<p><strong>Exception</strong>:</p>\n<pre><code>org.springframework.data.cassandra.CassandraInvalidQueryException: Query; CQL [SELECT * FROM products WHERE  TENANT_ID=?  AND onlinedate &lt;= toDate(now()) AND offlinedate &gt;= toDate(now()) AND code=?  ALLOW FILTERING]; Undefined column name tenant_id in table catalog.products; nested exception is com.datastax.oss.driver.api.core.servererrors.InvalidQueryException: Undefined column name tenant_id in table catalog.products\n    at org.springframework.data.cassandra.core.cql.CassandraExceptionTranslator.translate(CassandraExceptionTranslator.java:125) ~[spring-data-cassandra-3.4.3.jar!/:3.4.3]\n    at org.springframework.data.cassandra.core.cql.CassandraAccessor.translate(CassandraAccessor.java:422) ~[spring-data-cassandra-3.4.3.jar!/:3.4.3]\n    at org.springframework.data.cassandra.core.cql.CqlTemplate.translateException(CqlTemplate.java:764) ~[spring-data-cassandra-3.4.3.jar!/:3.4.3]\n    at org.springframework.data.cassandra.core.cql.CqlTemplate.query(CqlTemplate.java:545) ~[spring-data-cassandra-3.4.3.jar!/:3.4.3]\n</code></pre>\n<p>I thought it might be a compact storage issue but it is not the case:</p>\n<pre><code>cqlsh:catalog&gt; alter table products drop compact storage;\nInvalidRequest: Error from server: code=2200 [Invalid query] message=&quot;Cannot DROP COMPACT STORAGE on table without COMPACT STORAGE&quot;\ncqlsh:catalog&gt; \n</code></pre>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9931,
+        "total": 1
+      }
+    }
+  ]
+}
