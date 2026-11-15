@@ -222,3 +222,6 @@ __marimo__/
 
 # Configuração local do Claude Code (decisão do autor: não faz parte da pesquisa)
 CLAUDE.md
+
+# Travas do LibreOffice
+.~lock.*
