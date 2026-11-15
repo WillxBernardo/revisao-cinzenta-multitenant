@@ -1,1 +1,2 @@
 id_execucao,fonte,inicio,fim,status,commit,buscas_ok,buscas_erro,avisos
+dbt_forum_20261115T052750Z,dbt_forum,2026-11-15T05:27:50+00:00,2026-11-15T05:34:56+00:00,completa,8f6d12807211c3fc5aafefa1b914172f797030b8,81,0,

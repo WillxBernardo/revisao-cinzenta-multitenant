@@ -1,0 +1,115 @@
+{
+  "id_busca": "dbt_forum_20261115T052750Z_A8B9",
+  "id_execucao": "dbt_forum_20261115T052750Z",
+  "fonte": "dbt_forum",
+  "script": "scripts/coleta_dbt_forum.py",
+  "commit_head": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:34:08+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "connector",
+  "string_enviada": "https://discourse.getdbt.com/search.json?q=\"tenant_id\" connector&page=1",
+  "parametros": {
+    "url_busca": "https://discourse.getdbt.com/search.json",
+    "resultados_por_pagina": 50,
+    "max_paginas": 10,
+    "limite_coleta": 100,
+    "intervalo_s": 5.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://discourse.getdbt.com/t/how-can-i-do-loop-inside-loop-and-commit-for-each-iteration/20116"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://discourse.getdbt.com/search.json?q=%22tenant_id%22+connector&page=1",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:34:08+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:34:08 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "posts": [
+          {
+            "id": 28806,
+            "name": "Boazyw",
+            "username": "boazyw",
+            "avatar_template": "/user_avatar/discourse.getdbt.com/boazyw/{size}/5439_2.png",
+            "created_at": "2025-08-14T00:06:59.128Z",
+            "like_count": 0,
+            "blurb": "...ERE (CHANGED_ON::DATE &gt; = ''''2024-07-01'''' OR CHANGED_ON_BASE_LINE::DATE &gt; = ''''2024-07-01'''') GROUP BY UNIQUE_ID ), LastRun AS ( SELECT DISTINCT TENANT_ID AS UNIQUE_ID, dateadd(day,-1,LAST_RUN_DATE) AS LAST_RUN_DATE, CLIENT_NAME FROM '' || analytics_dim_schema || ''.DIM_SOURCE WHERE TABLE_NAME = ''''STA...",
+            "post_number": 1,
+            "topic_id": 20116
+          }
+        ],
+        "topics": [
+          {
+            "fancy_title": "How can I do loop inside loop and commit for each iteration?",
+            "id": 20116,
+            "title": "How can I do loop inside loop and commit for each iteration?",
+            "slug": "how-can-i-do-loop-inside-loop-and-commit-for-each-iteration",
+            "posts_count": 1,
+            "reply_count": 0,
+            "highest_post_number": 1,
+            "created_at": "2025-08-14T00:06:59.032Z",
+            "last_posted_at": "2025-08-14T00:06:59.128Z",
+            "bumped": true,
+            "bumped_at": "2025-08-14T00:06:59.128Z",
+            "archetype": "regular",
+            "unseen": false,
+            "pinned": false,
+            "unpinned": null,
+            "visible": true,
+            "closed": false,
+            "archived": false,
+            "bookmarked": null,
+            "liked": null,
+            "tags": [
+              {
+                "id": 96,
+                "name": "dbt-core",
+                "slug": "dbt-core"
+              }
+            ],
+            "tags_descriptions": {},
+            "category_id": 19,
+            "has_accepted_answer": false
+          }
+        ],
+        "users": [],
+        "categories": [],
+        "tags": [],
+        "groups": [],
+        "grouped_search_result": {
+          "more_posts": null,
+          "more_users": null,
+          "more_categories": null,
+          "term": "\"tenant_id\" connector",
+          "search_log_id": 2808919,
+          "more_full_page_results": null,
+          "can_create_topic": false,
+          "error": null,
+          "extra": {},
+          "post_ids": [
+            28806
+          ],
+          "user_ids": [],
+          "category_ids": [],
+          "tag_ids": [],
+          "group_ids": []
+        }
+      }
+    }
+  ]
+}
