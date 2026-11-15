@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Teste de fumaça das APIs com consultas neutras, fora do protocolo. Nada é gravado.
 
-Usa o código real dos scripts (requisitar, criar_filtro, CONSULTA_GRAPHQL) para
-validar endpoints, autenticação e os campos que a coleta espera. 7 requisições,
-com 2 s de pausa entre elas. Nunca imprime token, chave ou cabeçalhos de autenticação.
+Usa o código real dos scripts (requisitar, criar_filtro, CONSULTA_GRAPHQL e o
+analisar do coleta_debezium) para validar endpoints, autenticação e os campos ou
+páginas que a coleta espera. 9 requisições, com 2 s de pausa entre elas (5 s entre
+as duas do Google Groups). Nunca imprime token, chave ou cabeçalhos de autenticação.
 Não grava nada; ao final, confere que dados/ não foi alterado.
 
 Uso (a partir da raiz do repositório; requer GITHUB_TOKEN e STACKEXCHANGE_KEY no .env):
@@ -23,6 +24,7 @@ import comum  # noqa: E402
 import coleta_github  # noqa: E402
 import api_stackexchange  # noqa: E402
 import coleta_dbt_forum  # noqa: E402
+import coleta_debezium  # noqa: E402
 from comum import EstadoBusca, requisitar  # noqa: E402
 
 PAUSA = 2.0
@@ -62,6 +64,7 @@ gh = comum.nova_sessao({
 })
 se = comum.nova_sessao({"Accept": "application/json"})
 dbt = comum.nova_sessao({"Accept": "application/json"})
+gg = comum.nova_sessao({"Accept": "text/html", "Accept-Language": coleta_debezium.IDIOMA})
 
 
 def github_rest() -> None:
@@ -147,12 +150,33 @@ def dbt_forum() -> None:
         raise AssertionError("faltam campos esperados pelo script")
 
 
+def google_groups() -> None:
+    """Página de busca do grupo do Debezium, classificada pelo analisar() real.
+
+    PaginaInvalida (login, bloqueio, access-error, formato mudado) faz a etapa falhar.
+    """
+    for k, (q, espera_zero) in enumerate([(f'"{FRASE}"', False), ("xqzv lorem kjh", True)]):
+        if k:
+            time.sleep(coleta_debezium.INTERVALO)
+        r = requisitar(gg, "GET", coleta_debezium.URL_BUSCA, EstadoBusca(), params={"q": q},
+                       max_tentativas=coleta_debezium.MAX_TENTATIVAS)
+        p = coleta_debezium.analisar(r.url, r.text)
+        total = "many" if p.total is None else p.total
+        print(f"  q={q:<20} HTTP {r.status_code}  redirecionamentos: {len(r.history)}  "
+              f"tópicos na página: {len(p.topicos)}  total: {total}")
+        if p.topicos:
+            print(f"    1º tópico como o script monta: {coleta_debezium.URL_TOPICO}{p.topicos[0]}")
+        if espera_zero and (p.topicos or p.total != 0):
+            raise AssertionError("a consulta sem sentido deveria ser reconhecida como 0 resultados")
+
+
 etapa("GitHub REST (issues)", github_rest)
 etapa("GitHub GraphQL (discussions)", github_graphql)
 etapa("Stack Exchange: criação do filtro", stackexchange_filtro)
 etapa("Stack Exchange: stackoverflow", stackexchange("stackoverflow"))
 etapa("Stack Exchange: dba", stackexchange("dba"))
 etapa("Fórum do dbt (Discourse)", dbt_forum)
+etapa("Google Groups (grupo do Debezium)", google_groups)
 
 RESULTADOS.append(("dados/ não foi alterado", "OK" if retrato_dados() == DADOS_ANTES else "FALHOU"))
 

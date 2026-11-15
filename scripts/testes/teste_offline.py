@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Teste offline dos scripts de coleta: respostas simuladas, nenhuma requisição de rede.
 
-Roda os main() reais de coleta_github, api_stackexchange e coleta_dbt_forum com:
-- sessão HTTP falsa, que responde conforme um roteiro por busca;
+Roda os main() reais de coleta_github, api_stackexchange, coleta_dbt_forum e
+coleta_debezium com:
+- sessão HTTP falsa, que responde conforme um roteiro por busca (inclusive
+  redirecionamentos simulados);
 - time.sleep substituído (as esperas são só anotadas);
 - comum.RAIZ e os caminhos de dados/ apontando para um diretório temporário;
 - comum.verificar_antes_da_coleta substituída (o diretório de teste não é git).
@@ -38,6 +40,7 @@ import comum  # noqa: E402
 import coleta_github  # noqa: E402
 import api_stackexchange  # noqa: E402
 import coleta_dbt_forum  # noqa: E402
+import coleta_debezium  # noqa: E402
 
 FALHAS: list[str] = []
 
@@ -85,7 +88,9 @@ class SessaoFalsa:
         consulta = params.get("q") or ((json or {}).get("variables") or {}).get("consulta")
         chave = (url, consulta, params.get("page"))
         n = self.contagem[chave] = self.contagem.get(chave, 0) + 1
-        status, corpo, cabecalhos = self.roteiro(metodo, url, params, json, n)
+        # O roteiro devolve (status, corpo, cabeçalhos) ou, para simular um
+        # redirecionamento 302 seguido pelo requests, (status, corpo, cabeçalhos, url_final).
+        status, corpo, cabecalhos, *url_final = self.roteiro(metodo, url, params, json, n)
         r = requests.Response()
         r.status_code = status
         r.reason = "simulado"
@@ -94,6 +99,14 @@ class SessaoFalsa:
         r.headers = CaseInsensitiveDict(cabecalhos)
         r.request = requests.Request(metodo, url, params=params or None, json=json).prepare()
         r.url = r.request.url
+        if url_final:
+            anterior = requests.Response()
+            anterior.status_code = 302
+            anterior.headers = CaseInsensitiveDict({"Location": url_final[0]})
+            anterior.url = r.url
+            r.history = [anterior]
+            r.request = requests.Request(metodo, url_final[0]).prepare()
+            r.url = url_final[0]
         return r
 
 
@@ -185,6 +198,57 @@ def roteiro_dbt(metodo, url, params, corpo, n):
     return pagina_com([], None)
 
 
+CAB_HTML = {"Content-Type": "text/html; charset=utf-8", "Date": "Sun, 15 Nov 2026 12:00:00 GMT",
+            "Set-Cookie": "NID=x"}  # Set-Cookie deve ser descartado
+
+
+def pagina_groups(ids=(), contador=None, sem_resultados=False, titulo=coleta_debezium.TITULO_BUSCA):
+    """Página de busca do Google Groups com a estrutura observada no teste de fumaça."""
+    partes = [f"<!doctype html><html><head><title>{titulo}</title></head><body>",
+              # Presente em toda página real; não pode ser confundido com redirecionamento para login.
+              '<a href="https://accounts.google.com/ServiceLogin?continue=x">Sign in</a>']
+    if contador:
+        partes.append(f'<div class="c"><div class="n">{contador}</div>'
+                      '<div role="button" aria-label="Next page"></div></div>')
+    for i, t in enumerate(ids):
+        # O trecho imita um contador; só o contador antes da lista pode valer.
+        partes.append(f'<div class="l" role="row" data-rowid="{t}"><a href="./g/debezium/c/{t}/m/msg{i}">'
+                      f'<span>Tópico {t}</span><div>1–2 of 3</div></a></div>')
+    if sem_resultados:
+        partes.append(f"<div>{coleta_debezium.TEXTO_SEM_RESULTADOS}</div>")
+    return "".join(partes) + "</body></html>"
+
+
+SORRY = "https://www.google.com/sorry/index?continue=https://groups.google.com/g/debezium/search"
+PAGINA_BLOQUEIO = ("<html><head><title>https://groups.google.com/</title></head><body>"
+                   "<form id='captcha-form'><div class='g-recaptcha'></div></form>"
+                   "Our systems have detected unusual traffic from your computer network.</body></html>")
+DEBEZIUM = {"modo": "casos"}
+
+
+def roteiro_debezium(metodo, url, params, corpo, n):
+    if url != coleta_debezium.URL_BUSCA:
+        raise AssertionError(f"URL inesperada: {url}")
+    codigo = CODIGO[params["q"]]
+    poucos = pagina_groups(["t1", "t2", "t3", "t4"], "1–4 of 4")
+    zero = pagina_groups(sem_resultados=True)
+    if DEBEZIUM["modo"] == "completa":
+        return 200, (poucos if codigo.startswith("A1") else zero), CAB_HTML
+    return {
+        "A1B1": (200, pagina_groups([f"id{i:02d}" for i in range(30)], "1–30 of many"), CAB_HTML),
+        "A1B2": (200, poucos, CAB_HTML),
+        "A1B3": (200, zero, CAB_HTML),
+        "A1B4": (200, PAGINA_BLOQUEIO, CAB_HTML),                                # bloqueio com HTTP 200
+        "A1B5": (200, pagina_groups(["t1", "t2", "t3"], "1–5 of 5"), CAB_HTML),  # contador incoerente
+        "A1B6": (200, poucos, CAB_HTML),
+        "A1B7": (200, "<html><head><title>Sign in - Google Accounts</title></head></html>", CAB_HTML,
+                 "https://accounts.google.com/v3/signin/identifier?continue=x"),
+        "A1B8": (200, "<html><head><title>Google Groups</title></head><body>Content unavailable</body></html>",
+                 CAB_HTML, "https://groups.google.com/access-error?continue=x"),
+        "A1B9": (429, PAGINA_BLOQUEIO, CAB_HTML, SORRY),                         # 429 persistente
+    }.get(codigo, (200, zero, CAB_HTML))
+
+
 # --- utilitários -------------------------------------------------------------
 def rodar(funcao, *args):
     """Roda um main() capturando a saída; devolve (saída, exceção ou None)."""
@@ -230,8 +294,8 @@ try:
     comum.LOG_BUSCAS = comum.DIR_DADOS / "log_buscas.csv"
     comum.LOG_EXECUCOES = comum.DIR_DADOS / "execucoes.csv"
     comum.DIR_DADOS.mkdir(parents=True)
-    # Mesmo estado do repositório: execucoes.csv só com cabeçalho; log_buscas.csv ausente.
-    shutil.copy(REPO / "dados" / "execucoes.csv", comum.LOG_EXECUCOES)
+    # Estado anterior à primeira coleta: execucoes.csv só com cabeçalho; log_buscas.csv ausente.
+    comum.LOG_EXECUCOES.write_text(",".join(comum.COLUNAS_EXECUCOES) + "\n", encoding="utf-8")
     (TMP / ".env").write_text(f"GITHUB_TOKEN=token_do_arquivo_env\nSTACKEXCHANGE_KEY={CHAVE_FALSA}\n",
                               encoding="utf-8")
     os.environ["GITHUB_TOKEN"] = "token_do_ambiente"
@@ -347,12 +411,91 @@ try:
            "nova pasta com só as 3 buscas concluídas")
     checar(not list(TMP.rglob("*.parcial")), "nenhum arquivo .parcial sobrou")
 
-    # 5) Registros ----------------------------------------------------------------
-    print("\n[5] log_buscas.csv e execucoes.csv")
+    # 5) Debezium -----------------------------------------------------------------
+    print("\n[5] Debezium: 'of many', poucos, zero, bloqueio com HTTP 200, formato inesperado, login, "
+          "access-error, 429 persistente, interrupção após 3 erros seguidos")
+    DEBEZIUM["modo"] = "casos"
+    SESSAO["atual"] = SessaoFalsa(roteiro_debezium)
+    ESPERAS.clear()
+    saida, exc = rodar(coleta_debezium.main)
+    checar(isinstance(exc, SystemExit) and "3 buscas seguidas com erro (A1B7, A1B8, A1B9)" in str(exc.code),
+           f"3 erros seguidos: execução interrompida antes de A2B1: {exc!r}"[:160])
+    dz = pasta_da_execucao("debezium")
+    checar(sorted(p.name for p in dz.iterdir()) == [f"A1B{j}.json" for j in range(1, 10)],
+           "9 brutos (A1B1 a A1B9), nenhum para A2B1")
+    checar(not any(CODIGO.get(p.get("q")) == "A2B1" for p in SESSAO["atual"].params_enviados),
+           "nenhuma requisição enviada para A2B1")
+    checar("User-Agent" not in SESSAO["cabecalhos"] and SESSAO["cabecalhos"].get("Accept-Language", "").startswith("en-US"),
+           "User-Agent padrão do comum.py (não sobrescrito); Accept-Language en-US")
+    checar(ESPERAS.count(5.0) == 9, f"intervalo de 5 s antes de cada busca a partir da 2ª (9): {ESPERAS.count(5.0)}")
+
+    b = ler(dz / "A1B1.json")
+    checar(b["status"] == "ok" and b["n_coletados"] == 30 and b["n_resultados"] is None
+           and b["avisos"] == [coleta_debezium.AVISO_MAIS],
+           f"'1–30 of many': 30 coletados, n_resultados vazio, aviso: {b['avisos']}")
+    checar(b["urls_coletadas"][0] == "https://groups.google.com/g/debezium/c/id00", "URL canônica do tópico (sem /m/<mensagem>)")
+    checar(b["requisicoes"][0]["resposta"] == pagina_groups([f"id{i:02d}" for i in range(30)], "1–30 of many"),
+           "HTML completo gravado no bruto (requisicoes[0].resposta)")
+    checar(b["string_enviada"] == 'https://groups.google.com/g/debezium/search?q="database per tenant" ingestion',
+           "string_enviada legível, igual à do --dry-run")
+    checar(set(b["requisicoes"][0]["cabecalhos_resposta"]) == {"content-type", "date"},
+           "cabeçalhos gravados só date e content-type (Set-Cookie descartado)")
+    b = ler(dz / "A1B2.json")
+    checar(b["status"] == "ok" and (b["n_resultados"], b["n_coletados"]) == (4, 4) and b["avisos"] == [],
+           "'1–4 of 4': 4/4, sem aviso; o '1–2 of 3' dentro das linhas é ignorado")
+    b = ler(dz / "A1B3.json")
+    checar(b["status"] == "ok" and (b["n_resultados"], b["n_coletados"]) == (0, 0) and b["urls_coletadas"] == [],
+           "zero resultados: n_resultados = n_coletados = 0, status ok")
+    b = ler(dz / "A1B4.json")
+    checar(b["status"] == "erro" and "bloqueio" in (b["erro"] or "")
+           and b["n_resultados"] is None and b["n_coletados"] is None,
+           f"bloqueio com HTTP 200: erro com n vazios, nunca 0 resultados: {(b['erro'] or '')[:70]}")
+    checar("unusual traffic" in b["requisicoes"][0]["resposta"], "bloqueio: página gravada como bruto")
+    b = ler(dz / "A1B5.json")
+    checar(b["status"] == "erro" and "fora do formato esperado" in (b["erro"] or ""),
+           "contador '1–5 of 5' com 3 linhas: erro")
+    checar(ler(dz / "A1B6.json")["status"] == "ok", "2 erros seguidos não interrompem; a busca ok seguinte zera a contagem")
+    b = ler(dz / "A1B7.json")
+    checar(b["status"] == "erro" and "redirecionamento para login" in (b["erro"] or "")
+           and any(a.startswith("redirecionado: HTTP 302") for a in b["avisos"]),
+           "login: erro, com a cadeia de redirecionamento nos avisos")
+    checar(b["requisicoes"][0]["url"].startswith("https://accounts.google.com/"), "login: URL final gravada no bruto")
+    b = ler(dz / "A1B8.json")
+    checar(b["status"] == "erro" and "access-error" in (b["erro"] or ""), "access-error: erro")
+    b = ler(dz / "A1B9.json")
+    tent = b["requisicoes"][0]["tentativas_repetidas"]
+    checar(b["status"] == "erro" and "bloqueio do Google" in (b["erro"] or "")
+           and len(tent) == 3 and all(t["status"] == 429 for t in tent),
+           "429 persistente (/sorry/): 3 tentativas registradas, depois erro de bloqueio")
+    checar(ESPERAS.count(60.0) == 1 and ESPERAS.count(120.0) == 1, "429: esperas de 60 s e 120 s entre as tentativas")
+
+    url_busca = coleta_debezium.URL_BUSCA + "?q=x"
+    try:
+        coleta_debezium.analisar(url_busca, "<html><head><title>Pesquisar conversas</title></head>"
+                                            "<body>Nenhuma conversa corresponde à sua pesquisa</body></html>")
+        resultado = "aceita"
+    except coleta_debezium.PaginaInvalida:
+        resultado = "erro"
+    checar(resultado == "erro", "página sem resultados em outro idioma: erro, não 0 resultados")
+    p = coleta_debezium.analisar(url_busca, pagina_groups([f"id{i}" for i in range(30)], "1–30 of 45"))
+    checar(p.total == 45 and len(p.topicos) == 30, "contador numérico maior que a página: n_resultados = 45")
+
+    _sleep_real(1.1)  # carimbo de execução diferente do anterior
+    DEBEZIUM["modo"] = "completa"
+    SESSAO["atual"] = SessaoFalsa(roteiro_debezium)
+    ESPERAS.clear()
+    saida, exc = rodar(coleta_debezium.main)
+    checar(exc is None, f"execução sem erros terminou sem exceção ({exc!r})")
+    dz2 = pasta_da_execucao("debezium")
+    checar(dz2 != dz and len(list(dz2.iterdir())) == 81, "execução sem erros: nova pasta com 81 brutos")
+    checar(ESPERAS == [5.0] * 80, "5 s entre as 81 buscas (80 esperas)")
+
+    # 6) Registros ----------------------------------------------------------------
+    print("\n[6] log_buscas.csv e execucoes.csv")
     cab, linhas = ler_csv(comum.LOG_BUSCAS)
     bruto_log = comum.LOG_BUSCAS.read_text(encoding="utf-8")
     checar(cab == comum.COLUNAS_LOG and bruto_log.count("id_busca,data_hora") == 1, "log_buscas.csv: cabeçalho da seção 11, uma vez")
-    checar(len(linhas) == 162 + 81 + 81 + 3, f"log_buscas.csv: uma linha por busca executada (327): {len(linhas)}")
+    checar(len(linhas) == 162 + 81 + 81 + 3 + 9 + 81, f"log_buscas.csv: uma linha por busca executada (417): {len(linhas)}")
     por_id = {l["id_busca"]: l for l in linhas}
     l = por_id[f"{gh.name}_issues_A1B4"]
     checar(l["n_resultados"] == "" and l["n_coletados"] == "", "log: busca com erro tem n_resultados e n_coletados vazios")
@@ -362,15 +505,24 @@ try:
     checar(por_id[f"{gh.name}_issues_A1B1"]["string_enviada"]
            == 'https://api.github.com/search/issues?q="database per tenant" ingestion is:issue&per_page=100&page=1',
            "log: string_enviada do GitHub igual à do --dry-run")
+    log_dz = [(por_id[f"{dz.name}_{c}"]["n_resultados"], por_id[f"{dz.name}_{c}"]["n_coletados"])
+              for c in ("A1B1", "A1B2", "A1B3", "A1B4")]
+    checar(log_dz == [("", "30"), ("4", "4"), ("0", "0"), ("", "")],
+           f"log Debezium: of many -> vazio/30; poucos -> 4/4; zero -> 0/0; bloqueio -> vazio/vazio: {log_dz}")
 
     cab, execs = ler_csv(comum.LOG_EXECUCOES)
     bruto_exec = comum.LOG_EXECUCOES.read_text(encoding="utf-8")
     checar(cab == comum.COLUNAS_EXECUCOES and bruto_exec.count("id_execucao,fonte") == 1,
            "execucoes.csv: cabeçalho pedido, uma vez (arquivo pré-existente com cabeçalho)")
-    checar([e["id_execucao"] for e in execs] == [gh.name, se.name, dbt.name, dbt2.name], "execucoes.csv: uma linha por execução, na ordem")
+    checar([e["id_execucao"] for e in execs] == [gh.name, se.name, dbt.name, dbt2.name, dz.name, dz2.name],
+           "execucoes.csv: uma linha por execução, na ordem")
     resumo = [(e["status"], e["buscas_ok"], e["buscas_erro"]) for e in execs]
-    checar(resumo == [("erro", "161", "1"), ("completa", "81", "0"), ("completa", "81", "0"), ("incompleta", "3", "0")],
+    checar(resumo == [("erro", "161", "1"), ("completa", "81", "0"), ("completa", "81", "0"), ("incompleta", "3", "0"),
+                      ("incompleta", "4", "5"), ("completa", "81", "0")],
            f"status e contagens: {resumo}")
+    checar(f"A1B1: {coleta_debezium.AVISO_MAIS}" in execs[4]["avisos"]
+           and "execução interrompida: SystemExit: 3 buscas seguidas com erro" in execs[4]["avisos"],
+           "execucoes.csv: aviso de mais resultados e motivo da interrupção do Debezium")
     checar(all(e["commit"] == "abc1234" and e["inicio"].endswith("+00:00") and e["fim"].endswith("+00:00") for e in execs),
            "commit e horários em UTC com fuso")
     checar("issues_A1B3: incomplete_results=true" in execs[0]["avisos"], "execucoes.csv: aviso de incomplete_results")
@@ -378,8 +530,8 @@ try:
     checar("A1B3: página 2 sem tópicos novos" in execs[2]["avisos"], "execucoes.csv: aviso de paginação do dbt")
     checar("execução interrompida: Ctrl+C" in execs[3]["avisos"], "execucoes.csv: motivo da interrupção")
 
-    # 6) Verificações e .env ------------------------------------------------------
-    print("\n[6] Verificações anteriores à coleta e ler_env")
+    # 7) Verificações e .env ------------------------------------------------------
+    print("\n[7] Verificações anteriores à coleta e ler_env")
     with contextlib.redirect_stdout(io.StringIO()):
         try:
             verificar_real(False, [api_stackexchange.SEM_CHAVE])

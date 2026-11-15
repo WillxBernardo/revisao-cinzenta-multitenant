@@ -38,7 +38,7 @@ A literatura acadêmica sobre multi-tenancy avalia as estratégias de isolamento
 | `stackoverflow` | Stack Overflow | API do Stack Exchange (`site=stackoverflow`) |
 | `dba` | Database Administrators Stack Exchange | API do Stack Exchange (`site=dba`) |
 | `dbt_forum` | Fórum da comunidade dbt (Discourse) | Endpoint público de busca do Discourse |
-| `debezium` | Grupo de usuários do Debezium | Busca manual na interface do grupo |
+| `debezium` | Grupo de usuários do Debezium | Busca manual na interface do grupo (alterado pelo desvio D1, seção 13) |
 
 **Justificativa:** as fontes concentram relatos técnicos de praticantes e oferecem mecanismos de busca próprios, o que favorece a reprodutibilidade.
 
@@ -76,7 +76,7 @@ Exemplo: `"schema per tenant" ingestion`
 | `github` (discussions) | `search(query: "<termo A> <termo B>", type: DISCUSSION)` | ordenação por relevância (padrão) |
 | `stackoverflow` / `dba` | `/2.3/search/advanced?q=<termo A> <termo B>&site=<site>&sort=relevance&order=desc` | perguntas |
 | `dbt_forum` | `/search.json?q=<termo A> <termo B>` | tópicos |
-| `debezium` | `<termo A> <termo B>` na caixa de busca do grupo | — |
+| `debezium` | `<termo A> <termo B>` na caixa de busca do grupo (alterado pelo desvio D1, seção 13) | — |
 
 As strings efetivamente enviadas a cada API são registradas no `dados/log_buscas.csv`.
 
@@ -93,7 +93,7 @@ Para cada busca, são coletados todos os resultados se houver até 100. Acima di
 - A busca de issues do GitHub considera título, corpo e comentários, e sua correspondência de frases entre aspas é menos estrita que a das demais fontes. A busca não foi restringida a título e corpo para não excluir relatos publicados em comentários; o ruído decorrente é tratado na triagem.
 - Para discussions do GitHub, o bruto contém os campos solicitados na consulta GraphQL (título, corpo, URL, datas, repositório); o conteúdo completo é lido na fase 2 pela URL.
 - No fórum do dbt, `n_resultados` vazio indica que a API não informou o total de tópicos (busca com mais de 100 tópicos ou paginação interrompida); o motivo é registrado nos avisos da busca.
-- A busca no grupo do Debezium é manual, registrada em `dados/debezium_manual.csv`, com a página de resultados salva em HTML.
+- A busca no grupo do Debezium é manual, registrada em `dados/debezium_manual.csv`, com a página de resultados salva em HTML (alterado pelo desvio D1, seção 13).
 - Cada bruto registra o commit do repositório no momento da coleta.
 
 ## 6. Critérios de seleção
@@ -217,7 +217,7 @@ Cada item incluído é salvo no Wayback Machine (web.archive.org). A URL origina
 | `dados/brutos/<fonte>_<AAAAMMDDTHHMMSSZ>/<busca>.json` | Uma pasta por execução (carimbo em UTC) e um arquivo por busca (`issues_A1B1.json` e `discussions_A1B1.json` no GitHub; `A1B1.json` nas demais fontes), com os metadados da busca (`id_busca`, commit, data e hora, parâmetros, avisos) e a resposta completa, inclusive respostas de erro. No Stack Exchange, a pasta também traz `filtro.json`, com a criação do filtro da API. |
 | `dados/log_buscas.csv` | `id_busca, data_hora, fonte, termo_a, termo_b, string_enviada, n_resultados, n_coletados` |
 | `dados/execucoes.csv` | `id_execucao, fonte, inicio, fim, status, commit, buscas_ok, buscas_erro, avisos`. `status`: `completa` (todas as buscas executadas, nenhuma com erro), `erro` (todas executadas, ao menos uma com erro) ou `incompleta` (execução interrompida antes do fim). |
-| `dados/debezium_manual.csv` | Registro das buscas manuais no grupo do Debezium, com o mesmo cabeçalho do `log_buscas.csv`; páginas de resultados salvas em `dados/brutos/debezium_<AAAAMMDD>/`. |
+| `dados/debezium_manual.csv` | Registro das buscas manuais no grupo do Debezium, com o mesmo cabeçalho do `log_buscas.csv`; páginas de resultados salvas em `dados/brutos/debezium_<AAAAMMDD>/` (alterado pelo desvio D1, seção 13). |
 | `dados/triagem.csv` | `id_item, url, titulo, fonte, ids_busca, decisao_f1, decisao_f2, criterio_exclusao, justificativa` |
 | `dados/extracao.csv` | `id_item, url, url_arquivada, data_relato, data_acesso, fonte, papel_relator, estrategia, etapa, tipo_problema, polaridade, metrica_relacionada, motivo_escolha, desfecho, cr1, cr2, cr3, cr4, cr5, trecho_chave, observacao` |
 | `dados/validacao.csv` | Itens da amostra com as duas codificações e o resultado da comparação. |
@@ -237,4 +237,4 @@ Um commit é feito ao final de cada fase (coleta, fase 1, fase 2, extração, va
 
 | Data | Seção | Descrição | Justificativa |
 |---|---|---|---|
-| | | | |
+| 2026-11-15 | 4, 5.3, 5.5, 11 | **D1.** A busca no grupo de usuários do Debezium passa de manual para automatizada, por requisições HTTP à página de busca do Google Groups (`/g/debezium/search`), coletando apenas a primeira página de resultados de cada busca (até 30 tópicos), com intervalo de 5 s entre requisições. O HTML bruto de cada busca é gravado em `dados/brutos/debezium_<AAAAMMDDTHHMMSSZ>/`, e o registro segue o mesmo padrão das demais fontes (`log_buscas.csv` e `execucoes.csv`); o `debezium_manual.csv` deixa de ser usado. `n_resultados` fica vazio quando a interface não informa o total, e buscas com indicação de mais resultados recebem aviso. | Reduzir o risco de erro humano em 81 buscas repetitivas e manter o padrão de registro das demais fontes. O `robots.txt` de groups.google.com permite o acesso a `/g/` para agentes genéricos. A paginação depende de JavaScript e de uma rota interna bloqueada pelo `robots.txt`; por isso a coleta se limita à primeira página, critério aplicado igualmente a todas as buscas. |

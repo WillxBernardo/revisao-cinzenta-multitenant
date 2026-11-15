@@ -31,6 +31,7 @@ python scripts/coleta_github.py --dry-run
 python scripts/coleta_stackoverflow.py --dry-run
 python scripts/coleta_dba.py --dry-run
 python scripts/coleta_dbt_forum.py --dry-run
+python scripts/coleta_debezium.py --dry-run
 ```
 
 Sem `--dry-run`, a coleta só começa se:
@@ -39,4 +40,4 @@ Sem `--dry-run`, a coleta só começa se:
 - `protocolo.md` e `scripts/` não tiverem alterações não commitadas;
 - os termos do código forem iguais aos da seção 5.1 do `protocolo.md` marcado pela tag.
 
-A estrutura de `dados/` e o registro manual do Debezium estão descritos em [`dados/README.md`](dados/README.md).
+A busca no grupo de usuários do Debezium (Google Groups), prevista como manual no pré-registro, é feita pelo `coleta_debezium.py` desde o desvio D1 (protocolo, seção 13), que limita a coleta à primeira página de resultados de cada busca. A estrutura de `dados/` está descrita em [`dados/README.md`](dados/README.md).
