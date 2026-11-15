@@ -1,6 +1,6 @@
 id_item,url,titulo,estrategia,etapa,tipo_problema,polaridade
-I0452,https://github.com/PeerDB-io/peerdb/issues/3935,Postgres CDC: error when syncing inherited tables where child has different schema than parent,,,,
-I0729,https://github.com/avniproject/avni-server/issues/1072,"Infra: move the ETL schemas (62 GB of 133 GB) off the primary, and size the primary to the remaining hot set",,,,
-I0893,https://github.com/debezium/dbz/issues/2874,Reduce connector heap when capturing many databases with identical table layouts,,,,
-I0894,https://github.com/debezium/dbz/issues/592,Postgresql connector start is slow on multitenancy cases [DBZ-4840],,,,
-I2105,https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded,Multi-tenancy in Power BI Embedded,,,,
+I0452,https://github.com/PeerDB-io/peerdb/issues/3935,Postgres CDC: error when syncing inherited tables where child has different schema than parent,nao_informado,ingestao,compatibilidade_esquema,problema
+I0729,https://github.com/avniproject/avni-server/issues/1072,"Infra: move the ETL schemas (62 GB of 133 GB) off the primary, and size the primary to the remaining hot set",nao_informado,armazenamento;servico,desempenho_banco;isolamento_recursos,problema
+I0893,https://github.com/debezium/dbz/issues/2874,Reduce connector heap when capturing many databases with identical table layouts,banco_por_tenant,ingestao,consumo_memoria;multiplicacao_metadados,problema
+I0894,https://github.com/debezium/dbz/issues/592,Postgresql connector start is slow on multitenancy cases [DBZ-4840],esquema_por_tenant,ingestao,desempenho_ferramenta,problema
+I2105,https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded,Multi-tenancy in Power BI Embedded,banco_por_tenant,servico,complexidade_configuracao;governanca_isolamento,misto
