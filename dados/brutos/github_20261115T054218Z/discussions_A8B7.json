@@ -1,0 +1,149 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A8B7",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:52:48+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "dbt",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"tenant_id\\\" dbt\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 3,
+  "n_coletados": 3,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/dbt-labs/dbt/discussions/15584",
+    "https://github.com/sqlc-dev/sqlc/discussions/364",
+    "https://github.com/kedro-org/kedro/discussions/5571"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"tenant_id\" dbt",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:52:48+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:52:48 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4966",
+        "x-ratelimit-reset": "1794725298",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "34"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4966,
+            "resetAt": "2026-11-15T06:48:18Z"
+          },
+          "search": {
+            "discussionCount": 3,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjM="
+            },
+            "nodes": [
+              {
+                "id": "D_kwDOAzEXQ84An1cn",
+                "number": 15584,
+                "url": "https://github.com/dbt-labs/dbt/discussions/15584",
+                "title": "project quality checks please",
+                "body": "<img width=\"491\" height=\"493\" alt=\"Screenshot 2026-07-16 at 1 31 04 PM\" src=\"https://github.com/user-attachments/assets/3f84b216-bffe-47c9-a297-811a91aa3b89\" />\r\n\r\n## Project Quality Checks\r\n\r\nEvery dbt project starts off as a blank slate. Clean. Organized. Governed. And then, the project grows. And grows. And grows. And as you add more models and more contributors, things start to slip through the cracks. A new model is added that doesn’t *quite* fit your org’s naming convention. A new column is added, but is missing a `description`. A model is promoted to `public`, but doesn’t get an assigned `owner`. This slow degradation of project quality happens silently in dbt today.\r\n\r\nThere are many community-driven packages and extensions of dbt that attempt to fill this gap — enabling teams to enforce project quality and alert developers when expectations drift from reality: [dbt-checkpoint](https://github.com/dbt-checkpoint/dbt-checkpoint), @VDFaller’s [metadata_checks](https://github.com/VDFaller/jaffle_shop_duckdb/tree/dbt-wizard/metadata_checks), [dbt-artifacts](https://github.com/brooklyn-data/dbt_artifacts), [dbt-doctor](https://github.com/northgraindata/dbt-doctor), [dblect](https://github.com/dvryaboy/dblect/), [dbt-debt](https://github.com/obrienciaran/dbt-debt), [tff](https://github.com/tjirab/tff), [dbt-bouncer](https://github.com/godatadriven/dbt-bouncer), [sdf’s checks](https://docs.sdf.com/guide/data-quality/checks), the list goes on… [The proof is out there](https://www.imdb.com/title/tt13951868/). And project quality is every-growing in importance as code contributions are exploding in the age of AI.\r\n\r\nAs a creator and maintainer of one of those packages ([dbt-project-evaluator](https://dbt-labs.github.io/dbt-project-evaluator/latest/) 👽), I know both a) how important this feature is for maintaining a high-quality dbt project and b) how dbt isn’t-quite built for this today. [The way dbt-project-evaluator tackles this problem](https://dbt-labs.github.io/dbt-project-evaluator/latest/#how-it-works) is by unpacking the jinja `{{ graph }}` variable into a series of models and then adding a data test to each model checking for alignment with dbt best practices. And I’ll be the first to say that while this is clever and does indeed work, it’s a bit of a pain. These checks can *only* be run after those “core metadata” models have been built, and we don’t have a clean way to slowly introduce checks to an existing problematic project (e.g. there’s no simple mechanism to say “does *this* PR add a new problem or not?”). \r\n\r\nSo the pattern goes… the community has identified a problem, has extended dbt is fun-and-freaky ways to solve it, and now… it’s time to build a *better* out-of-the-box solution directly into dbt.\r\n\r\nWhy now?\r\n\r\nHopefully you’ve seen the announcement of dbt Core v2 (if not, go check out [the blog post](https://docs.getdbt.com/blog/dbt-core-v2-is-here?version=2.0&name=Fusion) ;))! or the github discussions on our [re-vamp of dbt-docs](https://github.com/dbt-labs/dbt-core/discussions/13080) and [writing to agents schema directly from dbt](https://github.com/dbt-labs/dbt-core/discussions/15447) 👀 \r\n\r\nThe key piece that’s relevant for this discussion is that **v2 writes our your project metadata as new parquet artifacts** — a high-performance alternative to large JSON files that can be directly queried through DuckDB. We’ve been calling this the “index layer” (though I’ve started thinking of it as “the dbt information schema”), and you can check it out [here](https://github.com/dbt-labs/dbt-core/tree/main/crates/dbt-index-core).\r\n\r\nThis layer is critical into bringing “project quality checks” to life. \r\n\r\nSo what might that look like?\r\n\r\nWe think: [*it’s all just SQL*](https://en.wikipedia.org/wiki/Turtles_all_the_way_down). **Any assertion you can express as a SQL query against your project's metadata should be enforceable as a first-class “check” in dbt.**\r\n\r\nLet’s say you want to ensure every public model has an `owner` defined in its YAML. You write that “check” as a SQL query against the “dbt information schema”:\r\n\r\n```sql\r\n-- SPEC IS TBD\r\n\r\nselect\r\n\tunique_id,\r\n\tname\r\nfrom {{ info_schema('nodes') }}\r\nwhere resource_type = 'model'\r\n  and access = 'public'\r\n  and owner IS NULL\r\n```\r\n\r\nJust like tests, by default a check that returns 0 rows is a `success`; if any rows are returned, it’s an `error`. \r\n\r\nUnlike tests, these can run after `compile` without ever touching your data warehouse. \r\n\r\n🔥\r\n\r\n## Requirements\r\n\r\n*Here’s what I’m thinking:*\r\n\r\n- checks should be defined in SQL (just like data tests!)\r\n- checks should query your project metadata (”the dbt information schema” parquets to disk)\r\n- checks should work with `state:modified` and other selectors to only evaluate a subset of your project\r\n- you should be able to prevent commands from running based on the results of checks\r\n- you should be able to disable checks installed from a dbt package\r\n\r\n## Open Questions\r\n\r\nOk, that’s the big vision! There is a lot to sort out for how this should all work, and I know there are a *ton* of community members out there that have built or thought-about-building a solution for this. So please, chime in with your thoughts! Here’s the open questions already in my brain:\r\n\r\n1. Should checks be a (1) **new node type** or a (2) **new test type**? (2) makes use of existing commands, configs, env vars, etc, but “checks” aren’t associated with a specific model/node, the way that tests are. 🤔\r\n    \r\n    option 1: new node type\r\n    \r\n    - Checks are a new node type in you DAG.\r\n    - Checks are `.sql` files in a `checks/` directory.\r\n    - You can customize that directory by configuring `check-paths:` in your `dbt_project.yml`.\r\n    - Checks are run via `dbt check` command (a la [`dbt lint`](https://docs.getdbt.com/reference/commands/lint)).\r\n    - Or (maybe?) as a part of `dbt build` executed in appropriate DAG-order (”as early as possible”). Or as part of `dbt compile`. Exclude checks with `resource_type:` selector.\r\n    \r\n    option 2: new test type\r\n    \r\n    - `metadata_tests` (name TBD) are assertions you make about the *metadata* in your project.\r\n    - `dbt tests` runs all test types. You can use existing `test_type:` selector / environment variable to optionally exclude / include specific test types (e.g. exclude unit tests in production environment).\r\n    - `dbt build` includes all tests, executed in appropriate DAG-order (”as early as possible”).\r\n    - Set `severity` (and `warn_if`/`error_if` thresholds) to control what logs/status should be outputted by a failing test.\r\n    - Set `fail calc` to control how failures are evaluated.\r\n2. When should checks run? `dbt check`, `dbt compile`, `dbt lint`, `dbt build`? \r\n3. How should users specify modeling layers, naming conventions, etc. that will be used as part of checks? Should we have a set default? dbt-project-evaluator makes uses of [project variables](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/overriding-variables/#dag-variables), but we could (should?) do something that feels more clean.\r\n    \r\n    ```yaml\r\n    layers: \r\n      - name: staging\r\n        prefixes: ['stg_']\r\n        folders: ['staging']\r\n      - name: marts\r\n        prefixes: ['fct_', 'dim_']\r\n        folders: ['marts']\r\n    \r\n    ...\r\n    ```\r\n    \r\n4. Beyond the checks framework, should dbt also ship with basic built-in checks or should that be handled by a package (a la `dbt_utils` for data tests)? If we did include basic built-in checks how would you “turn them on”? \r\n5. What “rules” should be handled by `lint` vs. checks?\r\n6. Do folks want additional jinja in these checks beyond “ref”-ing the dbt information schema (like `run_query()`, `{% if ... %}`, `etc.)`?\r\n7. What kind of logging do you want these checks to produce?\r\n8. What should the default severity be of checks? Should that be configurable? How?",
+                "createdAt": "2026-07-16T17:39:40Z",
+                "updatedAt": "2026-09-01T10:59:51Z",
+                "author": {
+                  "login": "graciegoheen"
+                },
+                "repository": {
+                  "nameWithOwner": "dbt-labs/dbt"
+                },
+                "category": {
+                  "name": "Ideas"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 12,
+                "comments": {
+                  "totalCount": 10
+                }
+              },
+              {
+                "id": "MDEwOkRpc2N1c3Npb24xNDk3OA==",
+                "number": 364,
+                "url": "https://github.com/sqlc-dev/sqlc/discussions/364",
+                "title": "Support dynamic queries",
+                "body": "Does it make sense to support dynamic queries ? *(Dynamic `where` and `orderBy` clauses)*.\r\n\r\nDue to some requirements we have within our team, we need select statements with dynamic filters (a set of unknown numbers of where conditions, or lets say a set of optional where conditions which could be added to the query based on generated function's arguments) and also dynamic columns to order.\r\n\r\nI know `sqlc` only supports static queries, however we still prefer to use `sqlc` with some extra work to provide dynamic stuff.\r\nI am wondering if you have any plan to support dynamic queries or you are open to have this feature in your repo (I'd like to contribute and can create the PR in next few days I guess). BTW I think if we provide the feature, lots of more people can leverage `sqlc`.\r\n",
+                "createdAt": "2020-02-27T10:40:50Z",
+                "updatedAt": "2026-09-23T02:38:55Z",
+                "author": {
+                  "login": "mehdijoafshani"
+                },
+                "repository": {
+                  "nameWithOwner": "sqlc-dev/sqlc"
+                },
+                "category": {
+                  "name": "Issue Triage"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 124,
+                "comments": {
+                  "totalCount": 47
+                }
+              },
+              {
+                "id": "D_kwDOCtohMs4Amhvq",
+                "number": 5571,
+                "url": "https://github.com/kedro-org/kedro/discussions/5571",
+                "title": "[KEP-8] Jinja2 templating in SQL-string datasets via `load_args.template_params`",
+                "body": "## Q1. What are you trying to do?\r\n\r\nMake it possible to write **one** SQL file and reuse it across multiple Kedro datasets that differ only in filter values — for example, the same feature-engineering query  with *small* changes, e.g. extra filters, used in both training and inference, or the same query run over different date windows. Today this is impossible without either copy-pasting the SQL file. The proposal is to let users add a small block of variables under `load_args.template_params` in the catalog, and have the dataset substitute those variables into the SQL before sending it to the database.\r\n\r\n## Q2. What problem is this proposal NOT designed to solve?\r\n- **A new dataset type.** No new public class. The change is additive to existing datasets via a single new `load_args` key.\r\n- **Templating in non-SQL datasets.** The reusable helper introduced here could be applied elsewhere later, but this KEP only commits to the two SQL-string datasets listed.\r\n\r\n## Q3. How is it done today, and what are the limits of current practice?\r\n\r\n`pandas.SQLQueryDataset` and `polars.PolarsDatabaseDataset` accept either an inline `sql` string or a `filepath` to a `.sql` file and pass it to the driver verbatim.\r\n\r\nThe practical workarounds in production Kedro projects today are:\r\n\r\n1. **Duplicate the SQL file per variant** — `events_train.sql`, `events_inference.sql`, etc. Duplicated CTEs drift out of sync; bug fixes in one variant silently miss the others; new contributors cannot tell which file is canonical.\r\n2. **Wrap the dataset in a custom subclass** — works but every team reinvents it slightly differently and the experience is not portable across projects.\r\n\r\n## Q4. What is new in your approach and why do you think it will be successful?\r\n\r\nThree properties combined make this approach distinct from past attempts to template SQL:\r\n\r\n1. **Eliminates SQL duplication across pipelines.** This is the load-bearing benefit. Teams today maintain near-identical SQL files for training vs. inference, for different date windows, or for tenant-specific variants — and those copies drift apart over time, producing training/serving skew and silently divergent bug fixes. A single `.sql.j2` template parameterised via `template_params` collapses each family of duplicated files into one canonical source of truth, so a fix made once propagates everywhere.\r\n2. **Opt-in by data, not by config.** Templating activates **only** when `template_params` is present in `load_args`. Absent that key, behaviour is byte-for-byte identical to today. There is no global switch, no file-extension magic, no environment variable.\r\n3. **Reusable across datasets, not bolted onto one.** The rendering logic lives as a single helper function in `kedro_datasets._utils`. Both `pandas.SQLQueryDataset` and `polars.PolarsDatabaseDataset` consume the helper in two lines of their `load()` method. Future SQL-string datasets (Snowflake, Redshift, ibis-based, custom contrib datasets) can opt in identically — avoiding the same divergence at the dataset-implementation layer that the feature itself eliminates at the SQL layer.\r\n\r\n## Q5. Who cares? If you are successful, what difference will it make?\r\n\r\n- **Data scientists** stop duplicating SQL files across training and inference and stop reimplementing the same feature logic in Python — eliminating an entire class of training/serving skew bugs.\r\n\r\n## Q6. What are the risks?\r\n\r\n| Risk | Severity | Mitigation |\r\n|---|---|---|\r\n| Users accidentally enable templating and a literal `{{` in their SQL breaks rendering. | Low | Templating only activates when `template_params` is set. A SQL string with no `template_params` is never sent through Jinja. |\r\n| SQL injection via `template_params` values. | Medium | Document clearly: `template_params` controls **structure**, not user-supplied values. Values that originate from end users must still go through SQLAlchemy bind parameters (`load_args.params`). Mirrors dbt and Airflow guidance. |\r\n| Jinja2 becomes a hard dependency of the SQL extras. | Low | Already an indirect Kedro dependency via cookiecutter and a direct dependency of `kedro-airflow`. Lazy-imported inside the helper, so other datasets pay zero cost. |\r\n\r\n## Q7. How long will it take?\r\n\r\n- **Shared helper + tests + docs**: ~1–2 days of focused work.\r\n- **`pandas.SQLQueryDataset` integration**: ~0.5 day (two-line call site + tests + docstring update).\r\n- **`polars.PolarsDatabaseDataset` integration**: ~0.5 day (mirrors pandas).\r\n\r\nEstimated total: under two weeks of part-time effort.\r\n\r\n## Q8. What are the mid-term and final \"exams\" to check for success?\r\n\r\n**Mid-term**:\r\n- The new `render_sql` helper has dedicated unit tests covering: no-op when `template_params` is absent, inline string rendering, file-based rendering with sibling macro import, `StrictUndefined` raising on a missing variable, and composability with `load_args.params` bind parameters.\r\n- The existing `SQLQueryDataset` test suite passes unchanged (backwards compatibility).\r\n- A documentation example shows the training/inference one-file pattern from issue #1385.\r\n\r\n**Final**:\r\n- No regression issue filed against the new code path within one release cycle.\r\n\r\n## Appendix A. Proposed API Changes\r\n\r\n**New `load_args` key** on `pandas.SQLQueryDataset` and `polars.PolarsDatabaseDataset`:\r\n\r\n```yaml\r\nevents_train:\r\n  type: pandas.SQLQueryDataset\r\n  filepath: sql/events.sql.j2\r\n  credentials: warehouse\r\n  load_args:\r\n    template_params:               # NEW — opt-in templating trigger\r\n      mode: train\r\n      start_date: \"${globals:train_start_date}\"\r\n      end_date:   \"${globals:train_end_date}\"\r\n    params:                        # existing — SQLAlchemy bind params\r\n      tenant_id: 42\r\n```\r\n\r\nSemantics:\r\n- `template_params` is a mapping of variable name → value. Values may be any JSON-serialisable scalar or list (whatever Jinja2 will accept).\r\n- When `template_params` is present, the SQL (inline or file-loaded) is rendered through Jinja2 with `StrictUndefined` before being passed to the driver.\r\n- When absent (or `None`, or `{}`), behaviour is unchanged.\r\n- `template_params` is **not** forwarded to the underlying driver. It is consumed and removed during `load()`.\r\n- All other existing `load_args` (`params`, `parse_dates`, `index_col`, `chunksize`, etc.) are unaffected.\r\n\r\n**Backwards compatibility**: fully additive. No existing catalog, dataset, or pipeline behaves differently. The only observable change for users not opting in is a new entry in the dataset's documented `load_args` reference.\r\n\r\n**Forwards compatibility**: the `template_params` key is namespaced inside `load_args` and so cannot collide with future positional/keyword arguments of `pd.read_sql_query` or `pl.read_database`.\r\n\r\n## Appendix B. Design Sketch\r\n\r\n### Reusable helper\r\n\r\nA new module `kedro_datasets/_utils/sql_templating.py`:\r\n\r\n```python\r\nfrom __future__ import annotations\r\n\r\nimport os\r\nfrom collections.abc import Mapping\r\nfrom typing import Any\r\n\r\n\r\ndef render_sql(\r\n    sql: str,\r\n    template_params: Mapping[str, Any] | None,\r\n    search_path: str | os.PathLike[str] | None = None,\r\n) -> str:\r\n    \"\"\"Render `sql` through Jinja2 when `template_params` is provided.\r\n\r\n    - Returns `sql` unchanged when `template_params` is None or empty.\r\n    - Uses StrictUndefined so missing variables raise at render time.\r\n    - When `search_path` is a local directory, a FileSystemLoader is configured\r\n      so the template can import sibling macros via `{% from '...' import ... %}`.\r\n    - Remote (fsspec) paths fall back to inline rendering only; cross-filesystem\r\n      macro support is deferred to a future iteration.\r\n    \"\"\"\r\n    if not template_params:\r\n        return sql\r\n\r\n    # Lazy import so datasets that don't use templating pay zero import cost.\r\n    from jinja2 import Environment, FileSystemLoader, StrictUndefined\r\n\r\n    loader = FileSystemLoader(str(search_path)) if search_path else None\r\n    env = Environment(loader=loader, undefined=StrictUndefined, autoescape=False)\r\n    template = env.from_string(sql)\r\n    return template.render(**template_params)\r\n```\r\n\r\nRe-exported from `kedro_datasets/_utils/__init__.py`:\r\n\r\n```python\r\nfrom .sql_templating import render_sql  # noqa: F401\r\n```\r\n\r\nThis mirrors the existing `_utils` conventions (`ConnectionMixin`, `validate_sub_path`, `spark_utils.get_spark`, `databricks_utils.split_filepath`) and is trivially adoptable by any future SQL-string dataset.\r\n\r\n### Integration in `pandas.SQLQueryDataset`\r\n\r\nTwo-line change inside `load()` (current code at `kedro-datasets/kedro_datasets/pandas/sql_dataset.py:553-563`):\r\n\r\n```python\r\ndef load(self) -> pd.DataFrame:\r\n    load_args = copy.deepcopy(self._load_args)\r\n\r\n    if self._filepath:\r\n        load_path = get_filepath_str(PurePosixPath(self._filepath), self._protocol)\r\n        with self._fs.open(load_path, mode=\"r\", encoding=self.encoding) as fs_file:\r\n            load_args[\"sql\"] = fs_file.read()\r\n\r\n    # NEW: apply Jinja2 templating if requested\r\n    template_params = load_args.pop(\"template_params\", None)\r\n    search_path = (\r\n        Path(self._filepath).parent\r\n        if self._filepath and self._protocol == \"file\"\r\n        else None\r\n    )\r\n    load_args[\"sql\"] = render_sql(load_args[\"sql\"], template_params, search_path)\r\n\r\n    return pd.read_sql_query(\r\n        con=self.engine.execution_options(**self._execution_options), **load_args\r\n    )\r\n```\r\n\r\n### Integration in `polars.PolarsDatabaseDataset`\r\n\r\nSymmetric change at `kedro-datasets/kedro_datasets_experimental/polars/polars_database_dataset.py:322-338`:\r\n\r\n```python\r\ndef load(self) -> pl.DataFrame:\r\n    load_args = copy.deepcopy(self._load_args)\r\n\r\n    if self._filepath:\r\n        load_path = get_filepath_str(PurePosixPath(self._filepath), self._protocol)\r\n        with self._fs.open(load_path, mode=\"r\") as fs_file:\r\n            query = fs_file.read()\r\n    elif \"sql\" in load_args:\r\n        query = load_args.pop(\"sql\")\r\n    else:\r\n        query = f\"SELECT * FROM {self.table_name}\"  # nosec B608\r\n\r\n    # NEW: apply Jinja2 templating if requested\r\n    template_params = load_args.pop(\"template_params\", None)\r\n    search_path = (\r\n        Path(self._filepath).parent\r\n        if self._filepath and self._protocol == \"file\"\r\n        else None\r\n    )\r\n    query = render_sql(query, template_params, search_path)\r\n\r\n    return pl.read_database(query=query, connection=self.engine, **load_args)\r\n```\r\n\r\n### Macro example\r\n\r\n```jinja\r\n{# sql/_macros.sql.j2 #}\r\n{%- macro date_window(mode, start_date=None, end_date=None) -%}\r\n  {%- if mode == \"train\" %}\r\n    AND event_time >= DATE '{{ start_date }}'\r\n    AND event_time <  DATE '{{ end_date }}'\r\n  {%- elif mode == \"inference\" %}\r\n    AND event_time >= SYSDATE - INTERVAL '24' HOUR\r\n  {%- endif -%}\r\n{%- endmacro -%}\r\n```\r\n\r\n```jinja\r\n{# sql/events.sql.j2 #}\r\n{%- from '_macros.sql.j2' import date_window -%}\r\nSELECT ...\r\nFROM events\r\nWHERE 1=1\r\n  {{ date_window(mode, start_date=start_date, end_date=end_date) }}\r\n```\r\n\r\n### Dependency declaration\r\n\r\nIn `kedro-datasets/pyproject.toml`:\r\n\r\n```toml\r\npandas-sqlquerydataset = [\r\n  \"kedro-datasets[pandas-base]\",\r\n  \"SQLAlchemy>=1.4, <3.0\",\r\n  \"pyodbc>=4.0\",\r\n  \"Jinja2>=3.0\",          # NEW\r\n]\r\n```\r\n\r\nAnd a corresponding new extra for the experimental Polars dataset (or whichever extra currently gates `PolarsDatabaseDataset`).\r\n\r\n### Testing strategy\r\n\r\nA new file `kedro-datasets/tests/_utils/test_sql_templating.py` covers the helper in isolation:\r\n\r\n- Returns input unchanged when `template_params` is `None`.\r\n- Returns input unchanged when `template_params` is `{}`.\r\n- Substitutes a simple `{{ var }}` from an inline string.\r\n- Raises `jinja2.UndefinedError` when a referenced variable is missing.\r\n- Imports a sibling macro when `search_path` is provided.\r\n- Does **not** import macros when `search_path` is `None`.\r\n\r\nThe existing `test_sql_dataset.py` and `test_polars_database_dataset.py` suites gain a small set of integration tests that confirm:\r\n\r\n- A dataset with `template_params` set renders the SQL before the driver sees it (verifiable via a stub engine that captures the executed string).\r\n- A dataset without `template_params` works exactly as before (byte-for-byte SQL).\r\n- `template_params` and `params` (bind parameters) coexist.\r\n\r\n## Appendix C. Rejected Designs\r\n\r\nI didn't explore possibility of using OmegaConf instead of Jinja2\r\n",
+                "createdAt": "2026-05-20T13:07:47Z",
+                "updatedAt": "2026-06-16T03:52:11Z",
+                "author": {
+                  "login": "nikanton"
+                },
+                "repository": {
+                  "nameWithOwner": "kedro-org/kedro"
+                },
+                "category": {
+                  "name": "Kedro Enhancement Proposals"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 2,
+                "comments": {
+                  "totalCount": 2
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

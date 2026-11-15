@@ -1,0 +1,55 @@
+{
+  "id_busca": "github_20261115T054218Z_issues_A6B5",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:45:46+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per customer\"",
+  "termo_b": "ELT",
+  "string_enviada": "https://api.github.com/search/issues?q=\"schema per customer\" ELT is:issue&per_page=100&page=1",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 0,
+  "n_coletados": 0,
+  "avisos": [],
+  "urls_coletadas": [],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.github.com/search/issues?q=%22schema+per+customer%22+ELT+is%3Aissue&per_page=100&page=1",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:45:47+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:45:46 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-ratelimit-limit": "30",
+        "x-ratelimit-remaining": "24",
+        "x-ratelimit-reset": "1794721587",
+        "x-ratelimit-used": "6",
+        "x-ratelimit-resource": "search"
+      },
+      "resposta": {
+        "total_count": 0,
+        "incomplete_results": false,
+        "items": [],
+        "search_type": "lexical"
+      }
+    }
+  ]
+}

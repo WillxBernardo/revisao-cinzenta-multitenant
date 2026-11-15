@@ -1,0 +1,124 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A2B2",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:48:53+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database-per-tenant\"",
+  "termo_b": "CDC",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"database-per-tenant\\\" CDC\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 2,
+  "n_coletados": 2,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/estuary/flow/discussions/1808",
+    "https://github.com/airbytehq/airbyte/discussions/35340"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"database-per-tenant\" CDC",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:48:54+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:48:54 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4995",
+        "x-ratelimit-reset": "1794725293",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "5"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4995,
+            "resetAt": "2026-11-15T06:48:13Z"
+          },
+          "search": {
+            "discussionCount": 2,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjI="
+            },
+            "nodes": [
+              {
+                "id": "D_kwDODlDCHM4AdCSa",
+                "number": 1808,
+                "url": "https://github.com/estuary/flow/discussions/1808",
+                "title": "Control plane HTTP API",
+                "body": "We'd like to introduce some control-plane HTTP APIs instead of needing to go through postgresT for everthing. This is partly driven by the goal of having an \"officially supported\" API for users, and so I'd like to:\r\n\r\n- Align on what an \"officially supported\" API should look like\r\n- Come up with a rough plan for how we get there\r\n- See how much of that plan I can execute while adding these new handlers, so I don't have to re-do them later\r\n\r\nHere's what I see as some achievable short-term goals:\r\n\r\n- Clearly distinguish supported API endpoints from internal and/or beta endpoints\r\n- Serve an OpenAPI spec for all supported APIs\r\n- Be able to tell a sensible story about API compatibility\r\n- Give us an easy way to consume these APIs from flowctl\r\n- Any others I should be looking at?\r\n\r\n### Compatibility and paths\r\n\r\nI'd previously [brought up](https://estuaryworkspace.slack.com/archives/C03QBN83GQ4/p1732553301440559) using an `/api/v1/` path prefix, and nobody seemed upset about it, so I think we can say that any supported APIs should go under a prefix such as that, and anything else should be considered an internal-only API and not supported for end users.\r\n\r\nIn terms of compatibility, I'll propose that we start out with just an `/api/v0/` prefix for now, and make breaking changes to it as desired until we feel like it's stable enough to bless it as `/v1/`. Once we do that, we'd commit to only making backward compatible changes to the v1 API. Adding new endpoints is always backward compatible, so we'd still have flexibility to change things without breaking existing clients.\r\n\r\n### OpenAPI\r\n\r\nOpenAPI spec seems like an achievable short term goal, and having it can also make it easier to write client applications, which might be useful in flowctl. Although technically we could defer setting this up depending on our answer to the code organization question below. Personally, I'd rather just figure out the OpenAPI stuff up front, as long as it's not significantly more difficult than it seems.\r\n\r\nI found the [aide library](https://docs.rs/aide/latest/aide/), which seems like it can serve our OpenAPI needs and integrates with `schemars`, which we already use. So I'd like to take a stab at integrating that and see how it goes.[^1]\r\n\r\n### Accept headers, lol\r\n\r\nThe is maybe something that only I care about, but I've found HTTP content negotiation to be useful, and I don't want to close off the possibility of having APIs that return something other than just plain JSON (even LD-JSON should have a separate mime type). We don't currently do anything with the `Accept` header, so a client can send a request with `Accept: application/xml` and get back a successful JSON response. I'd like to just validate that if a request specifies an `Accept` header it permits us to return JSON. For now, all our APIs will only return JSON, so we're just ensuring that requests don't explicitly expect otherwise. Doing this now will ensure that it isn't a breaking change later, if we want to have responses of different mime types.\r\n\r\n### Error handling\r\n\r\nI took a stab at making our error handling more ergonomic by adding a [custom error type](https://github.com/estuary/flow/blob/766bfddfbac5a9a9c0a03484f1bc2c43500318a2/crates/agent/src/api/error.rs#L24) that has `From` impls for other common error types. Then handler functions can return `Result<Json<SuccessResponse>, ApiError>` instead of needing to use the `wrap` function. This also allows us to return different HTTP status codes as appropriate for different types of errors.\r\n\r\n### Code organization\r\n\r\nI'm thinking specifically about how we share request and response types between the agent and flowctl. One option would be to have flowctl use `openapi-generator` to generate the API client types, just like a user would. Some questions I still have about this:\r\n\r\n- How well would the generated client code would integrate with flowctl?\r\n- What would be the impact on our build/dev process?\r\n\r\nAnother option would be to factor out a separate `control_plane_api` crate where we define the rust types used in our API, and then have both flowctl and agent depend on that. It's a little easier to answer the above questions with this approach, but I'm still not sure whether we might run into other snags.\r\n\r\nAs of now, I'm planning to explore both options at least a bit more, but I'd like to hear some other opinions or ideas if you have any.\r\n\r\n## Other?\r\n\r\nDoes anyone have strong feelings about response representations, or other stuff that we should standardize early on? Or alternatives to what I've outlined above?\r\n\r\n[^1]: Aide has a much nicer API that seems well integrated with `axum`. Unfortunately, it is not very actively maintained. `utoipa` is an alternative that we already use in the `source-http-ingest` connector. But `utoipa` doesn't support `schemars`, so we'd have to manually convert all the `schemars` schemas to `utoipa` ones. More importantly, the API requires defining your routes using their confusing macro. So I'm thinking to try `aide` first and see how it goes.",
+                "createdAt": "2024-12-04T16:29:07Z",
+                "updatedAt": "2025-10-16T19:38:40Z",
+                "author": {
+                  "login": "psFried"
+                },
+                "repository": {
+                  "nameWithOwner": "estuary/flow"
+                },
+                "category": {
+                  "name": "Ideas"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 5
+                }
+              },
+              {
+                "id": "D_kwDOEN7yYc4AXvjj",
+                "number": 35340,
+                "url": "https://github.com/airbytehq/airbyte/discussions/35340",
+                "title": "Request for Beta Testers: Source MSSQL",
+                "body": "### Certified Source MSSQL is open for early access!\r\nHi Airbyte community,\r\n\r\nWe are excited to inform you that the Airbyte team will soon be supporting [source-mssql](https://docs.airbyte.com/integrations/sources/mssql)! The updated connector for SQL Server brings you:\r\n\r\n- _Terabyte sized table support_: source-mssql can now do incremental reads of terabyte-sized tables without incurring any performance degradation.\r\n- _Reliability improvements_: Failed reads, (for any reason e.g connection disruption), can now resume reading from a last known checkpoint, rather than having to start over.\r\n- _Various bug fixes_: fixes have been implemented for many issues discovered in the community connector, including full support of datetime data types. \r\n\r\n### How to Enroll\r\n\r\nWe are actively seeking beta testers.  We are soliciting feedback and hoping to further refine these features prior to general availability. Here's how you can try out the beta:\r\n\r\n1. Comment Under this discussion to get in contact with our team to be included in our beta program. Also take a look at the [#announcements](https://airbytehq.slack.com/archives/C01A4CAP81L/p1708039425926939) channel in our community slack to opt-in there.\r\n\r\n**Keep in mind that the early access version is NOT suitable for production and we may ask you to reset your data.**\r\n\r\n### Request for Feedback\r\n\r\nAs you explore the new functionality, we ask that you pay special attention to the reliability of reading incremental changes.  We want to ensure that all records show up on your destination, and the speed and cost of your syncs improves.\r\n\r\nWe look forward to hearing about your experience with beta source mssql. Please don't hesitate to share any feedback or questions in the comments below. You can also [join us on Slack](https://airbytehq.slack.com/archives/C01A4CAP81L/p1708039425926939) if you would like to chat directly with the team about this feature.\r\n",
+                "createdAt": "2024-02-15T23:20:21Z",
+                "updatedAt": "2024-03-22T21:52:55Z",
+                "author": {
+                  "login": "rodireich"
+                },
+                "repository": {
+                  "nameWithOwner": "airbytehq/airbyte"
+                },
+                "category": {
+                  "name": "Connector Ideas and Features"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 2,
+                "comments": {
+                  "totalCount": 7
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

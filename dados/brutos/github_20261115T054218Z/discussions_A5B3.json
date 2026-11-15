@@ -1,0 +1,72 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A5B3",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:50:41+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema-per-tenant\"",
+  "termo_b": "\"change data capture\"",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"schema-per-tenant\\\" \\\"change data capture\\\"\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 0,
+  "n_coletados": 0,
+  "avisos": [],
+  "urls_coletadas": [],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"schema-per-tenant\" \"change data capture\"",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:50:42+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:50:41 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4980",
+        "x-ratelimit-reset": "1794725293",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "20"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4980,
+            "resetAt": "2026-11-15T06:48:13Z"
+          },
+          "search": {
+            "discussionCount": 0,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": null
+            },
+            "nodes": []
+          }
+        }
+      }
+    }
+  ]
+}

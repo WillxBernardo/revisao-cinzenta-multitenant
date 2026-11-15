@@ -1,0 +1,134 @@
+{
+  "id_busca": "github_20261115T054218Z_issues_A4B5",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:44:31+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per tenant\"",
+  "termo_b": "ELT",
+  "string_enviada": "https://api.github.com/search/issues?q=\"schema per tenant\" ELT is:issue&per_page=100&page=1",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/grynn-in/konsolidat/issues/90"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.github.com/search/issues?q=%22schema+per+tenant%22+ELT+is%3Aissue&per_page=100&page=1",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:44:31+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:44:31 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-ratelimit-limit": "30",
+        "x-ratelimit-remaining": "27",
+        "x-ratelimit-reset": "1794721523",
+        "x-ratelimit-used": "3",
+        "x-ratelimit-resource": "search"
+      },
+      "resposta": {
+        "total_count": 1,
+        "incomplete_results": false,
+        "items": [
+          {
+            "url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90",
+            "repository_url": "https://api.github.com/repos/grynn-in/konsolidat",
+            "labels_url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90/labels{/name}",
+            "comments_url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90/comments",
+            "events_url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90/events",
+            "html_url": "https://github.com/grynn-in/konsolidat/issues/90",
+            "id": 4727736780,
+            "node_id": "I_kwDOSzojls8AAAABGcuJzA",
+            "number": 90,
+            "title": "Decision: is Airbyte still on the roadmap? (ELT/ETL leaves scope under the multi-tenant direction)",
+            "user": {
+              "login": "grynn-in",
+              "id": 23282682,
+              "node_id": "MDQ6VXNlcjIzMjgyNjgy",
+              "avatar_url": "https://avatars.githubusercontent.com/u/23282682?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/grynn-in",
+              "html_url": "https://github.com/grynn-in",
+              "followers_url": "https://api.github.com/users/grynn-in/followers",
+              "following_url": "https://api.github.com/users/grynn-in/following{/other_user}",
+              "gists_url": "https://api.github.com/users/grynn-in/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/grynn-in/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/grynn-in/subscriptions",
+              "organizations_url": "https://api.github.com/users/grynn-in/orgs",
+              "repos_url": "https://api.github.com/users/grynn-in/repos",
+              "events_url": "https://api.github.com/users/grynn-in/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/grynn-in/received_events",
+              "type": "User",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "labels": [],
+            "state": "closed",
+            "locked": false,
+            "assignees": [],
+            "milestone": null,
+            "comments": 6,
+            "created_at": "2026-06-23T16:36:12Z",
+            "updated_at": "2026-09-15T18:31:50Z",
+            "closed_at": "2026-09-15T18:27:05Z",
+            "assignee": null,
+            "author_association": "OWNER",
+            "issue_field_values": [],
+            "type": null,
+            "active_lock_reason": null,
+            "sub_issues_summary": {
+              "total": 0,
+              "completed": 0,
+              "percent_completed": 0
+            },
+            "issue_dependencies_summary": {
+              "blocked_by": 0,
+              "total_blocked_by": 0,
+              "blocking": 0,
+              "total_blocking": 0
+            },
+            "body": "## Context\n\nThe local Airbyte setup uses `abctl`, which provisions Airbyte into a throwaway kind (k8s-in-docker) cluster on its own Docker network. This is a dev/POC convenience, not a production deployment. Several pain points encountered locally are artifacts of `abctl`, not the design:\n\n- The Airbyte kind node must be manually bridged to the `open_epm` Docker network (`docker network connect open_epm airbyte-abctl-control-plane`), and **this bridge drops on every host reboot / Airbyte reinstall** — konsol then can't reach the Airbyte API (all calls fail until re-attached). Documented in `scripts/setup-airbyte.sh` but fragile.\n- Airbyte API credentials are random per-install (`abctl local credentials`) and currently hand-pasted into konsol EPM Settings.\n- `workspace_id` and `d365_source_definition_id` are found manually via the UI/API.\n\n## What production should look like\n\nTwo viable shapes:\n\n**A. Airbyte Cloud (managed SaaS)** — stable API (`api.airbyte.com`), OAuth application client-id/secret created once, stable workspace/source-definition IDs. The ClickHouse **destination** must be reachable from Airbyte Cloud (TLS public endpoint + IP allowlist, or tunnel/PrivateLink). D365 source side is already public HTTPS (Azure OData).\n\n**B. Self-hosted Airbyte on Kubernetes (Helm)** — Airbyte + ClickHouse in the same cluster/VPC, **stable service DNS** (no docker bridge, no reboot-drop). Custom D365 connector image published to a registry (GHCR/ECR), versioned.\n\n## What changes local → prod\n\n| Concern | Local (abctl) | Production |\n|---|---|---|\n| Networking | manual `docker network connect`, drops on reboot | VPC/cluster service DNS (self-host) or secured endpoint/tunnel (Cloud) |\n| Airbyte creds | random per-install, hand-pasted | secret manager (Vault / AWS Secrets Manager / K8s secrets), injected |\n| workspace/source-def IDs | hunt in UI/API | set once via IaC (Terraform / Helm values / bootstrap) |\n| EPM Settings Airbyte block | clicked in UI | provisioned by config/IaC at deploy time |\n| D365 connector | local docker image | published, versioned registry image |\n| Stability | reboot breaks it | restart policies, persistence, monitoring, HA |\n\n## What stays the same\n\nThe konsol layer is prod-ready as-is: `provision_connector_airbyte` is idempotent (find-or-create), D365 creds stored encrypted in connector password fields, and the config → source → schema-apply → build flow is identical. Productionizing means swapping the Airbyte substrate, not rebuilding konsol.\n\n## Multi-tenant (hosted-clients) notes\n\n- One Airbyte workspace per client (or dedicated instance for isolation); connector → `workspace_id` scopes it.\n- Per-tenant D365 creds stay encrypted in each tenant's konsol (never exposed to an LLM/MCP — only a `configured: true` boolean is ever returned).\n- Per-tenant ClickHouse target (separate database/schema, e.g. `epm_raw_<tenant>`).\n- Onboarding = IaC creating a workspace + connection + calling idempotent `provision_connector_airbyte`, not a human clicking buttons.\n\n## Key decision\n\nThe single biggest real design decision is **how Airbyte reaches ClickHouse securely**: in-VPC service DNS (self-host) vs secured endpoint/tunnel (Cloud). Everything konsol-side carries over unchanged.\n\n## Acceptance / next steps\n\n- [ ] Decide Cloud vs self-hosted Helm\n- [ ] Define ClickHouse-destination networking for the chosen path\n- [ ] Move Airbyte + per-tenant secrets into a secret manager\n- [ ] Provision EPM Settings Airbyte block + workspace/source-definition via IaC\n- [ ] Publish the `source-d365-fno` custom connector image to a registry\n\n---\n_Filed from a working session analyzing the D365 → consolidation wiring on the local stack._\n",
+            "reactions": {
+              "url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90/reactions",
+              "total_count": 0,
+              "+1": 0,
+              "-1": 0,
+              "laugh": 0,
+              "hooray": 0,
+              "confused": 0,
+              "heart": 0,
+              "rocket": 0,
+              "eyes": 0
+            },
+            "timeline_url": "https://api.github.com/repos/grynn-in/konsolidat/issues/90/timeline",
+            "performed_via_github_app": null,
+            "state_reason": "not_planned",
+            "pinned_comment": null,
+            "score": 1.0
+          }
+        ],
+        "search_type": "lexical"
+      }
+    }
+  ]
+}

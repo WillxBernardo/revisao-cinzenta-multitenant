@@ -1,0 +1,99 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A5B7",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:50:56+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema-per-tenant\"",
+  "termo_b": "dbt",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"schema-per-tenant\\\" dbt\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/dbt-labs/dbt/discussions/7705"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"schema-per-tenant\" dbt",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:50:57+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:50:57 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4979",
+        "x-ratelimit-reset": "1794725298",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "21"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4979,
+            "resetAt": "2026-11-15T06:48:18Z"
+          },
+          "search": {
+            "discussionCount": 1,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjE="
+            },
+            "nodes": [
+              {
+                "id": "D_kwDOAzEXQ84AT9rf",
+                "number": 7705,
+                "url": "https://github.com/dbt-labs/dbt/discussions/7705",
+                "title": "How to handle convergent models?",
+                "body": "## Problem\r\n\r\nWe would like to have assistance with regard on how to structure our dbt models given our data model structure (convergent proprietary models into a standardized data model).\r\n\r\n**Given the following data model:**\r\n\r\n- Multitenant model where each tenant has a separate BigQuery dataset in which their respective data is loaded, then transformed.\r\n- We integrate multiple competing providers that cover the same domain entities with different table structures; for each category of competing providers, a tenant will have data from only one of the competing providers.\r\n\r\nFor example, here's a simplified/genralized representation of a subset of the analytics DAG for two tenants respectively using different competing providers:\r\n\r\n```\r\nTenant A (Provider P1):\r\n\r\nP1.schedule --> std_schedule\r\nP1.order --> std_order\r\nP1.order_item --> std_order\r\n\r\nTenant B (Provider P2):\r\n\r\nP2.t_schtemp --> std_schedule\r\nP2.t_billinvoice --> std_order\r\nP2.t_billitem --> std_order\r\n```\r\n\r\n**Then how can we structure our dbt project to dynamically switch between providers?**\r\n\r\n## Proposed solution\r\n\r\nOur current (incomplete) understanding of how to support multiple concurrent implementation of a given model (e.g. std_schedule, std_order) is the following:\r\n\r\n1. One dbt execution per tenant (given they have different impl & schema)\r\n2. Tag sources (`P1.*`, `P2.*`) with the provider identifier (e.g. `acme_provider`, `corp_provider`)\r\n3. Have a single model file for a standardized (common) model (e.g. std_schedule, std_order)\r\n4. Split each provider custom implementations into separate SQL files to be included using jinja's `include`\r\n5. Implement the standard models as switches between implementation using the passed tags\r\n\r\nWould that work?\r\n- Does dbt support jinja's include? / Should the includes be marked as excluded in the dbt project?\r\n- Would dbt be able to correctly write a manifest when tags are passed?\r\n- Would dbt be able to correctly interpret the jinja2 SQL given the appropriate tags?\r\n- How would this work if we wanted to integrate with dbt Cloud?\r\n\r\n\r\nAlternatively, if you have a better model to propose, we are all ears!\r\n\r\nThanks so much for your answer 🙏 😄 ",
+                "createdAt": "2023-05-25T17:47:21Z",
+                "updatedAt": "2023-10-16T15:33:56Z",
+                "author": {
+                  "login": "p-hebert"
+                },
+                "repository": {
+                  "nameWithOwner": "dbt-labs/dbt"
+                },
+                "category": {
+                  "name": "Q&A"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 1
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A8B4",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:52:36+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "ETL",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"tenant_id\\\" ETL\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 10,
+  "n_coletados": 10,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/jorgehaf/jorgehaf/discussions/5",
+    "https://github.com/morghim/numex/discussions/173",
+    "https://github.com/lance-format/lance/discussions/4125",
+    "https://github.com/langgenius/dify/discussions/32038",
+    "https://github.com/inference-sim/inference-sim/discussions/402",
+    "https://github.com/langgenius/dify/discussions/27500",
+    "https://github.com/wazuh/wazuh/discussions/27977",
+    "https://github.com/apache/doris/discussions/19581",
+    "https://github.com/ClickHouse/ClickHouse/discussions/34170",
+    "https://github.com/apache/airflow/discussions/22308"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"tenant_id\" ETL",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:52:37+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:52:37 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4968",
+        "x-ratelimit-reset": "1794725298",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "32"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4968,
+            "resetAt": "2026-11-15T06:48:18Z"
+          },
+          "search": {
+            "discussionCount": 10,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjEw"
+            },
+            "nodes": [
+              {
+                "id": "D_kwDOG1HOqc4AqZYX",
+                "number": 5,
+                "url": "https://github.com/jorgehaf/jorgehaf/discussions/5",
+                "title": "SaaS multi-tenant: banco por cliente ou tenant_id em tudo?",
+                "body": "Pra começar uma API SaaS, vale mais um schema/banco por cliente ou tudo no mesmo banco com `tenant_id` e filtro em toda query? Quais prós e contras pesam mais no começo?",
+                "createdAt": "2026-10-23T17:11:13Z",
+                "updatedAt": "2026-10-23T18:44:37Z",
+                "author": {
+                  "login": "jorgehaf"
+                },
+                "repository": {
+                  "nameWithOwner": "jorgehaf/jorgehaf"
+                },
+                "category": {
+                  "name": "Q&A"
+                },
+                "isAnswered": true,
+                "answerChosenAt": "2026-10-23T18:44:37Z",
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 2
+                }
+              },
+              {
+                "id": "D_kwDOQ6X3D84Akc5O",
+                "number": 173,
+                "url": "https://github.com/morghim/numex/discussions/173",
+                "title": "Agent Debate: how can replace platform api and platform dashboard and tenant service and plugin service by store b",
+                "body": "**Topic:** how can replace platform api and platform dashboard and tenant service and plugin service by store backend to be numrh platform is store and add plugins that cover all features we need it on service you see if medusa plugin on web we can use it give me full plan step by steps and details of what recommand \n\n_This discussion is an automated multi-model debate. 3 models will discuss and vote._\n\n---\n\n\n\n=== LEARNED CONTEXT (auto-generated from past work) ===\n### Past Resolutions (from knowledge base)\n- [documentation] {\"type\":\"context_pack\",\"version\":1,\"taskId\":\"task-1771277095005-uq62r8uep\",\"agentId\":\"agent-1770741986704-kw094cfrh\",\"createdAt\":\"2026-02-19T21:49:33.255Z\",\"sections\":{\"task\":\"Analyzing the task idea and exploring the codebase to locate workspace config, install/init flows, and where post-install/in\n=== END LEARNED CONTEXT ===\n\n=== PROJECT CONTEXT ===\n- Framework: nodejs\n- Language: typescript\n- Package Manager: npm\n- Key Deps: @actions/core, @actions/github, @octokit/graphql, @octokit/rest, @octokit/webhooks-types, @opencode-ai/sdk, @temporalio/activity, @temporalio/client, @temporalio/worker, @temporalio/workflow, bcryptjs, better-sqlite3, bottleneck, commander, cookie-parser\n- Structure: config, data, docs, frontend, help, scripts, services, src, templates, tests\n=== END PROJECT CONTEXT ===",
+                "createdAt": "2026-03-01T19:01:14Z",
+                "updatedAt": "2026-03-01T19:08:46Z",
+                "author": {
+                  "login": "numrh-saas"
+                },
+                "repository": {
+                  "nameWithOwner": "morghim/numex"
+                },
+                "category": {
+                  "name": "General"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 5
+                }
+              },
+              {
+                "id": "D_kwDOHn_KdM4AghDX",
+                "number": 4125,
+                "url": "https://github.com/lance-format/lance/discussions/4125",
+                "title": "Partitioning (or not) for Lance",
+                "body": "This topic has come up multiple times, since today Lance does not support partition and sort key. Just raise this discussion thread so we can centralize all the feedback here.",
+                "createdAt": "2025-07-02T20:48:28Z",
+                "updatedAt": "2026-08-05T20:51:35Z",
+                "author": {
+                  "login": "jackye1995"
+                },
+                "repository": {
+                  "nameWithOwner": "lance-format/lance"
+                },
+                "category": {
+                  "name": "Ideas"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 6,
+                "comments": {
+                  "totalCount": 10
+                }
+              },
+              {
+                "id": "D_kwDOJVxJus4Aj_rN",
+                "number": 32038,
+                "url": "https://github.com/langgenius/dify/discussions/32038",
+                "title": "How to install the missing Python dependencies when using the Dify code execution module in Python?",
+                "body": "### Self Checks\n\n- [X] I have searched for existing issues [search for existing issues](https://github.com/langgenius/dify/issues), including closed ones.\n- [X] I confirm that I am using English to submit this report (我已阅读并同意 [Language Policy](https://github.com/langgenius/dify/issues/1542)).\n- [X] [FOR CHINESE USERS] 请务必使用英文提交 Issue，否则会被关闭。谢谢！:)\n- [X] Please do not modify this template :) and fill in all the required fields.\n\n### 1. Is this request related to a challenge you're experiencing? Tell me about your story.\n\nHow to install the missing Python dependencies when using the Dify code execution module in Python?\n\n### 2. Additional context or comments\n\n_No response_",
+                "createdAt": "2026-02-06T05:31:54Z",
+                "updatedAt": "2026-04-30T06:54:27Z",
+                "author": {
+                  "login": "jiangpeng663"
+                },
+                "repository": {
+                  "nameWithOwner": "langgenius/dify"
+                },
+                "category": {
+                  "name": "Help"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 2,
+                "comments": {
+                  "totalCount": 4
+                }
+              },
+              {
+                "id": "D_kwDOO48g084AkVDS",
+                "number": 402,
+                "url": "https://github.com/inference-sim/inference-sim/discussions/402",
+                "title": "Sprint Plan for AI-Native Autoscaling",
+                "body": "# Sprint Plan for AI-Native Autoscaling\n\n## Phase 0: Workload Unification — Three-Level Canonical Model\n\n**Goal:** Unify all workload generation through a single canonical spec format, retire legacy code paths, and set up the foundation for non-stationary workloads that autoscaling requires.\n\n### Motivation\n\nBLIS currently has three workload generation paths (CLI distribution-based, WorkloadSpec YAML, CSV trace replay) with ~300 lines of duplicated code across `sim/workload_config.go` and `sim/cluster/workload.go`. Features are scattered: rate stages are locked behind inference-perf, empirical PDFs behind ServeGen, multi-turn behind the reasoning block. These paths are mutually exclusive — you can't compose a ServeGen empirical distribution with inference-perf rate stages and multi-turn reasoning.\n\nThe unification introduces a **three-level canonical model** where every feature is composable, and external formats (ServeGen, inference-perf, GuideLLM, CSV traces) become **converters** that produce the canonical format.\n\n### The Three-Level Model\n\n```\nLevel 1: CLIENT POPULATION PROCESS — \"Who is active, and when?\"\n│  Clients arrive and depart over time. Each client targets a specific model.\n│  Non-stationary load is an emergent property of population dynamics:\n│  diurnal = many arrivals at peak hours; spike = burst of arrivals;\n│  scale-to-zero = all clients depart.\n│\n└─ Level 2: REQUEST GENERATION PROCESS — \"How does this client produce requests?\"\n   │  Each active client generates requests at its own rate with its own\n   │  token distributions, arrival process, prefix affinity, and modality.\n   │\n   └─ Level 3: CONVERSATION PROCESS — \"How do turns within a request unfold?\"\n      Multi-turn sessions with think time, context accumulation,\n      and reasoning token ratios.\n```\n\n### Canonical Spec Format (v2)\n\n```yaml\nversion: \"2\"\nseed: 42\nhorizon: 86400000000  # microseconds\n\n# Level 1: Client population — two specification modes\n\n# Mode A: Explicit clients with lifecycles (for controlled experiments, trace replay)\nclients:\n  - id: \"web-user-1\"\n    model: \"meta-llama/llama-3.1-8b-instruct\"\n    arrives_at_us: 0\n    departs_at_us: 43200000000\n    request_process:              # Level 2\n      arrival: {process: \"poisson\", rate: 2.0}\n      input_distribution: {type: \"gaussian\", params: {mean: 256, std_dev: 100, min: 10, max: 2048}}\n      output_distribution: {type: \"exponential\", params: {mean: 128}}\n      prefix_group: \"system-prompt-v2\"\n      prefix_length: 256\n      multimodal: ...             # optional\n    conversation:                 # Level 3 (optional)\n      multi_turn: {max_rounds: 3, think_time_us: 500000, context_growth: \"accumulate\"}\n    slo_class: \"interactive\"\n    streaming: true\n\n# Mode B: Statistical cohorts (for generating realistic population dynamics)\ncohorts:\n  - name: \"web-users\"\n    model: \"meta-llama/llama-3.1-8b-instruct\"\n    count: 200\n    arrival_process: {type: \"poisson\", rate: 50.0}  # client arrival rate\n    session_duration: {type: \"exponential\", params: {mean: 1800000000}}  # ~30min\n    diurnal:\n      peak_hour: 14\n      trough_hour: 4\n      peak_trough_ratio: 5.0\n    request_process:\n      arrival: {process: \"poisson\", rate: 0.5}\n      input_distribution: {type: \"gaussian\", params: {mean: 256, std_dev: 100, min: 10, max: 2048}}\n      output_distribution: {type: \"exponential\", params: {mean: 128}}\n    conversation:\n      multi_turn: {max_rounds: 5, think_time_us: 500000, context_growth: \"accumulate\"}\n    slo_class: \"realtime\"\n\n  - name: \"batch-jobs\"\n    model: \"qwen/qwen-2.5-7b\"\n    count: 10\n    arrival_process: {type: \"constant\", rate: 0.001}\n    session_duration: {type: \"constant\", params: {value: 86400000000}}\n    request_process:\n      arrival: {process: \"gamma\", cv: 3.5, rate: 20.0}\n      input_distribution: {type: \"empirical\", file: \"production_input_pdf.json\"}\n      output_distribution: {type: \"exponential\", params: {mean: 512}}\n```\n\n### Converter Architecture\n\nThe simulator only parses the canonical format. External formats are supported through converters that produce canonical YAML:\n\n```\n  blis convert servegen ──────┐\n  blis convert inference-perf ┼──► Canonical YAML ──► Simulator\n  blis convert preset ────────┤    (one format)       (one parser)\n  blis convert csv-trace ─────┤\n  hand-written YAML ──────────┘\n```\n\n```bash\n# Convert ServeGen traces → canonical spec\nblis convert servegen /data/production/ -o workload.yaml\n\n# Convert inference-perf config → canonical spec\nblis convert inference-perf config.yaml -o workload.yaml\n\n# Convert GuideLLM preset → canonical spec\nblis convert preset chatbot --rate 100 --num-requests 500 -o workload.yaml\n\n# Convert legacy CSV traces → canonical spec\nblis convert csv-trace traces.csv -o workload.yaml\n\n# Compose multiple sources (convenience helper)\nblis compose \\\n  --from-servegen /data/production/:0.5 \\\n  --from-preset chatbot:0.3 \\\n  --from-spec spike-test.yaml:0.2 \\\n  -o combined.yaml\n```\n\nComposition happens at the YAML level — merge client/cohort lists, adjust rate fractions. Adding support for a new external format tomorrow is just a new `blis convert <format>` subcommand with zero changes to the spec or simulator.\n\n### Supported Features (all composable on any client)\n\n| Feature | Level | Available on any client |\n|---------|-------|------------------------|\n| Arrival process (Poisson, Gamma, Weibull, Constant) | 2 | Yes |\n| Token distributions (Gaussian, Exponential, ParetoLogNormal, Empirical, Constant) | 2 | Yes |\n| Multimodal (text, image, audio, video) | 2 | Yes |\n| Prefix groups + prefix length | 2 | Yes |\n| Multi-turn reasoning with context accumulation | 3 | Yes |\n| SLO class / tenant ID | Client | Yes |\n| Streaming mode | Client | Yes |\n| Network model (RTT + bandwidth) | Client | Yes |\n| Model affinity | Client | Yes |\n| Client lifecycle (arrives/departs) | 1 | Yes |\n| Diurnal population dynamics | 1 (cohorts) | Yes |\n| Session duration distribution | 1 (cohorts) | Yes |\n\n### What Gets Retired\n\n- `GuideLLMConfig` struct and its 11-parameter constructor\n- `sim/workload_config.go` — entire file (~170 lines of duplicated generation/CSV parsing)\n- `sim/cluster/workload.go` — `generateRequestsFromDistribution()` and `generateRequestsFromCSV()` (~100 lines)\n- The 4-way `if/else` in `cmd/root.go` for workload selection\n- The placeholder `GuideLLMConfig` hack when using WorkloadSpec\n\n### What Gets Added\n\n- `\"constant\"` arrival process (deterministic fixed-rate, for GuideLLM backward compatibility)\n- `model` field on clients (for multi-model autoscaling)\n- `cohorts` specification mode (statistical population dynamics)\n- `blis convert` subcommands (servegen, inference-perf, preset, csv-trace)\n- `blis compose` convenience helper\n- v1 → v2 spec migration (v1 specs still parse, auto-promoted internally)\n\n### CLI Backward Compatibility\n\nExisting CLI invocations continue to work — they internally synthesize a canonical spec:\n\n| CLI Command | Internal Translation |\n|-------------|---------------------|\n| `blis run --rate 100 --prompt-tokens 512` | Single client, constant arrival, Gaussian distributions |\n| `blis run --workload chatbot` | Single client from preset template |\n| `blis run --workload traces --workload-traces-filepath X` | Explicit clients from CSV |\n| `blis run --workload-spec X.yaml` | Direct parse (v1 or v2) |\n\n***\n\n## Phase 1A: Foundation — Make BLIS Dynamically Scalable\n\n**Goal:** Extend the DES kernel so instances can be added/removed mid-simulation.\n\n### Architecture Prerequisites\n- [ ] Design doc: Instance lifecycle abstraction (`AddInstance`/`RemoveInstance` on `ClusterSimulator`)\n  - Resolve fixed `[]*InstanceSimulator` slice → ID-indexed map or dynamic slice\n  - `CachedSnapshotProvider` must handle instance arrival/departure\n  - `pendingRequests` bookkeeping already uses string keys (robust)\n  - Define instance states: `Provisioning → WarmingUp → Active → Draining → Terminated`\n  - Scale-to-zero: relax `NumInstances >= 1` panic; define \"cold start from zero\" event sequence\n- [ ] Design doc: Heterogeneous instance configuration\n  - Per-instance `SimConfig` (different model, GPU, TP config per instance)\n  - Extend `DeploymentConfig` → `[]InstanceConfig` or multiple `DeploymentConfig` objects\n  - Routing implications: scorer weights may differ per-model (e.g., prefix-affinity irrelevant for some models)\n  - Model-aware routing: requests with `model` field routed only to instances serving that model\n\n### Core Autoscaler Module\n- [ ] Design doc: Autoscaler subsystem module (per design guidelines §5.3)\n  - Module contract: observes (metrics, queue depth, KV utilization), controls (instance count), owns (scaling state, cooldown timers), invariants (min ≤ replicas ≤ max, no scale during cooldown)\n  - Event types: `AutoScaleCheckEvent`, `ScaleActionEvent`, `InstanceReadyEvent` (priority after routing/step/completion)\n  - `AutoScalePolicy` interface (single-method: `Decide(AutoScaleContext) ScaleDecision`)\n  - Strawman policies: `ThresholdScaler` (reactive), `PredictiveScaler` (trend-based), `Oscillator` (pathological control)\n  - Actuation model: `ProvisioningDelay` (distribution), `WarmupProfile` (duration, cache cold-start penalty), `DrainPolicy` (immediate/wait/redirect)\n  - Scale-to-zero: `DrainPolicy.DRAIN_ALL` + `MinReplicas=0`; cold-start-from-zero latency model\n- [ ] Derive invariants:\n  - INV-A1: `active_instances + provisioning_instances + draining_instances = total_managed_instances`\n  - INV-A2: No routing to `Provisioning` or `Draining` instances\n  - INV-A3: Scale-down must drain queue before terminating (or redirect in-flight)\n- [ ] Derive hypotheses (pre-implementation, to validate post-implementation):\n  - H-ScaleUp: Adding instance at ρ>0.8 reduces TTFT p99 by >30% within 2× provisioning_delay\n  - H-ScaleDown: Removing instance at ρ<0.3 has <5% TTFT impact (headroom absorbs)\n  - H-Oscillation: Naive threshold scaler with tight bounds produces scale oscillation (>3 scale events per 10× service_time)\n  - H-WarmupCost: Cold instance with empty KV cache has >2× TTFT vs warm instance for first N requests\n  - H-ScaleToZero: Cold-start-from-zero adds provisioning_delay + warmup_time to first request E2E\n  - H-MultiModel: Model-aware routing with heterogeneous instances matches homogeneous per-model clusters within 10% TTFT\n\n### Metrics & Observability Extensions\n- [ ] New metrics: scaling_events_count, provisioning_latency_p99, instances_active (time-series), cost_proxy (instance-seconds), SLO_violation_rate\n- [ ] Extend `ComputeFitness()` with cost and scaling-efficiency dimensions\n- [ ] Extend counterfactual analysis: \"what if we had scaled 30s earlier?\"\n- [ ] Trace records: `ScaleRecord` (already templated in extension-recipes.md)\n\n### Macro Plan Derivation\n- [ ] Derive PR sequence from the above design docs. Likely structure:\n  - PR-W1: Workload unification — canonical spec v2, retire legacy paths, converters\n  - PR-W2: Cohort-based population dynamics (non-stationary workloads)\n  - PR-A1: Instance lifecycle (AddInstance/RemoveInstance + states + tests)\n  - PR-A2: Autoscaler core (interface + ThresholdScaler + events + metrics)\n  - PR-A3: Actuation model (provisioning delay, warmup, drain)\n  - PR-A4: Heterogeneous instances + multi-model routing\n  - PR-A5: Scale-to-zero support\n  - PR-A6: Hypothesis experiments (H-ScaleUp through H-ScaleToZero)\n- [ ] Validate llm-d/WVA alignment at each PR boundary\n  - WPA (Workload-Proportional Autoscaling) maps to ThresholdScaler with utilization target\n  - EPP (Endpoint Picker Policy) maps to existing composable scorer framework\n  - Model routing maps to PR-A4 multi-model extension\n\n***\n\n## Phase 1B: Implementation Sprint\n\n**Goal:** Land all PRs on an `autoscaling` feature branch.\n\n- [ ] For each PR in the macro plan:\n  - Run the PR workflow (micro-plan → convergence review → implement → code review → self-audit)\n  - **Keep automated convergence rounds** (10 perspectives) — these catch real bugs every time\n  - Skip the human gate at Step 3 (plan approval) for velocity — human reviews at branch merge instead\n  - Merge into `autoscaling` branch (not `main`)\n- [ ] Run hypothesis experiments (PR-A6) to validate autoscaler behavior\n- [ ] Rebase `autoscaling` on `upstream/main`, resolve conflicts\n- [ ] Full human review of the consolidated branch\n- [ ] Merge into `main`\n\n***\n\n## Phase 1C: Evolutionary Algorithm Discovery\n\n**Goal:** Use LLM-guided evolution to discover autoscaling algorithms that outperform hand-designed policies.\n\n### Fitness Function Design\n- [ ] Define the multi-objective fitness landscape:\n  - **Latency**: TTFT p99, E2E p99 (from existing `ComputeFitness`)\n  - **Cost**: total instance-seconds (minimize)\n  - **SLO compliance**: fraction of requests meeting SLO target\n  - **Stability**: scaling event frequency (penalize oscillation)\n  - **Responsiveness**: time from overload detection to scale-up completion\n- [ ] Define behavioral feature dimensions for MAP-Elites ([OpenEvolve](https://github.com/algorithmicsuperintelligence/openevolve)):\n  - Workload regime (steady/bursty/diurnal)\n  - Scale range (2-4 instances vs 4-16 vs 16-64)\n  - Model mix (single-model vs multi-model)\n\n### OpenEvolve Integration — Algorithm Structure Discovery\n- [ ] Design the evolvable program template:\n  - The `AutoScalePolicy.Decide()` method body is the evolved code\n  - `AutoScaleContext` (signals) is the fixed input interface\n  - `ScaleDecision` is the fixed output interface\n  - BLIS simulation is the fitness evaluator (deterministic, fast, no GPU needed)\n- [ ] Configure OpenEvolve:\n  - Sandbox: BLIS binary execution (CPU-only, ~seconds per evaluation)\n  - Evaluation suite: N workload scenarios (steady, burst, diurnal, spike, scale-to-zero recovery)\n  - Seeds: multiple seeds per scenario for determinism validation (INV-6)\n  - Quality-diversity: MAP-Elites over (workload_regime × scale_range) feature space\n- [ ] Run evolution campaigns, collect Pareto-optimal algorithm set\n\n### GEPA Integration — Parameter Tuning\n- [ ] Implement `GEPAAdapter` for BLIS:\n  - `evaluate()`: run BLIS with candidate policy, return multi-objective scores\n  - `make_reflective_dataset()`: extract execution traces (scaling events, queue depth time-series, SLO violations) as Actionable Side Information\n- [ ] For each promising algorithm from OpenEvolve:\n  - Use [GEPA](https://github.com/gepa-ai/gepa) to tune thresholds, cooldown periods, look-back windows\n  - GEPA's trace reflection identifies *why* specific scaling decisions were suboptimal\n  - ~100-500 evaluations per algorithm (vs thousands for RL)\n\n### Landing Results\n- [ ] Select best candidates (Pareto-optimal across cost/latency/stability)\n- [ ] Add as named `AutoScalePolicy` implementations (e.g., `EvolvedReactiveScaler`, `EvolvedPredictiveScaler`)\n- [ ] Merge into `autoscaling` branch with hypothesis validation\n- [ ] Rebase, resolve conflicts, full review, merge into `main`\n\n***\n\n## Phase 2: Sim-to-Real Transfer\n\n**Goal:** Bridge BLIS-evolved algorithms to production llm-d deployments.\n\n_Expand after Phase 1 experience. Likely topics:_\n\n- [ ] Calibration pipeline: real cluster telemetry → BLIS coefficient fitting (alpha/beta per model/GPU)\n- [ ] Policy export format: BLIS `AutoScalePolicy` → llm-d WPA controller config\n- [ ] Online adaptation: GEPA reflective loop on production traces (not just sim traces)\n- [ ] Validation protocol: shadow-mode comparison (BLIS prediction vs real scaling decisions)\n- [ ] Feedback loop: production anomalies → new BLIS hypothesis experiments → algorithm refinement\n",
+                "createdAt": "2026-02-23T19:08:50Z",
+                "updatedAt": "2026-02-24T18:13:34Z",
+                "author": {
+                  "login": "sriumcp"
+                },
+                "repository": {
+                  "nameWithOwner": "inference-sim/inference-sim"
+                },
+                "category": {
+                  "name": "Ideas"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 8
+                }
+              },
+              {
+                "id": "D_kwDOJVxJus4Ainmc",
+                "number": 27500,
+                "url": "https://github.com/langgenius/dify/discussions/27500",
+                "title": "Help The Google Gemini API I use cannot perform OCR recognition on the files I upload!",
+                "body": "### Self Checks\n\n- [X] I have searched for existing issues [search for existing issues](https://github.com/langgenius/dify/issues), including closed ones.\n- [X] I confirm that I am using English to submit this report (我已阅读并同意 [Language Policy](https://github.com/langgenius/dify/issues/1542)).\n- [X] [FOR CHINESE USERS] 请务必使用英文提交 Issue，否则会被关闭。谢谢！:)\n- [X] Please do not modify this template :) and fill in all the required fields.\n\n### 1. Is this request related to a challenge you're experiencing? Tell me about your story.\n\nMy workflow is to upload a PDF file at the start node and then let Google Gemini's API do the OCR recognition. However, during the actual runtime, an error message is displayed:\r\nRun failed: Invalid context structure: dify_model_identity='dify__file' id=None tenant_id='f621c54e-93e7-433d-a5e0-f7b4617b7c08' type=<FileType.DOCUMENT: 'document'> transfer_method=<FileTransferMethod.LOCAL_FILE: 'local_file'> remote_url='/files/7f9bbf11-15f2-4578-8794-6e8cf23a8e17/file-preview?timestamp=1761548582&nonce=b399870dbb11543f51c74781ca5aa92b&sign=xOVIGIwquACbZCcYRRMxcmh_hr06X14QkyT7eMrNmO4%3D' related_id='7f9bbf11-15f2-4578-8794-6e8cf23a8e17' filename='01-10.pdf' extension='.pdf' mime_type='application/pdf' size=8221329\r\n\n\n### 2. Additional context or comments\n\nThe model's APIs have been correctly configured.\r\nThe configuration of the start node and gemini node is as follows.\r\n<img width=\"1177\" height=\"421\" alt=\"Process Preview\" src=\"https://github.com/user-attachments/assets/6dd5492c-44e8-466d-b1da-974acc3d9347\" />\r\n<img width=\"889\" height=\"386\" alt=\"open node \" src=\"https://github.com/user-attachments/assets/3ab29948-74f8-42e5-9d09-5d5d8e22eb66\" />\r\n<img width=\"1328\" height=\"640\" alt=\"api\" src=\"https://github.com/user-attachments/assets/df832c24-5db0-4a31-b943-b72582ea41eb\" />\r\n<img width=\"925\" height=\"565\" alt=\"gemini-2\" src=\"https://github.com/user-attachments/assets/0514a07a-882f-40f6-92d1-baad98bd3320\" />\r\n<img width=\"871\" height=\"932\" alt=\"gemini-1\" src=\"https://github.com/user-attachments/assets/00c37a65-9c1d-49e1-ac39-08ac94ea9558\" />\r\n",
+                "createdAt": "2025-10-27T07:19:49Z",
+                "updatedAt": "2025-10-27T14:59:50Z",
+                "author": {
+                  "login": "xxH7r"
+                },
+                "repository": {
+                  "nameWithOwner": "langgenius/dify"
+                },
+                "category": {
+                  "name": "Help"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 2
+                }
+              },
+              {
+                "id": "D_kwDOAmrWSs4AeIZ4",
+                "number": 27977,
+                "url": "https://github.com/wazuh/wazuh/discussions/27977",
+                "title": "Problema com o Vulnerability Detection",
+                "body": "\r\nVulnerability detection seems to be disabled or has a problem. Please check the cluster status. Also, you can check the [vulnerability detection documentation.](https://documentation.wazuh.com/4.10/user-manual/capabilities/vulnerability-detection/index.html)\r\n\r\nminha manager esta na ultima versão, 4.10.1, poderiam me ajudar",
+                "createdAt": "2025-01-31T19:36:42Z",
+                "updatedAt": "2025-02-17T09:40:24Z",
+                "author": {
+                  "login": "Heriolourenco"
+                },
+                "repository": {
+                  "nameWithOwner": "wazuh/wazuh"
+                },
+                "category": {
+                  "name": "General"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 8
+                }
+              },
+              {
+                "id": "D_kwDOBfSlxs4ATymG",
+                "number": 19581,
+                "url": "https://github.com/apache/doris/discussions/19581",
+                "title": "倒排索引查询失败",
+                "body": "建表sql\r\n`create table if not exists fulltext_search (\r\n    tenant_id BIGINT comment '租户ID',\r\n    company_id BIGINT comment '客户ID',\r\n    doc_id BIGINT comment '文档ID',\r\n    doc_content String comment '文档内容',\r\n\r\n    INDEX idx_doc_content (doc_content) using INVERTED PROPERTIES(\"parser\" = \"chinese\") comment '文档内容倒排'\r\n)\r\nunique key(tenant_id, company_id, doc_id)\r\ncomment '文档内容索引测试'\r\ndistributed by hash(tenant_id, company_id) buckets 1\r\nproperties (\r\n    \"enable_unique_key_merge_on_write\" = \"true\",\r\n    \"replication_num\" = \"1\"\r\n)\r\n    ;`\r\n插入了一条数据,其中的doc_content的内容为“https://doris.apache.org/zh-CN/docs/dev/data-table/index/inverted-index/”页面正文内容. 但查询时发现中文基本是查不到的. 例如\r\n\r\n`select count()\r\nfrom fulltext_search\r\nwhere doc_content MATCH_ANY '查询'`\r\n`select count()\r\nfrom just_4_test.fulltext_search\r\nwhere doc_content MATCH_ANY '主键'`\r\n\r\n结果都是0, 明显是不对的.\r\n不知道是哪里出了问题? jieba分词器需要做什么设置吗?",
+                "createdAt": "2023-05-12T07:59:34Z",
+                "updatedAt": "2023-05-19T22:21:21Z",
+                "author": {
+                  "login": "EddyChina"
+                },
+                "repository": {
+                  "nameWithOwner": "apache/doris"
+                },
+                "category": {
+                  "name": "A - General / Q&A"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 5
+                }
+              },
+              {
+                "id": "D_kwDOA5dJV84AOqlV",
+                "number": 34170,
+                "url": "https://github.com/ClickHouse/ClickHouse/discussions/34170",
+                "title": "Should I create multiple physical tables or let partition handle it?",
+                "body": "Hello,\r\nI am thinking of using clickhouse for our time series data. But I am not familiar with deep internals of architecture yet. \r\nIt's a humongous data set (in Peta Bytes). Let's take below representative logical table schema for my data\r\nVendor | City | Time | DataField1 | DataField2 | ....\r\nThere are couple hundred vendors and each vendor contains few thousand cities (with some minor overlap between vendors which I guess is not relevant here)\r\nMy question is, should I create a single table with above schema or create multiple tables, say 1 per Vendor or even 1 per vendor per City? What's the trade off here? \r\n1) I can see multiple tables might save some storage as then then vendor/city columns with lot of duplicate entries go away, but ClickHouse compression might take care of that in case of single table.\r\n2) I think bigger difference might be in query time as I will be using Vendor and City to Index the data. Then question would be is finding a table more costly op than finding right chunk of data in a single table (need to have PARTITION, ORDER property in schema)?\r\n3) Which one would scale better? Which is easier to manage in sharding/cluster setting?\r\nThanks in advance!",
+                "createdAt": "2022-01-31T08:34:24Z",
+                "updatedAt": "2022-06-14T01:00:29Z",
+                "author": {
+                  "login": "rajnish-aargo"
+                },
+                "repository": {
+                  "nameWithOwner": "ClickHouse/ClickHouse"
+                },
+                "category": {
+                  "name": "Q&A"
+                },
+                "isAnswered": true,
+                "answerChosenAt": "2022-01-31T17:34:52Z",
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 3
+                }
+              },
+              {
+                "id": "D_kwDOAgUK284APCUt",
+                "number": 22308,
+                "url": "https://github.com/apache/airflow/discussions/22308",
+                "title": "Airflow webserver stops responding and then restarted by liveness probes",
+                "body": "### Apache Airflow version\n\n2.2.4 (latest released)\n\n### What happened\n\nHi Team,\r\n\r\nAfter upgrading to airflow 2.2.3, we have started facing an issue where webserserver gets stuck and is eventually restarted after failing the liveness probes. However, this issue is transient and we see it 2-3 times per week. We also see high spike of cpu during the time issue occured.\r\n\r\nCloud - AWS EKS 1.21\r\nHelm Chart - 1.4.0\r\nCurrent airflow version- 2.2.4\r\n\r\nPlease let me know in case you need more details \r\n\r\nThanks,\r\nHussain \r\n\n\n### What you think should happen instead\n\nWebserver should continue running and responds to requests.\n\n### How to reproduce\n\nThe issue is transient, occurs 2-3 times per week.\n\n### Operating System\n\nDebian GNU/Linux 10 (buster)\n\n### Versions of Apache Airflow Providers\n\napache-airflow-providers-amazon==3.0.0\r\napache-airflow-providers-apache-hive==2.2.0\r\napache-airflow-providers-celery==2.1.0\r\napache-airflow-providers-cncf-kubernetes==3.0.2\r\napache-airflow-providers-docker==2.4.1\r\napache-airflow-providers-elasticsearch==2.2.0\r\napache-airflow-providers-ftp==2.0.1\r\napache-airflow-providers-google==6.4.0\r\napache-airflow-providers-grpc==2.0.1\r\napache-airflow-providers-hashicorp==2.1.1\r\napache-airflow-providers-http==2.0.3\r\napache-airflow-providers-imap==2.2.0\r\napache-airflow-providers-microsoft-azure==3.6.0\r\napache-airflow-providers-microsoft-mssql==2.1.0\r\napache-airflow-providers-mysql==2.2.0\r\napache-airflow-providers-odbc==2.0.1\r\napache-airflow-providers-postgres==3.0.0\r\napache-airflow-providers-redis==2.0.1\r\napache-airflow-providers-sendgrid==2.0.1\r\napache-airflow-providers-sftp==2.4.1\r\napache-airflow-providers-slack==4.2.0\r\napache-airflow-providers-sqlite==2.1.0\r\napache-airflow-providers-ssh==2.4.0\n\n### Deployment\n\nOfficial Apache Airflow Helm Chart\n\n### Deployment details\n\nPlease find below helm values.\r\n\r\n    defaultAirflowTag: \"2.2.4\"\r\n\r\n    airflowVersion: \"2.2.4\"\r\n\r\n    labels:\r\n      spotinst.io/restrict-scale-down: \"true\"\r\n    nodeSelector:\r\n      node-class: worker\r\n\r\n    fernetKeySecretName: airflow-fernet-key\r\n\r\n    webserverSecretKeySecretName: airflow-webserver-secret-key\r\n\r\n    ingress:\r\n      enabled: true\r\n      web:\r\n        host: \"airflow.************.com\"\r\n        annotations:\r\n          kubernetes.io/ingress.class: \"nginx\"\r\n        hosts:\r\n          - name: \"airflow.**************.com\"\r\n            tls:\r\n              enabled: true\r\n              secretName: \"tls-wildcard\"\r\n\r\n      # Configs for the Ingress of the flower Service\r\n      flower:\r\n\r\n        path: \"/flower\"\r\n\r\n        pathType: \"ImplementationSpecific\"\r\n\r\n        host: \"airflow.************.com\"\r\n        annotations:\r\n          kubernetes.io/ingress.class: \"nginx\"\r\n\r\n        hosts:\r\n          - name: \"airflow.***********.com\"\r\n            tls:\r\n              enabled: true\r\n              secretName: \"tls-wildcard\"\r\n\r\n\r\n    airflowPodAnnotations:\r\n      ad.datadoghq.com/airflow-web.check_names: '[\"airflow\"]'\r\n      ad.datadoghq.com/airflow-web.init_configs: '[{}]'\r\n      ad.datadoghq.com/airflow-web.instances: |\r\n        [\r\n          {\r\n            \"url\": \"http://%%host%%:8080\"\r\n          }\r\n        ]\r\n    executor: \"KubernetesExecutor\"\r\n\r\n\r\n    extraEnv: |\r\n      - name: AIRFLOW__CORE__FERNET_KEY\r\n        valueFrom:\r\n          secretKeyRef:\r\n            name: airflow-fernet-key\r\n            key: fernet-key\r\n      - name: AZURE_TENANT_ID\r\n        valueFrom:\r\n          secretKeyRef:\r\n            name: airflow-azuread-creds\r\n            key: tenant_id\r\n      - name: AZURE_CLIENT_SECRET\r\n        valueFrom:\r\n          secretKeyRef:\r\n            name: airflow-azuread-creds\r\n            key: client_secret\r\n      - name: AZURE_CLIENT_ID\r\n        valueFrom:\r\n          secretKeyRef:\r\n            name: airflow-azuread-creds\r\n            key: client_id\r\n      - name: AIRFLOW__METRICS__STATSD_HOST\r\n        valueFrom:\r\n          fieldRef:\r\n            fieldPath: status.hostIP\r\n    env:\r\n      - name: AIRFLOW_CONN_AWS_LOG\r\n        value: \"aws://\"\r\n      - name: AIRFLOW__CORE__REMOTE_LOGGING\r\n        value: \"True\"\r\n      - name: AIRFLOW__CORE__REMOTE_BASE_LOG_FOLDER\r\n        value: \"s3://***********/airflow-etl/logs\"\r\n      - name: AIRFLOW__CORE__REMOTE_LOG_CONN_ID\r\n        value: \"aws_development\"\r\n      - name: AIRFLOW__CORE__ENCRYPT_S3_LOGS\r\n        value: \"True\"\r\n      - name: AIRFLOW__CORE__PARALLELISM\r\n        value: \"64\"\r\n      - name: AIRFLOW__CORE__DAG_CONCURRENCY\r\n        value: \"32\"\r\n      - name: AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG\r\n        value: \"32\"\r\n      - name: AIRFLOW__CORE__SQL_ALCHEMY_POOL_SIZE\r\n        value: \"10\"\r\n      - name: AIRFLOW__CORE__SQL_ALCHEMY_MAX_OVERFLOW\r\n        value: \"30\"\r\n      - name: AIRFLOW__SMTP__SMTP_HOST\r\n        value: \"smtp.mail-relay.svc\"\r\n      - name: AIRFLOW__SMTP__SMTP_MAIL_FROM\r\n        value: \"***********\"\r\n      - name: AIRFLOW__METRICS__STATSD_ON\r\n        value: \"True\"\r\n      - name: AIRFLOW__METRICS__STATSD_PORT\r\n        value: \"8125\"\r\n      - name: AIRFLOW__METRICS__STATSD_PREFIX\r\n        value: \"airflow\"\r\n      - name: AIRFLOW__WEBSERVER__AUTHENTICATE\r\n        value: \"True\"\r\n      - name: AIRFLOW__WEBSERVER__EXPOSE_CONFIG\r\n        value: \"True\"\r\n      - name: AIRFLOW__WEBSERVER__RBAC\r\n        value: \"True\"\r\n      - name: AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX\r\n        value: \"True\"\r\n      - name: AIRFLOW__LOGGING__FAB_LOGGING_LEVEL\r\n        value: \"WARN\"\r\n      - name: AIRFLOW__LOGGING__LOGGING_LEVEL\r\n        value: \"DEBUG\"\r\n      - name: AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT\r\n        value: \"240.0\"\r\n      - name: AIRFLOW__CELERY__FLOWER_URL_PREFIX\r\n        value: \"/flower\"\r\n      - name: AIRFLOW__API__AUTH_BACKEND\r\n        value: \"airflow.api.auth.backend.basic_auth\"\r\n      - name: AIRFLOW__CORE__HOSTNAME_CALLABLE\r\n        value: \"socket:gethostname\"\r\n      - name: AIRFLOW__WEBSERVER__WORKER_REFRESH_BATCH_SIZE\r\n        value: \"0\"\r\n      - name: AIRFLOW__WEBSERVER__WORKER_REFRESH_INTERVAL\r\n        value: \"0\"\r\n\r\n    data:\r\n      metadataSecretName: airflow-metadata-connection\r\n\r\n    # Airflow scheduler settings\r\n    scheduler:\r\n      replicas: 2\r\n      serviceAccount:\r\n        create: false\r\n        name: airflow\r\n      # Scheduler pod disruption budget\r\n      podDisruptionBudget:\r\n        enabled: true\r\n        config:\r\n          maxUnavailable: 1\r\n\r\n      resources:\r\n        limits:\r\n          cpu: \"4000m\"\r\n          memory: \"8Gi\"\r\n        requests:\r\n          cpu: \"1000m\"\r\n          memory: \"2Gi\"\r\n\r\n      nodeSelector:\r\n        node-class: worker\r\n      affinity:\r\n        podAntiAffinity:\r\n          preferredDuringSchedulingIgnoredDuringExecution:\r\n          - podAffinityTerm:\r\n              labelSelector:\r\n                matchLabels:\r\n                  component: scheduler\r\n              topologyKey: kubernetes.io/hostname\r\n            weight: 100\r\n\r\n    # Airflow webserver settings\r\n    webserver:\r\n\r\n      replicas: 1\r\n\r\n      serviceAccount:\r\n        create: false\r\n        name: airflow\r\n\r\n      resources:\r\n        limits:\r\n          cpu: \"4000m\"\r\n          memory: \"8Gi\"\r\n        requests:\r\n          cpu: \"1500m\"\r\n          memory: \"2Gi\"\r\n\r\n      webserverConfig: |\r\n        import os\r\n        from airflow.configuration import conf\r\n        from flask_appbuilder.security.manager import AUTH_OAUTH\r\n        from flask import Flask\r\n        from flask_appbuilder import SQLA, AppBuilder\r\n        SQLALCHEMY_DATABASE_URI = conf.get(\"core\", \"SQL_ALCHEMY_CONN\")\r\n        basedir = os.path.abspath(os.path.dirname(__file__))\r\n        AUTH_USER_REGISTRATION_ROLE = \"Viewer\"\r\n        AUTH_TYPE = AUTH_OAUTH\r\n        AUTH_ROLES_SYNC_AT_LOGIN = True\r\n        AUTH_USER_REGISTRATION = True\r\n        AZURE_TENANT_ID = os.environ.get(\"AZURE_TENANT_ID\")\r\n        API_BASE = f\"https://login.microsoftonline.com/{AZURE_TENANT_ID}/oauth2\"\r\n        ACCESS_TOKEN_URL = f\"{API_BASE}/token\"\r\n        AUTHORIZE_URL = f\"{API_BASE}/authorize\"\r\n        AUTH_ROLES_MAPPING = {\r\n                                  ***********\r\n        }\r\n        OAUTH_PROVIDERS = [\r\n           {\r\n            \"name\": \"azure\",\r\n            \"icon\": \"fa-windows\",\r\n            \"token_key\": \"access_token\",\r\n            \"remote_app\": {\r\n                \"client_id\": os.environ.get(\"AZURE_CLIENT_ID\"),\r\n                \"client_secret\":  os.environ.get(\"AZURE_CLIENT_SECRET\"),\r\n                \"api_base_url\": API_BASE,\r\n                \"client_kwargs\": {\r\n                    \"resource\": os.environ.get(\"AZURE_CLIENT_ID\"),\r\n                    \"scope\": \"User.read name preferred_username email profile upn https://graph.windows.net/.default openid\"\r\n                },\r\n                \"request_token_url\": None,\r\n                \"access_token_url\": ACCESS_TOKEN_URL,\r\n                \"authorize_url\": AUTHORIZE_URL,\r\n            },\r\n        }\r\n        ]\r\n    # Airflow Triggerer Config\r\n    triggerer:\r\n      enabled: true\r\n\r\n      # Create ServiceAccount\r\n      serviceAccount:\r\n        create: false\r\n        name: airflow\r\n\r\n    workers:\r\n      serviceAccount:\r\n        create: false\r\n        name: airflow\r\n\r\n      resources:\r\n        limits:\r\n          cpu: \"1000m\"\r\n          memory: \"2Gi\"\r\n        requests:\r\n          cpu: \"400m\"\r\n          memory: \"1000Mi\"\r\n\r\n    # Flower settings\r\n    flower:\r\n      enabled: false\r\n\r\n\r\n    # Statsd settings\r\n    statsd:\r\n      enabled: false\r\n\r\n\r\n    # Configuration for the redis provisioned by the chart\r\n    redis:\r\n      enabled: false\r\n\r\n    postgresql:\r\n      enabled: false\r\n\r\n    # Git sync\r\n    dags:\r\n      gitSync:\r\n        enabled: true\r\n        repo: git@github.com:***********\r\n        branch: development/airflow\r\n        subPath: \"dags\"\r\n        sshKeySecret: \"airflow-git\"\r\n\r\n        knownHosts: |\r\n          github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==\r\n        wait: 120\r\n        resources:\r\n          limits:\r\n            cpu: \"100m\"\r\n            memory: \"400Mi\"\r\n          requests:\r\n            cpu: \"50m\"\r\n            memory: \"200Mi\"\n\n### Anything else\n\n_No response_\n\n### Are you willing to submit PR?\n\n- [ ] Yes I am willing to submit a PR!\n\n### Code of Conduct\n\n- [X] I agree to follow this project's [Code of Conduct](https://github.com/apache/airflow/blob/main/CODE_OF_CONDUCT.md)\n",
+                "createdAt": "2022-03-16T11:28:55Z",
+                "updatedAt": "2022-06-01T11:51:48Z",
+                "author": {
+                  "login": "hussainsaify"
+                },
+                "repository": {
+                  "nameWithOwner": "apache/airflow"
+                },
+                "category": {
+                  "name": "General"
+                },
+                "isAnswered": false,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 4
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

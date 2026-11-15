@@ -1,0 +1,99 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A3B7",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:49:46+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database per customer\"",
+  "termo_b": "dbt",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"database per customer\\\" dbt\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/mikefarah/yq/discussions/1223"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"database per customer\" dbt",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:49:47+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:49:47 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4986",
+        "x-ratelimit-reset": "1794725293",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "14"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4986,
+            "resetAt": "2026-11-15T06:48:13Z"
+          },
+          "search": {
+            "discussionCount": 1,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjE="
+            },
+            "nodes": [
+              {
+                "id": "D_kwDOApOQGc4APnUZ",
+                "number": 1223,
+                "url": "https://github.com/mikefarah/yq/discussions/1223",
+                "title": "Merging dbt source yaml files to preserve existing elements, add new tables, columns",
+                "body": "The data transformation tool dbt uses [source.yaml](https://docs.getdbt.com/docs/building-a-dbt-project/using-sources#testing-and-documenting-sources) files to expose, document and test raw data tables. While there is tooling that will generate fresh yaml that includes any schema changes since it last ran, the original file accumulates additional yaml elements that are typically added manually such as `description`, `tests`, etc.\r\n\r\nI have been unable to find the right combination of yq parameters to merge the old file (with accumulated nested metdata) and the new file (that has tables and columns that no longer exist). Either the result is the same as the old file, or it is the same as the new file. I have tried various combinations of:\r\n\r\n`yq ea 'select(fileIndex == 0) * select(fileIndex == 1)' original.yaml update.yaml` --results == update.yaml\r\n`yq ea 'select(fileIndex == 0) *? select(fileIndex == 1)' update.yaml original.yaml` --results == original.yaml\r\n`yq ea 'select(fileIndex == 0) *n select(fileIndex == 1)' update.yaml original.yaml` --results == update.yaml\r\n\r\nFor the moment, I am not concerned with changes such as deleted tables or columns (that would be a great bonus), and I'm only concerned with the `tables:` section of this yaml format.\r\n\r\nSo for example if I have the following where the original has two tables with descriptive metadata, and then I have an update yaml file that has a new table `customers_orders` and there's also a new column added to `orders` called `creation_timestamp`.\r\n\r\nAppreciate any help!\r\n\r\n**_original.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        description: One record per customer.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the customers table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: email_address\r\n            description: customer email address.\r\n      - name: orders\r\n        description: One record per order. Includes cancelled and deleted orders.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the orders table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: status\r\n            description: Note that the status can change over time\r\n```\r\n\r\n**_update.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        columns:\r\n          - name: id\r\n          - name: email_address\r\n      - name: customers_orders\r\n        columns:\r\n          - name: customer_id\r\n          - name: order_id\r\n      - name: orders\r\n        columns:\r\n          - name: id\r\n          - name: status\r\n          - name: creation_timestamp\r\n```\r\n\r\n**_merged.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        description: One record per customer.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the customers table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: email_address\r\n            description: customer email address.\r\n      - name: customers_orders\r\n        columns:\r\n          - name: customer_id\r\n          - name: order_id\r\n      - name: orders\r\n        description: One record per order. Includes cancelled and deleted orders.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the orders table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: status\r\n            description: Note that the status can change over time\r\n          - name: creation_timestamp\r\n```\r\n",
+                "createdAt": "2022-05-23T15:28:24Z",
+                "updatedAt": "2022-05-24T17:26:55Z",
+                "author": {
+                  "login": "davesgonechina"
+                },
+                "repository": {
+                  "nameWithOwner": "mikefarah/yq"
+                },
+                "category": {
+                  "name": "Q&A"
+                },
+                "isAnswered": true,
+                "answerChosenAt": "2022-05-24T17:25:27Z",
+                "upvoteCount": 2,
+                "comments": {
+                  "totalCount": 1
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

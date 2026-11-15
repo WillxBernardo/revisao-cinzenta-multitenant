@@ -1,0 +1,157 @@
+{
+  "id_busca": "github_20261115T054218Z_issues_A6B4",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:45:43+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per customer\"",
+  "termo_b": "ETL",
+  "string_enviada": "https://api.github.com/search/issues?q=\"schema per customer\" ETL is:issue&per_page=100&page=1",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/Fundabl2025/Bankable-IQ-Fintech/issues/971"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.github.com/search/issues?q=%22schema+per+customer%22+ETL+is%3Aissue&per_page=100&page=1",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:45:43+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:45:43 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-ratelimit-limit": "30",
+        "x-ratelimit-remaining": "25",
+        "x-ratelimit-reset": "1794721587",
+        "x-ratelimit-used": "5",
+        "x-ratelimit-resource": "search"
+      },
+      "resposta": {
+        "total_count": 1,
+        "incomplete_results": false,
+        "items": [
+          {
+            "url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971",
+            "repository_url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech",
+            "labels_url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971/labels{/name}",
+            "comments_url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971/comments",
+            "events_url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971/events",
+            "html_url": "https://github.com/Fundabl2025/Bankable-IQ-Fintech/issues/971",
+            "id": 4558787529,
+            "node_id": "I_kwDORlhU088AAAABD7mTyQ",
+            "number": 971,
+            "title": "[platform] §9.7 Legacy Fundabl customer migration pipeline: extract-transform-load pipeline migrating Fundabl legacy customer profiles to BANKABLE IQ identity and org schemas, legacy score normalization (map Fundabl readiness scores to Bankability Score 0-100 scale), referral attribution preservation for Capital Connector commissions, data validation and deduplication against existing org records by EIN, migration audit log entry per migrated customer, and beta access flag for migrated customers with legacy pricing lock",
+            "user": {
+              "login": "bankable-fleet[bot]",
+              "id": 288813511,
+              "node_id": "BOT_kgDOETbxxw",
+              "avatar_url": "https://avatars.githubusercontent.com/u/240859455?v=4",
+              "gravatar_id": "",
+              "url": "https://api.github.com/users/bankable-fleet%5Bbot%5D",
+              "html_url": "https://github.com/apps/bankable-fleet",
+              "followers_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/followers",
+              "following_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/following{/other_user}",
+              "gists_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/subscriptions",
+              "organizations_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/orgs",
+              "repos_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/repos",
+              "events_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/bankable-fleet%5Bbot%5D/received_events",
+              "type": "Bot",
+              "user_view_type": "public",
+              "site_admin": false
+            },
+            "labels": [
+              {
+                "id": 11082481540,
+                "node_id": "LA_kwDORlhU088AAAAClJE_hA",
+                "url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/labels/platform",
+                "name": "platform",
+                "color": "0EA5E9",
+                "default": false,
+                "description": "Owned by bot-platform",
+                "archived_at": null,
+                "archived_by": null
+              },
+              {
+                "id": 11092767546,
+                "node_id": "LA_kwDORlhU088AAAAClS4zOg",
+                "url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/labels/spec",
+                "name": "spec",
+                "color": "7C3AED",
+                "default": false,
+                "description": "Spec-driven issue derived from engineering-spec-v1.0 or Blueprint v1.8",
+                "archived_at": null,
+                "archived_by": null
+              }
+            ],
+            "state": "open",
+            "locked": false,
+            "assignees": [],
+            "milestone": null,
+            "comments": 0,
+            "created_at": "2026-05-31T19:51:36Z",
+            "updated_at": "2026-05-31T19:51:36Z",
+            "closed_at": null,
+            "assignee": null,
+            "author_association": "NONE",
+            "issue_field_values": [],
+            "type": null,
+            "active_lock_reason": null,
+            "sub_issues_summary": {
+              "total": 0,
+              "completed": 0,
+              "percent_completed": 0
+            },
+            "issue_dependencies_summary": {
+              "blocked_by": 0,
+              "total_blocked_by": 0,
+              "blocking": 0,
+              "total_blocking": 0
+            },
+            "body": "owner: platform, spec_sections: §9.7, maturity_target: pre-mvp, Acceptance: ETL pipeline defined for Fundabl legacy customer records with field mapping: Fundabl user_id to identity.users auth0_sub via migration lookup, Fundabl business profile to org schema with EIN deduplication, Fundabl assessment answers to intake_partial JSONB for partial re-assessment prompt; legacy score normalization function defined mapping Fundabl readiness output (if any) to Bankability Score scale (0-100) with explicit documentation of normalization logic; referral attribution chain preserved from Fundabl connector relationships to BANKABLE IQ referral schema; migration audit log entry in compliance.audit_log per migrated customer record with source system Fundabl and migration batch ID; EIN-based deduplication check prevents duplicate org records if customer already exists in BANKABLE IQ; migrated customers flagged with is_legacy_migration boolean and grandfathered_pricing_lock for any Founding Member pricing commitments; Temporal batch migration workflow supports incremental migration with checkpoint resume; migration validation report showing migrated count, failed count, deduplicated count, and referral attributions preserved; migration dry-run mode for validation without writes. Details: §9.7 covers HUSLConnect and sister platform integrations including legacy Fundabl customer migration. No dedicated issue exists for the Fundabl customer migration pipeline which is a critical pre-launch operation to preserve the existing customer base and referral attribution network. Spec reference: §9.7 sister platform integrations, §8.4 multi-tenant isolation, Blueprint §22 Founder-to-Advisor pathway.",
+            "reactions": {
+              "url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971/reactions",
+              "total_count": 0,
+              "+1": 0,
+              "-1": 0,
+              "laugh": 0,
+              "hooray": 0,
+              "confused": 0,
+              "heart": 0,
+              "rocket": 0,
+              "eyes": 0
+            },
+            "timeline_url": "https://api.github.com/repos/Fundabl2025/Bankable-IQ-Fintech/issues/971/timeline",
+            "performed_via_github_app": null,
+            "state_reason": null,
+            "pinned_comment": null,
+            "score": 1.0
+          }
+        ],
+        "search_type": "lexical"
+      }
+    }
+  ]
+}

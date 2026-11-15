@@ -1,0 +1,99 @@
+{
+  "id_busca": "github_20261115T054218Z_discussions_A8B3",
+  "id_execucao": "github_20261115T054218Z",
+  "fonte": "github",
+  "script": "scripts/coleta_github.py",
+  "commit_head": "8f80351a1943dc3a22b7008e4c33e7f6120060d0",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:52:33+00:00",
+  "estrategia": "esquema_compartilhado",
+  "termo_a": "\"tenant_id\"",
+  "termo_b": "\"change data capture\"",
+  "string_enviada": "POST https://api.github.com/graphql search(query: \"\\\"tenant_id\\\" \\\"change data capture\\\"\", type: DISCUSSION, first: 100)",
+  "parametros": {
+    "url_rest": "https://api.github.com/search/issues",
+    "url_graphql": "https://api.github.com/graphql",
+    "x_github_api_version": "2022-11-28",
+    "novas_tentativas_incomplete_results": 3,
+    "consulta_graphql": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+    "limite_coleta": 100,
+    "intervalo_s": 3.0
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://github.com/Flowdular/flowdular/discussions/50"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "POST",
+      "url": "https://api.github.com/graphql",
+      "corpo_enviado": {
+        "query": "query($consulta: String!, $n: Int!) {\n  rateLimit { cost remaining resetAt }\n  search(query: $consulta, type: DISCUSSION, first: $n) {\n    discussionCount\n    pageInfo { hasNextPage endCursor }\n    nodes {\n      ... on Discussion {\n        id\n        number\n        url\n        title\n        body\n        createdAt\n        updatedAt\n        author { login }\n        repository { nameWithOwner }\n        category { name }\n        isAnswered\n        answerChosenAt\n        upvoteCount\n        comments { totalCount }\n      }\n    }\n  }\n}",
+        "variables": {
+          "consulta": "\"tenant_id\" \"change data capture\"",
+          "n": 100
+        }
+      },
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:52:33+00:00",
+      "cabecalhos_resposta": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sun, 15 Nov 2026 05:52:33 GMT",
+        "x-ratelimit-limit": "5000",
+        "x-ratelimit-remaining": "4969",
+        "x-ratelimit-reset": "1794725298",
+        "x-ratelimit-resource": "graphql",
+        "x-ratelimit-used": "31"
+      },
+      "resposta": {
+        "data": {
+          "rateLimit": {
+            "cost": 1,
+            "remaining": 4969,
+            "resetAt": "2026-11-15T06:48:18Z"
+          },
+          "search": {
+            "discussionCount": 1,
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "Y3Vyc29yOjE="
+            },
+            "nodes": [
+              {
+                "id": "D_kwDOUU-eO84ApVV0",
+                "number": 50,
+                "url": "https://github.com/Flowdular/flowdular/discussions/50",
+                "title": "RFC 0007: Integration events: a transactional outbox, subscriptions and event triggers",
+                "body": "- Status: proposed\n- Number: provisional until the file lands in `docs/rfc`\n- Date: 2026-09-17\n- Follows: RFC 0006 (research, documents and case work, delivered 2026-09-16)\n- Reopens: RFC 0004 H9 (event bus as an outbox), deferred in `docs/deferred.md`\n  until \"a second module needs decoupling from a producer\"\n- Relates to: ADR 0006 (agentic workflows), RFC 0009 (rules, for the shared\n  expression language), RFC 0011 (operability of background work)\n- Verdict: platform capability in `packages/server`, adopted by the producing\n  modules, plus an `event` trigger in `automations.core`\n\n## Summary\n\nA module that commits a fact today tells other modules about it by calling\ntheir capability after its own transaction has committed. When the process\ndies between the commit and the call, or the call throws, the other module\nnever hears about it. Four producers already work this way, and one consumer\ncompensates with a five minute polling loop. This RFC proposes one durable\npath for \"something happened\": an event row written in the producer's own\ntransaction, drained by the shared job runner to subscribers registered at\ncomposition, and an automation trigger that starts an agent or a workflow\nwhen an event arrives.\n\nThis is the capability a business needs to say \"when an invoice is imported,\nscreen it\", \"when a listing feed run finishes, recompute the district\nprices\" or \"when a supplier certificate is uploaded, read it\", without a\nmodule per reaction.\n\n## Motivation\n\n### What exists today, read out of the tree\n\n- **Post-commit, best effort publishing.** `agents.core` publishes run\n  outcomes and records meters after the terminal row committed:\n  `publishRunOutcome` in `modules/agents/src/services/notifications.ts` is\n  documented as \"Advisory and post-commit\" and swallows a failure, and\n  `#reportMeters` in `modules/agents/src/services/worker.ts` logs a warning\n  when `metering.meters.v1` throws. `workflows.core`, `approvals.core` and\n  `metering.core` carry the same shape. A lost meter record under-counts a\n  budget; a lost notification is never retried.\n- **One notice per month, lost for the month.** `metering.core` claims the\n  threshold row before it publishes, \"which is what keeps a published\n  notification to one per meter per month per threshold\"\n  (`modules/metering/src/services/notifications.ts`). A publish that fails\n  after the claim is gone until next month.\n- **Callbacks that do not survive a restart.** `approvals.requests.v1`\n  accepts `onResolved`, kept in an in-process map of at most 4096 entries\n  (`modules/approvals/src/services/callbacks.ts`, \"A restart loses them\").\n  `workflows.core` uses it to wake a run waiting on a human approval and\n  rechecks every waiting request every five minutes as the durable path\n  (`WORKFLOW_APPROVAL_RECHECK_MS` in `modules/workflows/src/domain/types.ts`).\n- **Contracts kept by copy.** The `notifications.publish.v1` input is\n  declared four times, in agents, workflows, approvals and metering, each\n  with a comment asking the next author to keep the copies identical.\n- **A closed set of kinds.** `NOTIFICATION_KINDS` in\n  `modules/notifications/src/domain/types.ts` holds eight kinds, and outbound\n  webhook subscriptions key off the same set. An external system can learn\n  that an agent run failed; it cannot learn that an import finished or a\n  document was uploaded.\n- **No reaction to a fact.** Automations fire on a schedule or on a signed\n  inbound webhook. A workflow starts manually, from a module, a schedule or a\n  webhook (`WorkflowExecutionOrigin` in\n  `modules/workflows/src/domain/types.ts`). Nothing starts work because\n  something happened inside the workspace.\n- **The pieces an outbox needs are built.** `createJobRunner` owns claim,\n  lease, heartbeat, `CLAIM_LOST`, backoff and drain; `jobBackoff` exists;\n  notifications and metering already accept a repeat idempotently by\n  `(tenantId, kind, sourceRef)` and by source reference. RFC 0006 recorded\n  that the database is the queue on this platform.\n\nThe deferral condition in `docs/deferred.md` is met.\n\n## Goals\n\n- A producer records an event in the same transaction as the fact, so there\n  is no fact without its event and no event without its fact.\n- Every subscriber receives each event at least once, in isolation from other\n  subscribers, with retries, a dead letter and a replay.\n- An owner can start an agent run or a workflow from an event, filtered by\n  the event's data, without writing a module.\n- Event types are declared, versioned and namespaced like capabilities.\n- The existing post-commit calls retire once their consumers subscribe.\n\n## Non-goals\n\n- A message broker, a stream store or exactly-once delivery.\n- Global ordering. Events of one subject are delivered in emit order on a\n  best effort basis; subscribers must not depend on it.\n- Replaying history to a subscriber added later. Deliveries are created for\n  the subscriptions known when the event is emitted.\n- Carrying record bodies. An event carries references and small facts; a\n  subscriber reads the record back through the owner's capability under its\n  own permissions.\n- Events between deployments.\n\n## Proposal\n\n### Contract\n\nIn `packages/server/src/events/`, bound to the module id by the generated\ncomposition like `context.metrics`:\n\n- **Declare** while composing:\n  `context.events.declare([{ type, version, description, schema, triggerable?, exportable? }])`.\n  `type` is `<module id>.<noun>.<past tense verb>`, for example\n  `documents.core.document.uploaded` or `adapters.core.run.settled`.\n  `schema` uses the input schema subset `documents.core` validates for\n  templates (object root, bounded depth and properties), promoted to a\n  platform package together with the expression language in RFC 0009.\n  `triggerable` lets an automation start work from it; `exportable` lets an\n  owner send it to an outbound webhook. The registry is sealed after\n  composition, like data classes.\n- **Emit** inside the producer's transaction:\n  `context.events.emit(tx, { type, version, tenantId, subjectRef, actor?, data, causation? })`,\n  where `tx` is the `DatabaseTransaction` the fact is written in. The tenant\n  must equal the transaction's tenant (`EVENT_TENANT_MISMATCH`), `data` is\n  validated against the declared schema and bounded to 8 KB of JSON\n  (`EVENT_DATA_INVALID`, `EVENT_DATA_TOO_LARGE`), and an undeclared type is\n  refused (`EVENT_TYPE_UNDECLARED`).\n- **Subscribe** while composing:\n  `context.events.subscribe([{ id, type, versions, handle }])`, where\n  `handle({ event, signal })` receives `{ id, type, version, tenantId,\n  occurredAt, subjectRef, actor, data, causation }` and resolves or throws.\n  A thrown error with `retryable: false` goes straight to the dead letter.\n  A subscription to a type owned by a module that is not a declared\n  dependency or optional requirement is refused at boot.\n- **Handlers are idempotent on `event.id`.** The first two subscribers\n  already are: notifications on `(tenantId, kind, sourceRef)` and metering on\n  the source reference.\n\n### Data model\n\nEach producing module owns two tables, created by a numbered migration whose\nSQL the helper documents and `migration verify` checks by checksum, the way\njob routing tables stay module-owned under the shared runner:\n\n- `<prefix>_event_outbox`: `tenant_id`, `id`, `type`, `version`,\n  `subject_ref`, `actor_account_id`, `data` (jsonb), `causation_depth`,\n  `occurred_at`.\n- `<prefix>_event_deliveries`: `tenant_id`, `event_id`, `subscription_id`,\n  `status` (`pending`, `delivered`, `retrying`, `dead`, `skipped`),\n  `attempts`, `next_attempt_at`, `last_code`, `claimed_by`, `lease_until`,\n  `settled_at`. One row per matching subscription is inserted by `emit` in\n  the same transaction.\n\nBoth tables enable and force row-level security with a tenant policy; the\nbackground role reads only the routing columns of due deliveries. A data\nclass `<module id>.events` keeps settled rows 30 days by default, is not\nexportable (references only) and redacts the actor on erasure.\n\n### Delivery and durability\n\n- One runner per producer, `<module id>.events`, on `createJobRunner`: claim\n  a due delivery with a lease token, call the subscriber's handler in\n  process with an `AbortSignal` that fires on `CLAIM_LOST`, settle under the\n  token.\n- A failing delivery backs off with `jobBackoff` and becomes `dead` after a\n  bounded number of attempts (8 by default, a platform setting), the shape\n  notifications.core already uses for webhooks. One subscriber failing never\n  delays another: each has its own row.\n- A delivery whose subscriber module is inactive in the workspace\n  (`system.modules.v1`) is settled `skipped`, not retried.\n- A process that dies mid-delivery leaves a claimed row whose lease lapses;\n  another instance reclaims it and delivers again, which the idempotency rule\n  above makes harmless.\n- **Causation.** An event emitted by work that an event started carries\n  `causation_depth` plus one. An automation refuses to start work from an\n  event at depth 4 or more and records `EVENT_CAUSATION_DEPTH`, which stops\n  a loop of triggers.\n\n### Event triggers\n\n`automations.core` gains a trigger kind `event` next to schedules and inbound\nwebhooks: `{ type, versions, filter?, target, inputMapping }`. `filter` is an\nexpression over `data` in the language RFC 0009 promotes out of the workflows\ngate node, so a trigger reads \"`documents.core.document.uploaded` where\n`data.contentType` is `application/pdf` and `data.ownerModule` is\n`purchasing.core`\". The target is an agent or a workflow through the existing\n`automations.targets.v1`; the run's origin names the event id. The run acts\nas the account that last saved the trigger, resolved live, and fails with a\nstable code when that member is inactive or lost the permission, which is the\nrule `adapters.core` already applies to scheduled runs. `automations.core`\nsubscribes to every `triggerable` type and evaluates the workspace's triggers\nat delivery.\n\n### Permissions and tenant isolation\n\n- The tenant of an event is the tenant of the transaction that wrote it,\n  never a value from a request.\n- A handler runs without a person; anything it does on behalf of someone\n  resolves that account live and checks permissions then.\n- Event triggers are managed under the existing automations permissions.\n- New owner scopes `system.events.read` (see deliveries) and\n  `system.events.manage` (replay a dead delivery), granted by an auth.core\n  migration.\n- Outbound webhooks may subscribe to `exportable` types only; the body is the\n  envelope with references, signed with the scheme notifications.core\n  already uses.\n\n### UI surface\n\n- Automations: the trigger drawer gains the event kind with a type picker\n  (declared `triggerable` types with their descriptions), the filter builder\n  and the input mapping.\n- Administration, section integrations: **Events**, owned by `system.core`,\n  lists declared types by module, and per subscription the pending, retrying\n  and dead deliveries of the workspace, with the last code and a Replay\n  action on a dead one. The helper registers the read of each producer's\n  delivery rows with the platform, the way `defineListExport` registers a\n  list, so `system.core` never opens another module's tables.\n- Notifications, webhook subscriptions: exportable event types join the kind\n  picker.\n\n### Sandbox and agents\n\n- The module spec gains `events: { emits: [...], subscribes: [...] }`;\n  `spec validate` checks namespaces, schemas and that a subscribed type\n  belongs to a declared dependency. The scaffold writes the declarations, a\n  handler stub and a test that delivers the same event twice.\n- The sandbox preview runs the drain in its worker with a short poll, so a\n  session sees a trigger fire on sample data.\n- No agent tool emits an event: events are facts a module commits, not\n  statements an agent makes. An agent run can be the target of an event\n  trigger.\n- A skill section in `workflow-development` covers event triggers; module\n  authors get the emit and subscribe rules in `module-new` and\n  `module-update`.\n\n## Alternatives considered\n\n- **Keep post-commit calls.** Simple, and it loses work whenever a process\n  stops between commit and call, which the metering threshold case turns into\n  a month-long gap.\n- **An external broker** (Kafka, NATS, Redis streams, a cloud queue). Adds\n  infrastructure to every deployment and still needs an outbox to avoid the\n  dual write; the database already gives durability and per-tenant isolation.\n- **PostgreSQL `LISTEN`/`NOTIFY`.** Not durable: a notification sent while no\n  listener is connected is gone. Useful later as a wake-up signal for the\n  drain, not as the record.\n- **Logical decoding or change data capture.** Needs replication privileges\n  the runtime role does not hold and turns table shapes into public contract.\n- **One platform-owned outbox table.** One drain instead of one per producer,\n  but every module's transaction would write a table it does not own, against\n  the ADR 0008 rule that modules own their queries and SQL, and the rows would\n  leave the owning module's data class and erasure.\n\n## Rollout and compatibility\n\n1. `packages/server/src/events` with the declare, emit, subscribe and drain\n   contract, the documented migration SQL and tests on PGlite and on\n   PostgreSQL with the non-bypass roles. Platform API patch bump (additive).\n2. Producers `agents.core`, `workflows.core`, `approvals.core` and\n   `metering.core` add their outbox migration and emit next to the current\n   calls; `notifications.core` and `metering.core` subscribe, and\n   `workflows.core` subscribes to `approvals.core.request.resolved` to wake\n   waiting runs; then the post-commit calls and the four copies of the\n   publish contract are removed. Patch bumps, since no public capability\n   changes shape.\n3. `automations.core` event trigger (minor), `system.core` Events screen and\n   scopes (minor) with the auth.core scope migration.\n4. First new types: `documents.core.document.uploaded`,\n   `import.core.job.completed`, `adapters.core.run.settled`,\n   `exports.core.job.completed`, `research.core.evidence.kept`, each a patch\n   bump of its module.\n5. Spec schema section, scaffold, skills, capability card paragraph.\n\n`notifications.publish.v1` and `approvals.requests.v1` keep their shapes;\n`onResolved` stays until the owner decides its fate (question 5). Nothing in\nthe official modules changes until they choose to emit.\n\n## Open questions for the owner\n\n1. **Reopen H9.** Four producers already publish after commit and one\n   consumer polls every five minutes. Reopen the outbox now: yes or no?\n2. **Where the rows live.** Outbox and delivery tables per producing module\n   (proposed), or one platform-owned table?\n3. **Order.** Event triggers in `automations.core` in the first wave together\n   with the outbox, or the outbox and the four producers first?\n4. **Outbound webhooks.** May an owner send `exportable` event types to an\n   outbound webhook, which widens notifications.core beyond its eight kinds:\n   yes or no?\n5. **Approval callbacks.** After workflows subscribes to\n   `approvals.core.request.resolved`, keep `onResolved` as a fast path, or\n   remove it together with the five minute recheck?\n",
+                "createdAt": "2026-09-17T16:57:15Z",
+                "updatedAt": "2026-09-17T16:57:15Z",
+                "author": {
+                  "login": "WebEferen"
+                },
+                "repository": {
+                  "nameWithOwner": "Flowdular/flowdular"
+                },
+                "category": {
+                  "name": "Ideas"
+                },
+                "isAnswered": null,
+                "answerChosenAt": null,
+                "upvoteCount": 1,
+                "comments": {
+                  "totalCount": 0
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
