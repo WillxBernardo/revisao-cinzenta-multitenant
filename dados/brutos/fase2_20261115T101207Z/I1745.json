@@ -1,0 +1,138 @@
+{
+ "id_item": "I1745",
+ "url": "https://github.com/rocky-data/rocky/issues/2015",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:56.277667+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/rocky-data/rocky/issues/2015",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/rocky-data/rocky/issues/2015",
+    "repository_url": "https://api.github.com/repos/rocky-data/rocky",
+    "labels_url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/labels{/name}",
+    "comments_url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/comments",
+    "events_url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/events",
+    "html_url": "https://github.com/rocky-data/rocky/issues/2015",
+    "id": 5469065687,
+    "node_id": "I_kwDOSB2L6s8AAAABRftR1w",
+    "number": 2015,
+    "title": "bug(engine): a [[test]] block on a .rocky model never runs, so a wrong expectation passes",
+    "user": {
+     "login": "hugocorreia90",
+     "id": 15011339,
+     "node_id": "MDQ6VXNlcjE1MDExMzM5",
+     "avatar_url": "https://avatars.githubusercontent.com/u/15011339?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/hugocorreia90",
+     "html_url": "https://github.com/hugocorreia90",
+     "followers_url": "https://api.github.com/users/hugocorreia90/followers",
+     "following_url": "https://api.github.com/users/hugocorreia90/following{/other_user}",
+     "gists_url": "https://api.github.com/users/hugocorreia90/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/hugocorreia90/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/hugocorreia90/subscriptions",
+     "organizations_url": "https://api.github.com/users/hugocorreia90/orgs",
+     "repos_url": "https://api.github.com/users/hugocorreia90/repos",
+     "events_url": "https://api.github.com/users/hugocorreia90/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/hugocorreia90/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 10685575176,
+      "node_id": "LA_kwDOSB2L6s8AAAACfOjwCA",
+      "url": "https://api.github.com/repos/rocky-data/rocky/labels/bug",
+      "name": "bug",
+      "color": "d73a4a",
+      "default": true,
+      "description": "Something isn't working",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11836959171,
+      "node_id": "LA_kwDOSB2L6s8AAAACwYmpww",
+      "url": "https://api.github.com/repos/rocky-data/rocky/labels/engine",
+      "name": "engine",
+      "color": "c2410c",
+      "default": false,
+      "description": "Engine (Rust CLI) subproject",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-09-16T01:15:13Z",
+    "updated_at": "2026-09-16T02:56:14Z",
+    "closed_at": "2026-09-16T02:56:14Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "A `[[test]]` block on a `.rocky` model never runs. `rocky test` prints no unit-test line at all and exits 0, so a deliberately wrong expectation passes. The same sidecar on a `.sql` model fails correctly. A `[[surrogate_key]]` block on a `.rocky` model is dropped the same way, so the key column is never created.\n\n## Reproduce (engine 1.74.0, DuckDB, no credentials)\n\n`rocky.toml` declares one transformation pipeline over `models/**`. `models/raw_orders.sql` is a `VALUES` list, so nothing needs seeding.\n\n```toml\n# models/customer_totals.toml — the expectation is deliberately WRONG:\n# customer 7 totals 15.0, not 999.0.\ndepends_on = [\"raw_orders\"]\n\n[target]\ncatalog = \"repro\"\nschema = \"main\"\n\n[[test]]\nname = \"totals_per_customer\"\n\n[[test.given]]\nref = \"raw_orders\"\nrows = [\n    { order_id = 1, customer_id = 7, amount = 10.0 },\n    { order_id = 2, customer_id = 7, amount = 5.0 },\n    { order_id = 3, customer_id = 9, amount = 4.0 },\n]\n\n[test.expect]\nrows = [\n    { customer_id = 7, total = 999.0 },\n    { customer_id = 9, total = 4.0 },\n]\n```\n\nOnly the model file changes between A and B.\n\n```text\nA  models/customer_totals.rocky      rocky test  exit 0\n     from raw_orders                   \"passed\": 2, \"failed\": 0\n     group customer_id {               no \"unit test run complete\" line anywhere\n         total: sum(amount)            in stdout or stderr\n     }\n\nB  models/customer_totals.sql       rocky test  exit 1\n     SELECT customer_id,              \"unit test run complete\" total=1 passed=0\n       SUM(amount) AS total           the wrong expectation is reported\n     FROM raw_orders\n     GROUP BY customer_id\n```\n\nThe missing log line is the tell: the block is not run and passed, it is never loaded.\n\nThe same A/B with a `[[surrogate_key]]` block instead, reading the built table afterwards:\n\n```text\nA  .rocky   rocky run exit 0   customer_totals columns: customer_id, total\nB  .sql     rocky run exit 0   customer_totals columns: customer_id, total, customer_sk\n```\n\n## Why\n\n`engine/crates/rocky-core/src/models.rs:1708`, inside `load_unit_tests_from_dir`:\n\n```rust\nif path.extension().and_then(|e| e.to_str()) != Some(\"sql\") {\n    continue;\n}\n```\n\nThe loader walks the models tree looking for `.sql` files and reads each one's sidecar. A `.rocky` model has a sidecar too, but its model file never matches, so the directory entry is skipped and the sidecar is never opened. `load_surrogate_keys_from_dir_filtered` (`models.rs:1891`) has the identical filter.\n\n`load_column_docs_from_dir` (`models.rs:1789`), three functions away, reads both extensions:\n\n```rust\nif ext != Some(\"sql\") && ext != Some(\"rocky\") {\n```\n\nSo the two-extension form is the intended shape, and two loaders were left behind. The compiler itself accepts both (`rocky-compiler/src/project.rs:534`), which is why `rocky compile` is clean and nothing warns.\n\n## Why it matters\n\nA unit test that cannot fail is worse than one that does not exist: `rocky test` and `rocky ci` go green on a model whose declared expectations are never checked, and the project cannot tell the difference. Every DSL model with a `[[test]]` block is in that state today.\n\n`docs/src/content/docs/concepts/testing.md` and the `[[test]]` section of `reference/model-format.md` both say `rocky test` runs these blocks, without limiting it to `.sql` models.\n\n## Fix\n\nWiden both filters to `Some(\"sql\") | Some(\"rocky\")`, matching the column-docs loader. Two tests to stop it coming back: a `[[test]]` block on a `.rocky` model that fails for the right reason, and a `[[surrogate_key]]` block on a `.rocky` model that reaches the built table. A third, cheaper guard is worth considering: `rocky test` reporting how many unit tests it loaded, so \"zero ran\" is visible rather than silent.\n\nFound by a documentation walkthrough, reproduced twice independently, and confirmed here on a dev build.\n",
+    "closed_by": {
+     "login": "hugocorreia90",
+     "id": 15011339,
+     "node_id": "MDQ6VXNlcjE1MDExMzM5",
+     "avatar_url": "https://avatars.githubusercontent.com/u/15011339?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/hugocorreia90",
+     "html_url": "https://github.com/hugocorreia90",
+     "followers_url": "https://api.github.com/users/hugocorreia90/followers",
+     "following_url": "https://api.github.com/users/hugocorreia90/following{/other_user}",
+     "gists_url": "https://api.github.com/users/hugocorreia90/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/hugocorreia90/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/hugocorreia90/subscriptions",
+     "organizations_url": "https://api.github.com/users/hugocorreia90/orgs",
+     "repos_url": "https://api.github.com/users/hugocorreia90/repos",
+     "events_url": "https://api.github.com/users/hugocorreia90/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/hugocorreia90/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/rocky-data/rocky/issues/2015/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

@@ -1,0 +1,137 @@
+{
+ "id_item": "I1018",
+ "url": "https://github.com/estuary/connectors/issues/1643",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:13.262689+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/estuary/connectors/issues/1643",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/estuary/connectors/issues/1643",
+    "repository_url": "https://api.github.com/repos/estuary/connectors",
+    "labels_url": "https://api.github.com/repos/estuary/connectors/issues/1643/labels{/name}",
+    "comments_url": "https://api.github.com/repos/estuary/connectors/issues/1643/comments",
+    "events_url": "https://api.github.com/repos/estuary/connectors/issues/1643/events",
+    "html_url": "https://github.com/estuary/connectors/issues/1643",
+    "id": 2346694632,
+    "node_id": "I_kwDOFh74cs6L37fo",
+    "number": 1643,
+    "title": "SQL Server:  CDC Improvements",
+    "user": {
+     "login": "jgraettinger",
+     "id": 209664,
+     "node_id": "MDQ6VXNlcjIwOTY2NA==",
+     "avatar_url": "https://avatars.githubusercontent.com/u/209664?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jgraettinger",
+     "html_url": "https://github.com/jgraettinger",
+     "followers_url": "https://api.github.com/users/jgraettinger/followers",
+     "following_url": "https://api.github.com/users/jgraettinger/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jgraettinger/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jgraettinger/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jgraettinger/subscriptions",
+     "organizations_url": "https://api.github.com/users/jgraettinger/orgs",
+     "repos_url": "https://api.github.com/users/jgraettinger/repos",
+     "events_url": "https://api.github.com/users/jgraettinger/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jgraettinger/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [
+     {
+      "login": "willdonnelly",
+      "id": 82535,
+      "node_id": "MDQ6VXNlcjgyNTM1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82535?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/willdonnelly",
+      "html_url": "https://github.com/willdonnelly",
+      "followers_url": "https://api.github.com/users/willdonnelly/followers",
+      "following_url": "https://api.github.com/users/willdonnelly/following{/other_user}",
+      "gists_url": "https://api.github.com/users/willdonnelly/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/willdonnelly/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/willdonnelly/subscriptions",
+      "organizations_url": "https://api.github.com/users/willdonnelly/orgs",
+      "repos_url": "https://api.github.com/users/willdonnelly/repos",
+      "events_url": "https://api.github.com/users/willdonnelly/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/willdonnelly/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     }
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2024-06-11T15:15:16Z",
+    "updated_at": "2024-06-18T04:40:53Z",
+    "closed_at": null,
+    "assignee": {
+     "login": "willdonnelly",
+     "id": 82535,
+     "node_id": "MDQ6VXNlcjgyNTM1",
+     "avatar_url": "https://avatars.githubusercontent.com/u/82535?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/willdonnelly",
+     "html_url": "https://github.com/willdonnelly",
+     "followers_url": "https://api.github.com/users/willdonnelly/followers",
+     "following_url": "https://api.github.com/users/willdonnelly/following{/other_user}",
+     "gists_url": "https://api.github.com/users/willdonnelly/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/willdonnelly/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/willdonnelly/subscriptions",
+     "organizations_url": "https://api.github.com/users/willdonnelly/orgs",
+     "repos_url": "https://api.github.com/users/willdonnelly/repos",
+     "events_url": "https://api.github.com/users/willdonnelly/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/willdonnelly/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "There are several issues with SQL Server CDC and/or our connector implementation which keep coming up:\r\n\r\n- The change tables can grow pretty large. Change data retention in the CDC tables is purely time-based, with the default being 72 hours. Since the CDC tables store a complete row image for every change made to the source table during that time interval, this can really add up.\r\n- Polling all of the change tables can take a while. It's fairly common to have a few hundred tables in the source database and want all of them captured, and even thousands are hardly out of the question. Currently we issue a polling query against each table, one at a time, and all those database RTTs really add up.\r\n- Handling DDL alterations is complicated and difficult at the best of times, and our connector doesn't handle it well. Because of how SQL Server CDC is structured (as an asynchronous process copying WAL events into a change table) the set of columns is fixed at the time that a capture instance is created. To solve this problem, SQL Server generously allows one to create **two** capture instances for any source table, and the theory is that you're supposed to create a second capture instance after the DDL change, have your CDC consumer automatically switch over once the minimum LSN of the newer table is reached, and then go clean up the old one. We currently don't handle this at all. What we ought to do is implement support for that little switchover dance, and then _also_ implement logic to automatically create new capture instances as appropriate and delete the old one once we're able.\r\n- Finally, a fairly common pattern in SQL Server is having a bunch of \"cookie cutter\" databases with the same structure, one per customer or equivalent unit of isolation. As a reminder, the hierarchy in SQL Server goes `Server > Database > Schema > Table`, and what we're talking about is a single server install divided up into a bunch of distinct logical databases, each of which contains the same schemas and tables. I don't know why exactly we keep seeing people doing this with SQL Server, but have theorized that maybe it's simply because SQL Server allows cross-database queries to be issued that makes this seem like an attractive pattern? Or maybe there's some influential DB admin training course that tells them to do this. Regardless, it's a common pattern we've seen and it would be nice to be able to support it somehow.\r\n\r\nThat's a lot of problems. One thing that's been proposed in the past is that if we were to use \"Change Tracking\" rather than CDC this might improve the situation. A quick summary of Change Tracking versus CDC:\r\n\r\n- Both Change Tracking and CDC have some sort of \"change table\", one per source table, which keeps track of the change history of the source table and is cleaned up according to a time-based retention policy.\r\n- The process of enabling Change Tracking / CDC on a database and on a table and then querying changes is basically the same at a high level even if the specific queries look different (Change Tracking has its own query syntax while CDC uses stored procedures for everything).\r\n- The CDC change table contains a full row image for each change, whereas Change Tracking only stores the primary key of the modified row. Most of the other differences between the two mechanisms are just implications of that:\r\n  - Change Tracking will usually require less storage space on disk than CDC would, for a given dataset and retention period.\r\n  - If you want to get actual row contents from Change Tracking, you have to do a join between the change history and the current state of the table. But since you can only get the latest state, it's possible to miss changes which occur in between polling intervals. And in fact, Change Tracking only lets you query \"net changes\" so that you can't screw that up (even though we can infer that the full history must exist in the change table to satisfy the API guarantees). So Change Tracking can't be used to produce a reliable \"audit log\" of changes like CDC can.\r\n  - Change Tracking can only be used on tables which have primary keys.\r\n- The other relevant difference between Change Tracking and CDC is when exactly the change information is written into the change table.\r\n  - CDC runs an asynchronous worker task which periodically tails the writeahead log and for each change to a CDC-enabled table writes that change information into the corresponding change table(s).\r\n  - Change Tracking on the other hand writes change information into the change tables as part of the same DML transaction that modifies the source table. According to [the relevant Microsoft documentation](https://learn.microsoft.com/en-us/sql/relational-databases/track-changes/manage-change-tracking-sql-server?view=sql-server-ver16#effects-on-dml) the overhead is \"similar to the overhead incurred when an index is created for a table and needs to be maintained\".\r\n  - So to summarize, CDC moves more data overall because it's tracking full row images, but it imposes zero additional overhead within the update transactions themselves, whereas Change Tracking moves less data (just the primary keys) but it does so as part of the update to the source table and thus imposes a small but nonzero overhead on each transaction.\r\n\r\nAfter investigating the situation in detail, we have decided that Change Tracking is probably not the solution we need right now. It has several downsides (only supports net changes so it can't be used for audit logging, requires a primary key so it can't be used on all tables, and a small but nonzero overhead on normal transaction processing) and the only real benefit is that the change table stores less data when both are configured with the same retention period.\r\n\r\nWe can do better than time-based retention (at least when our capture task is online and polling for changes) by explicitly issuing `sys.sp_cdc_cleanup_change_table` queries periodically (in response to Flow checkpoint acknowledgements) to clean up change events which have already been durably committed into Flow. This will mean that the change tables are typically storing seconds or minutes worth of change data rather than days, which should more than offset storing the full row image.\r\n\r\nTo make CDC actually work well for most users, we intend to make the following changes:\r\n\r\n- Manually cleanup change tables in response to Flow acknowledgements.\r\n- Some sort of polling query to figure out which change tables have new data and then query just those ones. Possibly also adding some parallelism to the change table queries, because there's no real reason we can't dispatch a few of those queries in parallel.\r\n- Fully automated handling of DDL alterations to the source table. These can be detected by checking `sys.sp_cdc_get_ddl_history` and then handled by automatically creating a new CDC instance, and then deleting the old one after it's no longer needed. This also implies support for the expected \"CDC instance two-step\" switchover behavior when a new CDC instance is created, so that DDL alterations can be handled seamlessly in the first place.\r\n\r\nThe one thing which this plan doesn't currently address is the issue of these \"cookie-cutter databases\". However using Change Tracking wouldn't do much to directly help with that, either, and it's looking reasonably likely that whatever form our solution takes for those will need to be its own dedicated connector. Just as one example, the endpoint config / resource specs which work well for the single-database use case wouldn't apply very well to the cookie-cutter scenario, and anything that would make them apply would look really overcomplicated in the single-database scenario.\r\n\r\nThere are also simplifying assumptions that we may be able to make about cookie-cutter databases. For instance, we can (probably?) safely assume that each individual table is small enough that we can reasonably backfill it all in one shot, which means that we could dispense with most of the complexity of our watermarking-and-incremental-backfills connector logic and just implement a much simpler \"create the CDC instance, issue a SELECT * query, and after consuming the entire result set from that backfill query begin processing CDC events for that table\" sort of pseudo-snapshotting behavior.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/estuary/connectors/issues/1643/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/estuary/connectors/issues/1643/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/estuary/connectors/issues/1643/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

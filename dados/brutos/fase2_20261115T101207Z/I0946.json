@@ -1,0 +1,163 @@
+{
+ "id_item": "I0946",
+ "url": "https://github.com/duckdb/duckdb-postgres/issues/321",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:02.031659+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321",
+    "repository_url": "https://api.github.com/repos/duckdb/duckdb-postgres",
+    "labels_url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/labels{/name}",
+    "comments_url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/comments",
+    "events_url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/events",
+    "html_url": "https://github.com/duckdb/duckdb-postgres/issues/321",
+    "id": 3064413000,
+    "node_id": "I_kwDOGgByGs62pztI",
+    "number": 321,
+    "title": "Filter Pushdown - Not working as expected on simple use cases",
+    "user": {
+     "login": "IS-Josh",
+     "id": 48971328,
+     "node_id": "MDQ6VXNlcjQ4OTcxMzI4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/48971328?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/IS-Josh",
+     "html_url": "https://github.com/IS-Josh",
+     "followers_url": "https://api.github.com/users/IS-Josh/followers",
+     "following_url": "https://api.github.com/users/IS-Josh/following{/other_user}",
+     "gists_url": "https://api.github.com/users/IS-Josh/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/IS-Josh/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/IS-Josh/subscriptions",
+     "organizations_url": "https://api.github.com/users/IS-Josh/orgs",
+     "repos_url": "https://api.github.com/users/IS-Josh/repos",
+     "events_url": "https://api.github.com/users/IS-Josh/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/IS-Josh/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2025-05-14T22:33:49Z",
+    "updated_at": "2025-06-11T13:28:31Z",
+    "closed_at": "2025-06-11T13:28:31Z",
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "I've been using Duckdb with dbt.  When I attach a Postgresql catalogue and query it via native Duckdb syntax without using Postgresql scanner or Postgresql query functions, Duckdb does not seem to push down the filter in simple scenarios. Example.\n\nusing v1.2\nWe have large database each table has a partition per customer.  So every query we run on a per tenant basis should have it's partition key filtering on.\n\n\n--works fine\nSELECT * FROM postgres_query('mydb','select * from tenant.table where tnt_id= ''{{var(\"tnt_id\")}}''   ')\n--tnt_id not pushed down to copy command\nSelect * from mydb.tenant.table where tnt_id=''{{var(\"tnt_id\")}}'' \n\nThe data type of the column being filtered on is a uuid.\n\n\nWe have set pg_use_ctid_scan to false as it does not work efficiently with our partitioned database and have pg_experimental_filter_pushdown set to false.\n\n\nNot sure if this is a bug or not.",
+    "closed_by": {
+     "login": "Mytherin",
+     "id": 3978469,
+     "node_id": "MDQ6VXNlcjM5Nzg0Njk=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/3978469?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/Mytherin",
+     "html_url": "https://github.com/Mytherin",
+     "followers_url": "https://api.github.com/users/Mytherin/followers",
+     "following_url": "https://api.github.com/users/Mytherin/following{/other_user}",
+     "gists_url": "https://api.github.com/users/Mytherin/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/Mytherin/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/Mytherin/subscriptions",
+     "organizations_url": "https://api.github.com/users/Mytherin/orgs",
+     "repos_url": "https://api.github.com/users/Mytherin/repos",
+     "events_url": "https://api.github.com/users/Mytherin/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/Mytherin/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/comments/2962716563",
+     "html_url": "https://github.com/duckdb/duckdb-postgres/issues/321#issuecomment-2962716563",
+     "issue_url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/321",
+     "id": 2962716563,
+     "node_id": "IC_kwDOGgByGs6wl3eT",
+     "user": {
+      "login": "Mytherin",
+      "id": 3978469,
+      "node_id": "MDQ6VXNlcjM5Nzg0Njk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3978469?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Mytherin",
+      "html_url": "https://github.com/Mytherin",
+      "followers_url": "https://api.github.com/users/Mytherin/followers",
+      "following_url": "https://api.github.com/users/Mytherin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Mytherin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Mytherin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Mytherin/subscriptions",
+      "organizations_url": "https://api.github.com/users/Mytherin/orgs",
+      "repos_url": "https://api.github.com/users/Mytherin/repos",
+      "events_url": "https://api.github.com/users/Mytherin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Mytherin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2025-06-11T13:28:31Z",
+     "updated_at": "2025-06-11T13:28:31Z",
+     "body": "Thanks for the report!\n\nFilter pushdown is only performed when `pg_experimental_filter_pushdown` is set to true. If you have set that to false, filter pushdown is expected not be enabled. Testing myself it seems that UUID filters are pushed down correctly. If you have a workload where this is not the case when `pg_experimental_filter_pushdown = true` then please share - but currently I can't reproduce a problem here.",
+     "author_association": "MEMBER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/duckdb/duckdb-postgres/issues/comments/2962716563/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

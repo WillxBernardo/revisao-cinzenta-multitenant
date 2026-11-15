@@ -1,0 +1,197 @@
+{
+ "id_item": "I0890",
+ "url": "https://github.com/debezium/dbz/issues/170",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:42.448558+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/170",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/debezium/dbz/issues/170",
+    "repository_url": "https://api.github.com/repos/debezium/dbz",
+    "labels_url": "https://api.github.com/repos/debezium/dbz/issues/170/labels{/name}",
+    "comments_url": "https://api.github.com/repos/debezium/dbz/issues/170/comments",
+    "events_url": "https://api.github.com/repos/debezium/dbz/issues/170/events",
+    "html_url": "https://github.com/debezium/dbz/issues/170",
+    "id": 3718324319,
+    "node_id": "I_kwDOQZg79s7doSBf",
+    "number": 170,
+    "title": "A long running PostgresTaskContext.refreshSchema causes the replication stream to fail [DBZ-932]",
+    "user": {
+     "login": "jpechane",
+     "id": 650600,
+     "node_id": "MDQ6VXNlcjY1MDYwMA==",
+     "avatar_url": "https://avatars.githubusercontent.com/u/650600?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jpechane",
+     "html_url": "https://github.com/jpechane",
+     "followers_url": "https://api.github.com/users/jpechane/followers",
+     "following_url": "https://api.github.com/users/jpechane/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jpechane/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jpechane/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jpechane/subscriptions",
+     "organizations_url": "https://api.github.com/users/jpechane/orgs",
+     "repos_url": "https://api.github.com/users/jpechane/repos",
+     "events_url": "https://api.github.com/users/jpechane/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jpechane/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 9733697432,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxvmA",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/postgresql-connector",
+      "name": "component/postgresql-connector",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733700131,
+      "node_id": "LA_kwDOQZg79s8AAAACRCx6Iw",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/type/bug",
+      "name": "type/bug",
+      "color": "fc2929",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9809765083,
+      "node_id": "LA_kwDOQZg79s8AAAACSLUi2w",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/migrated-from-jira",
+      "name": "migrated-from-jira",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2025-12-11T08:23:25Z",
+    "updated_at": "2026-11-14T12:20:26Z",
+    "closed_at": "2026-11-14T12:20:26Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "Migrated from [DBZ-932](https://issues.redhat.com/browse/DBZ-932)\n\nIf `PostgresTaskContext.refreshSchema` takes longer than `wal_sender_timeout` to run the replication stream errors on the first call to `read`.\n\n{noformat}\norg.apache.kafka.connect.errors.ConnectException: An exception ocurred in the change event producer. This connector will be stopped.\n\tat io.debezium.connector.base.ChangeEventQueue.throwProducerFailureIfPresent(ChangeEventQueue.java:168)\n\tat io.debezium.connector.base.ChangeEventQueue.poll(ChangeEventQueue.java:149)\n\tat io.debezium.connector.postgresql.PostgresConnectorTask.poll(PostgresConnectorTask.java:146)\n\tat org.apache.kafka.connect.runtime.WorkerSourceTask.poll(WorkerSourceTask.java:244)\n\tat org.apache.kafka.connect.runtime.WorkerSourceTask.execute(WorkerSourceTask.java:220)\n\tat org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:175)\n\tat org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:219)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: org.postgresql.util.PSQLException: Database connection failed when reading from copy\n\tat org.postgresql.core.v3.QueryExecutorImpl.readFromCopy(QueryExecutorImpl.java:964)\n\tat org.postgresql.core.v3.CopyDualImpl.readFromCopy(CopyDualImpl.java:41)\n\tat org.postgresql.core.v3.replication.V3PGReplicationStream.receiveNextData(V3PGReplicationStream.java:145)\n\tat org.postgresql.core.v3.replication.V3PGReplicationStream.readInternal(V3PGReplicationStream.java:114)\n\tat org.postgresql.core.v3.replication.V3PGReplicationStream.read(V3PGReplicationStream.java:60)\n\tat io.debezium.connector.postgresql.connection.PostgresReplicationConnection$1.read(PostgresReplicationConnection.java:198)\n\tat io.debezium.connector.postgresql.RecordsStreamProducer.streamChanges(RecordsStreamProducer.java:128)\n\tat io.debezium.connector.postgresql.RecordsStreamProducer.lambda$start$1(RecordsStreamProducer.java:114)\n\t... 5 more\nCaused by: java.io.EOFException\n\tat org.postgresql.core.PGStream.receiveChar(PGStream.java:284)\n\tat org.postgresql.core.v3.QueryExecutorImpl.processCopyResults(QueryExecutorImpl.java:1006)\n\tat org.postgresql.core.v3.QueryExecutorImpl.readFromCopy(QueryExecutorImpl.java:962)\n\t... 12 more\n{noformat}\n\nWe run a tenant per schema which each schema having ~50 tables. Refreshing the schema takes over a minute.\n\nWe have worked around this by using the fact that we set `schema.whitelist` to a single schema and passing that through to `connection.readSchema`.\n\n{noformat}\nthis.databaseCatalog = config.databaseName();\nString schemaWhitelist = config.schemaWhitelist();\nif (schemaWhitelist != null && !schemaWhitelist.isEmpty()) {\n    // not valid if there is regex in this string or it has commas, postgresql puts this string into a LIKE\n    this.schemaNamePattern = schemaWhitelist;\n} else {\n    this.schemaNamePattern = null;\n}\n\n...\n\nconnection.readSchema(tables(), this.databaseCatalog, this.schemaNamePattern, filters.tableNameFilter(), null, true);\n{noformat}\n",
+    "closed_by": {
+     "login": "Naros",
+     "id": 3255568,
+     "node_id": "MDQ6VXNlcjMyNTU1Njg=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/3255568?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/Naros",
+     "html_url": "https://github.com/Naros",
+     "followers_url": "https://api.github.com/users/Naros/followers",
+     "following_url": "https://api.github.com/users/Naros/following{/other_user}",
+     "gists_url": "https://api.github.com/users/Naros/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/Naros/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/Naros/subscriptions",
+     "organizations_url": "https://api.github.com/users/Naros/orgs",
+     "repos_url": "https://api.github.com/users/Naros/repos",
+     "events_url": "https://api.github.com/users/Naros/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/Naros/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/170/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/debezium/dbz/issues/170/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "not_planned",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/170/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/comments/6877177119",
+     "html_url": "https://github.com/debezium/dbz/issues/170#issuecomment-6877177119",
+     "issue_url": "https://api.github.com/repos/debezium/dbz/issues/170",
+     "id": 6877177119,
+     "node_id": "IC_kwDOQZg79s8AAAABmellHw",
+     "user": {
+      "login": "Naros",
+      "id": 3255568,
+      "node_id": "MDQ6VXNlcjMyNTU1Njg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3255568?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Naros",
+      "html_url": "https://github.com/Naros",
+      "followers_url": "https://api.github.com/users/Naros/followers",
+      "following_url": "https://api.github.com/users/Naros/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Naros/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Naros/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Naros/subscriptions",
+      "organizations_url": "https://api.github.com/users/Naros/orgs",
+      "repos_url": "https://api.github.com/users/Naros/repos",
+      "events_url": "https://api.github.com/users/Naros/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Naros/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-11-14T12:20:25Z",
+     "updated_at": "2026-11-14T12:20:25Z",
+     "body": "This looks fixed since 1.0.0.Beta3 by [DBZ-1579](https://issues.redhat.com/browse/DBZ-1579) ([b1b657b8bd](https://github.com/debezium/debezium/commit/b1b657b8bd26a90f5b690f9e6417db07daa0f751)). That change restored the replication stream keep-alive first added in 0.9.5.Final by [DBZ-1214](https://issues.redhat.com/browse/DBZ-1214) ([e1570dd330](https://github.com/debezium/debezium/commit/e1570dd3304a0dee9368ea85f08573da84e79a7b)). Later, [DBZ-8595](https://issues.redhat.com/browse/DBZ-8595) ([1338c7e7c5](https://github.com/debezium/debezium/commit/1338c7e7c5f8e6a3524cf722ccbf3a04dde4497c), 3.1.0.Beta1) removed the schema refresh that ran after streaming had started. Before these changes, the connector started streaming and then refreshed the schema without sending anything on the replication connection, so a refresh longer than `wal_sender_timeout` got the walsender terminated. Now the full refresh runs before the replication stream is started, and a keep-alive thread sends status updates on every open stream.\n\nI checked this on 3.8.0-SNAPSHOT with PostgreSQL 17, `wal_sender_timeout=1000ms`, `snapshot.mode=initial`, `status.update.interval.ms=400`, `errors.max.retries=0` and no schema filter:\n\n1. I created 100 tenant schemas with 50 tables each (5000 tables). A full schema refresh took 5.6 to 6.8 seconds, well above `wal_sender_timeout`.\n2. As a control, I opened a replication stream directly, ran the full refresh without a keep-alive, and then read from the stream.\n3. I repeated step 2 with the keep-alive started, then inserted a row and read again.\n4. I started the connector on all tenant schemas, consumed the snapshot and a streamed insert, waited five times `wal_sender_timeout` with no activity, and inserted into another tenant table.\n5. I stopped the connector, inserted a row, and restarted it from the stored offset, which repeats the full refresh. I consumed that row, waited idle again, and inserted one more row.\n\nThe control reproduced the original failure. The read failed with `PSQLException: Database connection failed when writing to copy`, and the server logged `terminating walsender process due to replication timeout`. With the keep-alive, the read had no error and returned the change. The connector received all four inserts before and after the restart and kept running, with no producer failure, no retry, and no walsender timeout on the server.\n\nI think it's okay to close this issue.\n",
+     "author_association": "MEMBER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/debezium/dbz/issues/comments/6877177119/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

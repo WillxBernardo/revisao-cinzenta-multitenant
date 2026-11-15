@@ -1,0 +1,155 @@
+{
+ "id_item": "I0147",
+ "url": "https://github.com/DTStack/chunjun/issues/1217",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:12:30.617987+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/DTStack/chunjun/issues/1217",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/DTStack/chunjun/issues/1217",
+    "repository_url": "https://api.github.com/repos/DTStack/chunjun",
+    "labels_url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/labels{/name}",
+    "comments_url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/comments",
+    "events_url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/events",
+    "html_url": "https://github.com/DTStack/chunjun/issues/1217",
+    "id": 1361578641,
+    "node_id": "I_kwDOB5-0Q85RKAqR",
+    "number": 1217,
+    "title": "[Bug][chunjun-connection] DateTime type conversion fails in different modes",
+    "user": {
+     "login": "kinoxyz1",
+     "id": 56473938,
+     "node_id": "MDQ6VXNlcjU2NDczOTM4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/56473938?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/kinoxyz1",
+     "html_url": "https://github.com/kinoxyz1",
+     "followers_url": "https://api.github.com/users/kinoxyz1/followers",
+     "following_url": "https://api.github.com/users/kinoxyz1/following{/other_user}",
+     "gists_url": "https://api.github.com/users/kinoxyz1/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/kinoxyz1/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/kinoxyz1/subscriptions",
+     "organizations_url": "https://api.github.com/users/kinoxyz1/orgs",
+     "repos_url": "https://api.github.com/users/kinoxyz1/repos",
+     "events_url": "https://api.github.com/users/kinoxyz1/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/kinoxyz1/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 888666923,
+      "node_id": "MDU6TGFiZWw4ODg2NjY5MjM=",
+      "url": "https://api.github.com/repos/DTStack/chunjun/labels/question",
+      "name": "question",
+      "color": "d876e3",
+      "default": true,
+      "description": "Further information is requested",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2022-09-05T08:22:58Z",
+    "updated_at": "2022-09-08T09:00:44Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Search before asking\r\n\r\n- [X] I had searched in the [issues](https://github.com/DTStack/chunjun/issues) and found no similar question.\r\n\r\n- [X] I had googled my question but i didn't get any help.\r\n\r\n- [X] I had read the documentation: [ChunJun doc](https://dtstack.github.io/chunjun) but it didn't help me.\r\n\r\n\r\n### Description\r\n\r\n# Description\r\nWhen I try to run the task in Flink on yarn mode, it throws an exception, but when I run the task in Flink on pre_job mode, it works fine.\r\n\r\n# case\r\ncreate table statement\r\n```mysql\r\n-- MySQL CREATE TABLE(source)\r\nCREATE TABLE `source` (\r\n  `business_date` date NOT NULL,\r\n  `tenant_id` bigint(20) NOT NULL,\r\n  `etl_time` datetime DEFAULT NULL\r\n);\r\n\r\n-- MySQL CREATE TABLE(sink)\r\nCREATE TABLE `sink` (\r\n  `business_date` date DEFAULT NULL ,\r\n  `tenant_id` bigint(20) DEFAULT NULL,\r\n  `etl_time` varchar(255) DEFAULT NULL\r\n);\r\n\r\n-- data\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-01', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-01', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-01', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-02', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-02', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-02', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-03', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-03', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-03', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-04', 177, '2022-05-24 17:47:36');\r\nINSERT INTO `source` (`business_date`, `tenant_id`, `etl_time`) VALUES ('2020-01-04', 177, '2022-05-24 17:47:36');\r\n```\r\nchunjun json\r\n```json\r\n{\r\n  \"job\" : {\r\n    \"content\" : [ {\r\n      \"reader\" : {\r\n        \"parameter\" : {\r\n          \"password\" : \"000000\",\r\n          \"startLocation\" : \"\",\r\n          \"increColumn\" : \"\",\r\n          \"column\" : [ {\r\n            \"format\" : \"\",\r\n            \"name\" : \"business_date\",\r\n            \"type\" : \"DATE\",\r\n            \"key\" : \"business_date\"\r\n          }, {\r\n            \"format\" : \"\",\r\n            \"name\" : \"tenant_id\",\r\n            \"type\" : \"BIGINT\",\r\n            \"key\" : \"tenant_id\"\r\n          }, {\r\n            \"format\" : \"\",\r\n            \"name\" : \"etl_time\",\r\n            \"type\" : \"DATETIME\",\r\n            \"key\" : \"etl_time\"\r\n          } ],\r\n          \"connection\" : [ {\r\n            \"schema\" : \"test\",\r\n            \"jdbcUrl\" : [ \"jdbc:mysql://localhost:3308/test?characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true\" ],\r\n            \"type\" : 1,\r\n            \"table\" : [ \"source\" ]\r\n          } ],\r\n          \"username\" : \"root\"\r\n        },\r\n        \"name\" : \"mysqlreader\"\r\n      },\r\n      \"writer\" : {\r\n        \"parameter\" : {\r\n          \"postSql\" : [ ],\r\n          \"mode\" : \"insert\",\r\n          \"password\" : \"000000\",\r\n          \"column\" : [ {\r\n            \"name\" : \"business_date\",\r\n            \"format\" : \"\",\r\n            \"isPart\" : false,\r\n            \"type\" : \"DATE\",\r\n            \"key\" : \"business_date\"\r\n          }, {\r\n            \"name\" : \"tenant_id\",\r\n            \"format\" : \"\",\r\n            \"isPart\" : false,\r\n            \"type\" : \"BIGINT\",\r\n            \"key\" : \"tenant_id\"\r\n          }, {\r\n            \"name\" : \"etl_time\",\r\n            \"format\" : \"\",\r\n            \"isPart\" : false,\r\n            \"type\" : \"VARCHAR\",\r\n            \"key\" : \"etl_time\"\r\n          } ],\r\n          \"connection\" : [ {\r\n            \"jdbcUrl\" : \"jdbc:mysql://localhost:3308/test1?characterEncoding=UTF-8&useSSL=false&allowMultiQuerie\",\r\n            \"table\" : [ \"sink\" ]\r\n          } ],\r\n          \"writeMode\" : \"insert\",\r\n          \"preSql\" : [ ],\r\n          \"username\" : \"root\"\r\n        },\r\n        \"name\" : \"mysqlwriter\"\r\n      }\r\n    } ],\r\n    \"setting\" : {\r\n      \"restore\" : {\r\n        \"isRestore\" : false,\r\n        \"isStream\" : false\r\n      },\r\n      \"speed\" : {\r\n        \"readerChannel\" : 1,\r\n        \"writerChannel\" : 1,\r\n        \"bytes\" : -20971520,\r\n        \"channel\" : 1\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\n\r\n# exception information\r\nThe exception information is as follows：\r\n```java\r\n2022-09-05 16:13:48.175 [Legacy Source Thread - Source: mysqlsourcefactory -> Sink: mysqlsinkfactory (1/1)#0] ERROR com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter  - value [2022-05-24T17:47:36] convent failed \r\n2022-09-05 16:13:48.225 [dirty-consumer-pool-2-thread-2] WARN  com.dtstack.chunjun.dirty.log.LogDirtyDataCollector  - \r\n====================Dirty Data=====================\r\nDirtyDataEntry[jobId='ddc99f057f9d827ee95b3a8ca1ad861e', jobName='Flink_Job', operatorName='Source: mysqlsourcefactory', dirtyContent='{\"extHeader\":[],\"byteSize\":1,\"arity\":0,\"rowKind\":\"INSERT\",\"headerInfo\":null,\"string\":\"()\",\"headers\":null}', errorMessage='com.dtstack.chunjun.throwable.ReadRecordException: \r\njava.lang.ClassCastException: java.time.LocalDateTime cannot be cast to java.sql.Timestamp\r\n\tat com.dtstack.chunjun.connector.jdbc.source.JdbcInputFormat.nextRecordInternal(JdbcInputFormat.java:309)\r\n\tat com.dtstack.chunjun.source.format.BaseRichInputFormat.nextRecord(BaseRichInputFormat.java:197)\r\n\tat com.dtstack.chunjun.source.format.BaseRichInputFormat.nextRecord(BaseRichInputFormat.java:67)\r\n\tat com.dtstack.chunjun.source.DtInputFormatSourceFunction.run(DtInputFormatSourceFunction.java:133)\r\n\tat org.apache.flink.streaming.api.operators.StreamSource.run(StreamSource.java:110)\r\n\tat org.apache.flink.streaming.api.operators.StreamSource.run(StreamSource.java:66)\r\n\tat org.apache.flink.streaming.runtime.tasks.SourceStreamTask$LegacySourceFunctionThread.run(SourceStreamTask.java:267)\r\nCaused by: java.lang.ClassCastException: java.time.LocalDateTime cannot be cast to java.sql.Timestamp\r\n\tat com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter.lambda$createInternalConverter$e77f182$2(JdbcColumnConverter.java:176)\r\n\tat com.dtstack.chunjun.converter.AbstractRowConverter.lambda$wrapIntoNullableInternalConverter$66e1293c$1(AbstractRowConverter.java:97)\r\n\tat com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter.toInternal(JdbcColumnConverter.java:114)\r\n\tat com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter.toInternal(JdbcColumnConverter.java:56)\r\n\tat com.dtstack.chunjun.connector.jdbc.source.JdbcInputFormat.nextRecordInternal(JdbcInputFormat.java:287)\r\n\t... 6 more\r\n', fieldName='null', createTime=2022-09-05 16:13:48.179]\r\n\r\n===================================================\r\n```\r\n\r\n### Code of Conduct\r\n\r\n- [X] I agree to follow this project's [Code of Conduct](https://www.apache.org/foundation/policies/conduct)\r\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/DTStack/chunjun/issues/1217/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/DTStack/chunjun/issues/comments/1236691415",
+     "html_url": "https://github.com/DTStack/chunjun/issues/1217#issuecomment-1236691415",
+     "issue_url": "https://api.github.com/repos/DTStack/chunjun/issues/1217",
+     "id": 1236691415,
+     "node_id": "IC_kwDOB5-0Q85JtmnX",
+     "user": {
+      "login": "kinoxyz1",
+      "id": 56473938,
+      "node_id": "MDQ6VXNlcjU2NDczOTM4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56473938?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kinoxyz1",
+      "html_url": "https://github.com/kinoxyz1",
+      "followers_url": "https://api.github.com/users/kinoxyz1/followers",
+      "following_url": "https://api.github.com/users/kinoxyz1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kinoxyz1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kinoxyz1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kinoxyz1/subscriptions",
+      "organizations_url": "https://api.github.com/users/kinoxyz1/orgs",
+      "repos_url": "https://api.github.com/users/kinoxyz1/repos",
+      "events_url": "https://api.github.com/users/kinoxyz1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kinoxyz1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2022-09-05T08:26:18Z",
+     "updated_at": "2022-09-05T08:26:18Z",
+     "body": "At present, after modifying the latest code of the master branch, com.dtstack.chunjun.connector.jdbc.converter.JdbcColumnConverter.java 177 behaves as follows, the session mode is normal, what is the difference between pre_job and session running?\r\n```java\r\n(Timestamp) val, ((TimestampType) (type)).getPrecision());  -> Timestamp.valueOf((LocalDateTime) val), ((TimestampType) (type)).getPrecision()); \r\n```",
+     "author_association": "MEMBER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/DTStack/chunjun/issues/comments/1236691415/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

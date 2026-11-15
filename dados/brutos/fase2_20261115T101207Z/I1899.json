@@ -1,0 +1,95 @@
+{
+ "id_item": "I1899",
+ "url": "https://github.com/tazama-lf/tazama-stack/issues/292",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:33.762798+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292",
+    "repository_url": "https://api.github.com/repos/tazama-lf/tazama-stack",
+    "labels_url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/labels{/name}",
+    "comments_url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/comments",
+    "events_url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/events",
+    "html_url": "https://github.com/tazama-lf/tazama-stack/issues/292",
+    "id": 5816771088,
+    "node_id": "I_kwDOKTbHkM8AAAABWrTiEA",
+    "number": 292,
+    "title": "NiFi: wire the `NIFI_AUTH` switch (localhost-only no-auth default, Keycloak HTTPS for shared deployments)",
+    "user": {
+     "login": "Justus-at-Tazama",
+     "id": 123470803,
+     "node_id": "U_kgDOB1wD0w",
+     "avatar_url": "https://avatars.githubusercontent.com/u/123470803?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/Justus-at-Tazama",
+     "html_url": "https://github.com/Justus-at-Tazama",
+     "followers_url": "https://api.github.com/users/Justus-at-Tazama/followers",
+     "following_url": "https://api.github.com/users/Justus-at-Tazama/following{/other_user}",
+     "gists_url": "https://api.github.com/users/Justus-at-Tazama/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/Justus-at-Tazama/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/Justus-at-Tazama/subscriptions",
+     "organizations_url": "https://api.github.com/users/Justus-at-Tazama/orgs",
+     "repos_url": "https://api.github.com/users/Justus-at-Tazama/repos",
+     "events_url": "https://api.github.com/users/Justus-at-Tazama/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/Justus-at-Tazama/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-12T16:04:45Z",
+    "updated_at": "2026-10-12T16:04:45Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Summary\n\n`biar-nifi` runs over plain HTTP (`NIFI_WEB_HTTP_PORT=8088` in `biar/env/biar-nifi.env`), published on all host interfaces. In that mode NiFi performs **no authentication or authorization**: every client is an anonymous user with full access. That includes:\n\n- Viewing all tenants' data in flight.\n- Changing the ETL.\n- Adding processors that run commands in the container.\n\nThe companion issue tazama-lf/biar#211 adds an image-level switch, `NIFI_AUTH=none|keycloak` (HTTP 8088 unauthenticated / HTTPS 8443 with Keycloak OIDC). This issue wires it into the stack:\n\n- Local deployments default to `none`, reachable **only from the local machine**.\n- Shared deployments (AWS, production) use `keycloak`.\n\n## Work items\n\n1. **Mode selection:** `NIFI_AUTH=none` in the committed `biar/env/biar-nifi.env` (local default). Deployments override it to `keycloak`. Mode-dependent variables:\n   - `KEYCLOAK_ISSUER_URL`, `KEYCLOAK_CLIENT_ID`\n   - `NIFI_WEB_PROXY_HOST`, `INITIAL_ADMIN_IDENTITY`\n2. **Ports (`docker-compose.dev.biar.yaml`, `docker-compose.hub.biar.yaml`):** publish both, permanently. Only the one matching the mode has a listener.\n   ```yaml\n   - \"${NIFI_BIND_ADDRESS:-127.0.0.1}:${NIFI_PORT:-8088}:8088\"         # none mode, localhost-only by default\n   - \"${NIFI_HTTPS_BIND_ADDRESS:-0.0.0.0}:${NIFI_HTTPS_PORT:-8443}:8443\" # keycloak mode\n   ```\n   - The localhost default is a safeguard: an unauthenticated NiFi is never reachable from other machines unless someone deliberately sets `NIFI_BIND_ADDRESS=0.0.0.0`.\n   - A shared deployment that forgets to switch modes **fails closed**: the UI is unreachable, not public.\n   - Internal callers use the Docker network and are unaffected.\n3. **`biar/nifi/init.sh`:** branch on `NIFI_AUTH`.\n   - `none`: `http://biar-nifi:8088`, as today.\n   - `keycloak`: `https://biar-nifi:8443`, with the machine identity (client certificate) defined in the biar issue.\n4. **Keycloak (realm-import JSON `core/auth/keycloak/realms/00-tazama-test-realm.json`):**\n   - Confidential client `nifi`, redirect `https://<nifi-host>/nifi-api/access/oidc/callback`, with a local test secret, as for `jupyterhub`.\n   - Group tree `tazama-nifi/NIFI_ADMIN/<ORG>` (TENANT_ID on org leafs).\n   - `keycloak` mode requires core's **Authentication** toggle.\n5. **Secrets (`secrets.env` template, see the secrets-file work):**\n   - New keys: `TAZAMA_NIFI_OIDC_CLIENT_SECRET`, `TAZAMA_NIFI_SENSITIVE_PROPS_KEY`, `TAZAMA_NIFI_KEYSTORE_PASSWORD`, `TAZAMA_NIFI_TRUSTSTORE_PASSWORD`.\n   - They are required only in `keycloak` mode, so compose uses `${X:-}`, and the image does the fail-fast check in `keycloak` mode.\n6. **AWS (`infra/aws`):**\n   - Deploy scripts set `NIFI_AUTH=keycloak` and **refuse** `none`.\n   - Values come from SSM (`/tazama/creds/nifi/*`).\n   - ALB target group `tazama-tg-nifi` becomes HTTPS:8443, with an adjusted health check (the current `/nifi-api/system-diagnostics` will require auth).\n   - Server C's SG allows 8443 from the ALB SG.\n   - Remove the plain-HTTP NiFi listener and SG rule. All in `modules/alb` + `modules/security-groups`.\n7. **Launcher:** the biar launcher shows the current NiFi auth mode (read from the env file) in its header.\n8. **Docs (`biar/README.md`):**\n   - Both modes and the default.\n   - Localhost-only binding in `none` mode, and `NIFI_BIND_ADDRESS=0.0.0.0` as a deliberate opt-out, with a warning.\n   - The `keycloak` mode URL (`https://localhost:8443/nifi`) and its Keycloak dependency.\n   - Correct the existing NiFi passages (UI URL and login statements).\n   - Also: `infra/aws/aws-deployment-instructions.md` (NiFi listener/SG/health-check sections).\n\n## Behaviour changes (disclosed)\n\n- Local: NiFi on 8088 is no longer reachable from other machines by default (opt-out: `NIFI_BIND_ADDRESS=0.0.0.0`).\n- Any existing shared deployment redeployed in `none` mode loses its NiFi UI through the load balancer (fail-closed). The ETL is unaffected.\n\n## Out of scope\n\n- Tenant (non-operator) access: NiFi has no tenant isolation. Design deferred until a use case exists.\n- `ListenHTTP` on 8081 (published on all interfaces, unauthenticated): separate follow-up; check whether the host mapping is needed at all.\n\n## Related\n\n- tazama-lf/biar#211 (image switch)\n- biar#184 (JupyterHub Keycloak OIDC; same convention as `JUPYTERHUB_AUTH`)\n- Planned tazama-stack secrets file (`secrets.env`)\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/tazama-lf/tazama-stack/issues/292/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

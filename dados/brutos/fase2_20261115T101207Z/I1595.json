@@ -1,0 +1,137 @@
+{
+ "id_item": "I1595",
+ "url": "https://github.com/open-metadata/OpenMetadata/issues/36948",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:34.455447+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948",
+    "repository_url": "https://api.github.com/repos/open-metadata/OpenMetadata",
+    "labels_url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/labels{/name}",
+    "comments_url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/comments",
+    "events_url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/events",
+    "html_url": "https://github.com/open-metadata/OpenMetadata/issues/36948",
+    "id": 6182920067,
+    "node_id": "I_kwDOF1l8-M8AAAABcIffgw",
+    "number": 36948,
+    "title": "Fivetran lineage binds same-named tables to the first service in dbServiceNames",
+    "user": {
+     "login": "greenape",
+     "id": 472828,
+     "node_id": "MDQ6VXNlcjQ3MjgyOA==",
+     "avatar_url": "https://avatars.githubusercontent.com/u/472828?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/greenape",
+     "html_url": "https://github.com/greenape",
+     "followers_url": "https://api.github.com/users/greenape/followers",
+     "following_url": "https://api.github.com/users/greenape/following{/other_user}",
+     "gists_url": "https://api.github.com/users/greenape/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/greenape/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/greenape/subscriptions",
+     "organizations_url": "https://api.github.com/users/greenape/orgs",
+     "repos_url": "https://api.github.com/users/greenape/repos",
+     "events_url": "https://api.github.com/users/greenape/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/greenape/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [
+     {
+      "login": "mohittilala",
+      "id": 63147650,
+      "node_id": "MDQ6VXNlcjYzMTQ3NjUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63147650?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mohittilala",
+      "html_url": "https://github.com/mohittilala",
+      "followers_url": "https://api.github.com/users/mohittilala/followers",
+      "following_url": "https://api.github.com/users/mohittilala/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mohittilala/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mohittilala/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mohittilala/subscriptions",
+      "organizations_url": "https://api.github.com/users/mohittilala/orgs",
+      "repos_url": "https://api.github.com/users/mohittilala/repos",
+      "events_url": "https://api.github.com/users/mohittilala/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mohittilala/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     }
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-11-03T12:50:46Z",
+    "updated_at": "2026-11-10T13:33:50Z",
+    "closed_at": null,
+    "assignee": {
+     "login": "mohittilala",
+     "id": 63147650,
+     "node_id": "MDQ6VXNlcjYzMTQ3NjUw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/63147650?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/mohittilala",
+     "html_url": "https://github.com/mohittilala",
+     "followers_url": "https://api.github.com/users/mohittilala/followers",
+     "following_url": "https://api.github.com/users/mohittilala/following{/other_user}",
+     "gists_url": "https://api.github.com/users/mohittilala/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/mohittilala/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/mohittilala/subscriptions",
+     "organizations_url": "https://api.github.com/users/mohittilala/orgs",
+     "repos_url": "https://api.github.com/users/mohittilala/repos",
+     "events_url": "https://api.github.com/users/mohittilala/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/mohittilala/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Connector\n\nFivetran\n\n### Feature area\n\nLineage\n\n### Describe the bug\n\nWhen several services in `lineageInformation.dbServiceNames` hold a table with the same database, schema and name, the Fivetran connector attaches every connector's lineage to the first listed service.\n\n`_resolve_table` in `pipeline/fivetran/metadata.py` loops over `dbServiceNames` in order and returns the first service where `<service>.<database or *>.<schema>.<table>` exists. It never uses which source the Fivetran connector actually reads from. Sharded or per-tenant estates, where several databases share one schema, are the common case.\n\nIn our instance six MySQL services hold the same `evo` schema, one per Fivetran connector. With all six in one agent's `dbServiceNames`, all six connectors' 273 table edges were attached to the first service. Nothing was logged and the run reported success.\n\n### To Reproduce\n\n1. Two database services, A and B, each with table `db.schema.t`.\n2. Two Fivetran connectors, one syncing from A and one from B.\n3. A Fivetran agent with `dbServiceNames: [A, B]`.\n4. Both connectors' lineage originates from A.\n\n### Expected behavior\n\nThe source service is chosen from the Fivetran connector's own source (for example its configured host, or its database/service type), or the ambiguity is reported and the edge skipped rather than bound to the first match.\n\nOur workaround is one Fivetran agent per source service, each with a `pipelineFilterPattern` and only its own service in `dbServiceNames`.\n\n### OS\n\nKubernetes (ingestion-base image)\n\n### Python version\n\n3.12\n\n### OpenMetadata version\n\n2.0.6\n\n### OpenMetadata Ingestion package version\n\nopenmetadata-ingestion==2.0.1.0; same logic on main.\n\n### Pre-submission checklist\n\n- [x] I searched for duplicate issues.\n- [x] I removed credentials, hostnames, emails, and other sensitive data from logs and config.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/open-metadata/OpenMetadata/issues/36948/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

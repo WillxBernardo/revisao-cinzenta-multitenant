@@ -1,0 +1,143 @@
+{
+ "id_item": "I0064",
+ "url": "https://github.com/ArroyoSystems/arroyo/issues/1103",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:12:22.258939+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103",
+    "repository_url": "https://api.github.com/repos/ArroyoSystems/arroyo",
+    "labels_url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/labels{/name}",
+    "comments_url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/comments",
+    "events_url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/events",
+    "html_url": "https://github.com/ArroyoSystems/arroyo/issues/1103",
+    "id": 4863183148,
+    "node_id": "I_kwDOJRHjJM8AAAABId5JLA",
+    "number": 1103,
+    "title": "Feature request: `bad_data: dead-letter` mode for Kafka sources (retain undecodable records in a DLQ topic)",
+    "user": {
+     "login": "augustinamann-y",
+     "id": 245920012,
+     "node_id": "U_kgDODqhxDA",
+     "avatar_url": "https://avatars.githubusercontent.com/u/245920012?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/augustinamann-y",
+     "html_url": "https://github.com/augustinamann-y",
+     "followers_url": "https://api.github.com/users/augustinamann-y/followers",
+     "following_url": "https://api.github.com/users/augustinamann-y/following{/other_user}",
+     "gists_url": "https://api.github.com/users/augustinamann-y/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/augustinamann-y/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/augustinamann-y/subscriptions",
+     "organizations_url": "https://api.github.com/users/augustinamann-y/orgs",
+     "repos_url": "https://api.github.com/users/augustinamann-y/repos",
+     "events_url": "https://api.github.com/users/augustinamann-y/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/augustinamann-y/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-07-11T16:31:29Z",
+    "updated_at": "2026-08-28T09:17:32Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\n\nArroyo Kafka sources support `bad_data: fail | drop`. `fail` makes a single poisoned record fatal to the whole pipeline (we measured a 27h outage from one bad magic byte). `drop` protects availability but discards the payload — the record is only visible as a counter in deserialization error metrics. There is no built-in way to *retain* the undecodable bytes for later inspection / replay.\n\nOperators are left choosing between availability and forensics. Kafka ecosystems solved this long ago with dead-letter queues (Kafka Connect `errors.deadletterqueue.topic.name`, Flink side outputs, etc.).\n\n## Proposal\n\nA third `bad_data` mode on Kafka sources:\n\n```sql\nCREATE TABLE src (...) WITH (\n  connector = 'kafka',\n  type = 'source',\n  'bad_data' = 'dead-letter',\n  'bad_data.dead_letter.topic' = 'my.dlq'\n);\n```\n\nSemantics: on deserialization failure, produce the ORIGINAL raw bytes to the configured topic with provenance headers (`source_topic`, `source_partition`, `source_offset`, `source_timestamp`, `error`), count it (same metric as `drop`), and continue. Delivery to the DLQ should be at-least-once; a DLQ produce failure should surface as a source error (configurable: warn vs fail).\n\n## Why upstream (and not only a side consumer)\n\nWe currently deploy an external \"sweeper\" that re-validates the same topics and copies undecodable records to a DLQ. It works, but:\n- it duplicates the deserialization work on every record of every topic;\n- its drop decision can drift from the engine's (schema registry cache timing, decoder version skew);\n- the engine already holds the failing bytes at the exact failure point — emitting them is the cheapest correct implementation.\n\n## Notes\n\n- Applies to any self-describing wire format source (avro+SR, json schema).\n- A per-source override of the DLQ topic matters (multi-tenant platforms route by domain).\n- Happy to contribute the implementation if the design direction is acceptable to the maintainers.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/comments/5450727760",
+     "html_url": "https://github.com/ArroyoSystems/arroyo/issues/1103#issuecomment-5450727760",
+     "issue_url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/1103",
+     "id": 5450727760,
+     "node_id": "IC_kwDOJRHjJM8AAAABROOBUA",
+     "user": {
+      "login": "ravithejatech714-create",
+      "id": 292378514,
+      "node_id": "U_kgDOEW1Xkg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/292378514?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ravithejatech714-create",
+      "html_url": "https://github.com/ravithejatech714-create",
+      "followers_url": "https://api.github.com/users/ravithejatech714-create/followers",
+      "following_url": "https://api.github.com/users/ravithejatech714-create/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ravithejatech714-create/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ravithejatech714-create/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ravithejatech714-create/subscriptions",
+      "organizations_url": "https://api.github.com/users/ravithejatech714-create/orgs",
+      "repos_url": "https://api.github.com/users/ravithejatech714-create/repos",
+      "events_url": "https://api.github.com/users/ravithejatech714-create/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ravithejatech714-create/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-08-28T09:17:32Z",
+     "updated_at": "2026-08-28T09:17:32Z",
+     "body": "The 27h outage from a single poisoned record and the external sweeper workaround really stood out here.\n\nWe’ve been working on the operator-side of this recovery problem with ReplayGuard.\n\nReplayGuard doesn’t replace the need to capture the undecodable record into a DLQ — but once failed records are retained, we provide a controlled recovery workflow around selecting the recovery scope, validating/dry-running it, redriving with rate controls, pause/resume/stop, and keeping an audit trail.\n\nYour point about preserving the original record for later inspection/replay is very aligned with what we’re seeing in production recovery workflows.\n\nIf you’re open to it, would you be interested in a short 15–20 min discussion? I’d really like to understand the operator workflow you want after dead-lettering and compare it with what we’ve built.\n\nhttps://replayguard.in",
+     "author_association": "NONE",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/ArroyoSystems/arroyo/issues/comments/5450727760/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,188 @@
+{
+ "id_item": "I1446",
+ "url": "https://github.com/metabase/metabase/issues/76878",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:27.083919+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/metabase/metabase/issues/76878",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/metabase/metabase/issues/76878",
+    "repository_url": "https://api.github.com/repos/metabase/metabase",
+    "labels_url": "https://api.github.com/repos/metabase/metabase/issues/76878/labels{/name}",
+    "comments_url": "https://api.github.com/repos/metabase/metabase/issues/76878/comments",
+    "events_url": "https://api.github.com/repos/metabase/metabase/issues/76878/events",
+    "html_url": "https://github.com/metabase/metabase/issues/76878",
+    "id": 4794191516,
+    "node_id": "I_kwDOAczgH88AAAABHcGOnA",
+    "number": 76878,
+    "title": "Multi-tenant support for divergent tenant schemas",
+    "user": {
+     "login": "zbodi74",
+     "id": 11080638,
+     "node_id": "MDQ6VXNlcjExMDgwNjM4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/11080638?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/zbodi74",
+     "html_url": "https://github.com/zbodi74",
+     "followers_url": "https://api.github.com/users/zbodi74/followers",
+     "following_url": "https://api.github.com/users/zbodi74/following{/other_user}",
+     "gists_url": "https://api.github.com/users/zbodi74/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/zbodi74/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/zbodi74/subscriptions",
+     "organizations_url": "https://api.github.com/users/zbodi74/orgs",
+     "repos_url": "https://api.github.com/users/zbodi74/repos",
+     "events_url": "https://api.github.com/users/zbodi74/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/zbodi74/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 320048748,
+      "node_id": "MDU6TGFiZWwzMjAwNDg3NDg=",
+      "url": "https://api.github.com/repos/metabase/metabase/labels/Type:New%20Feature",
+      "name": "Type:New Feature",
+      "color": "9CED51",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 2467575311,
+      "node_id": "MDU6TGFiZWwyNDY3NTc1MzEx",
+      "url": "https://api.github.com/repos/metabase/metabase/labels/Administration/Data%20Sandboxes",
+      "name": "Administration/Data Sandboxes",
+      "color": "57589A",
+      "default": false,
+      "description": "Enterprise Sandboxing",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9031281443,
+      "node_id": "LA_kwDOAczgH88AAAACGk5rIw",
+      "url": "https://api.github.com/repos/metabase/metabase/labels/.Team/UXWest",
+      "name": ".Team/UXWest",
+      "color": "c7dfec",
+      "default": false,
+      "description": "UX West - use for bugs and feature requests",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9288980647,
+      "node_id": "LA_kwDOAczgH88AAAACKaqYpw",
+      "url": "https://api.github.com/repos/metabase/metabase/labels/.Auto%20triaged",
+      "name": ".Auto triaged",
+      "color": "bfdadc",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-07-02T12:03:57Z",
+    "updated_at": "2026-07-13T20:51:50Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "**What problem will this feature request solve?**\n\nThe current multi-tenant tooling assumes one of following data shapes:\n* Per-tenant databases with identical schemas with db routing\n* A single multi-tenant database with row-level security / sandboxing\n* A singel multi-tenant database with impersonation\n\nEach shape assumes identical tenant schemas, while some customers might see their tenant schemas diverge: a shared \"generic\" schema plus small per-tenant or per-version customizations (a few tenant specific tables, columns or an extra schema with customer controlled data).\n\nThese customers are forced into an all-manual workflow: hand-managing groups, collections, permissions, and serialization across their tenants and databases.\n\n\n**Describe the solution you'd like.**\n\nExtend the tenant tooling, db routing, db permissions  so a common schema can be shared across tenants while allowing controlled per-tenant divergence, without hand-templatizing everything through serialization. \n\nTwo complementary directions (either would materially help; ideally both):\n\n*Option A — Hybrid database routing (shared schema + per-tenant additions).*\nKeep the shared \"generic\" schema managed once on the primary/template database and fanned out to all tenants as today, but let each destination database **catalog and expose its own tenant-specific tables / sub-schemas** on top of the shared template. In short: routing that tolerates a superset schema per tenant instead of requiring byte-for-byte identical schemas.\n\n*Option B — Per-tenant database tagging (scoped connections).*\nAllow a database connection to be **tagged to one or more specific tenants**. A tagged database is queryable only by the listed tenants and is invisible to all others. This gives a clean, declarative way to attach a tenant's divergent/custom data as its own connection while the shared datasets stay common — instead of encoding the isolation manually via groups, collections, and permission grants. It extends primitives the [tenants model](https://www.metabase.com/docs/latest/embedding/tenants#data-permissions-for-tenants) already exposes: the system-defined `@tenant.slug` attribute is the natural tag key, and the existing **All tenant users** / per-tenant groups are the natural scope — so a tagged database simply grants data access to the listed tenant(s) and is hidden from the rest.\n\n\n**How does this feature request impact you?**\n\nRequest from a Pro / Enterprise trialer\n\n\n**Describe alternatives you've considered**\n\nOptions explored with the customer before filing this (all workable but insufficient at scale):\n\n- **Database routing (identical-schema model)** — doesn't fit: routing syncs only the primary DB and assumes identical schemas, so per-tenant custom tables are dropped.\nCustomers would need to resort to using native questions or models to query their custom schemas, and some native features such as linked filters, drop-down values would not work. \n\n- **Tenants feature** — built as convenience sugar over the permission system for the two shapes above. \nTenant data permissions are assigned via the **All tenant users** group plus the per-tenant groups and cross-tenant segregation is enforced via db routing (separate DBs) *or* a shared DB with Row/Column Security or Impersonation. \nNone of these paths can represent a per-tenant schema that diverges from a shared template.\n\n- **Manual groups + collections + per-tenant permissions, templatized via serialization blueprints and the API (the pragmatic path chosen)** — functional, but all-manual: it fans out configuration across hundreds of databases, multiplies the metadata sync surface (tables × columns × tenants), and offers no migration path to a first-class feature later. \nIt also surfaces adjacent scale pain — per-tenant database connections.\n\n\n**Additional context about the requestor**\n\n- Deployment: Metabase Cloud, BigQuery data warehouse, tenant data is located in separate BQ projects or datasets. The theme of the request applies to any dwh type equally.\n- Topology per tenant: one shared \"generic\" schema (identical across all tenants) + one \"custom\" schema (per-tenant divergence).\n- Adjacent concerns the customer raised that this feature would relieve: scalability of hundreds of database connections, and the flat/non-searchable admin Databases UI at that scale.\n- The customer explicitly asked whether to **wait for a proper feature or continue the manual serialization approach** . Once implemented, a migration path from the manual/serialization world into a first-class model would be valuable.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/metabase/metabase/issues/76878/reactions",
+     "total_count": 2,
+     "+1": 2,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/metabase/metabase/issues/76878/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/metabase/metabase/issues/76878/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/metabase/metabase/issues/comments/4961868536",
+     "html_url": "https://github.com/metabase/metabase/issues/76878#issuecomment-4961868536",
+     "issue_url": "https://api.github.com/repos/metabase/metabase/issues/76878",
+     "id": 4961868536,
+     "node_id": "IC_kwDOAczgH88AAAABJ8Aa-A",
+     "user": {
+      "login": "ixipixi",
+      "id": 13661163,
+      "node_id": "MDQ6VXNlcjEzNjYxMTYz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13661163?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ixipixi",
+      "html_url": "https://github.com/ixipixi",
+      "followers_url": "https://api.github.com/users/ixipixi/followers",
+      "following_url": "https://api.github.com/users/ixipixi/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ixipixi/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ixipixi/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ixipixi/subscriptions",
+      "organizations_url": "https://api.github.com/users/ixipixi/orgs",
+      "repos_url": "https://api.github.com/users/ixipixi/repos",
+      "events_url": "https://api.github.com/users/ixipixi/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ixipixi/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-07-13T19:35:40Z",
+     "updated_at": "2026-07-13T20:51:50Z",
+     "body": "Recently had a conversation with a customer that was leveraging db routing with identical per tenant schemas. The trouble is in a couple of tables they stored custom per tenant attributes in JSONB colums. There isn't a straight forward way to flatten these custom attributes for consumption by their external end users.\n\nWhile it still adds complexity, this would have allowed them to expose the attributes into per tenant views in the database so customers could self serve from the shared schema and leveraged their own custom attributes. You can accomplish this with a work around but at scale it's not ideal (create a view with a different name per tenant that flattens that custom attributes into columns, create the same views in the primary router DB, then create a group for every customer that sets \"create query\" to \"no\" for the views they shouldn't see in the data browser).",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/metabase/metabase/issues/comments/4961868536/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

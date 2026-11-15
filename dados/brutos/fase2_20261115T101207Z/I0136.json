@@ -1,0 +1,241 @@
+{
+ "id_item": "I0136",
+ "url": "https://github.com/ContextualWisdomLab/mightyETL/issues/186",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:12:27.891657+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186",
+    "repository_url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL",
+    "labels_url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/labels{/name}",
+    "comments_url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/comments",
+    "events_url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/events",
+    "html_url": "https://github.com/ContextualWisdomLab/mightyETL/issues/186",
+    "id": 5105614771,
+    "node_id": "I_kwDOM_CJBs8AAAABMFF_sw",
+    "number": 186,
+    "title": "[Product/Data authority] Decide and enforce tenancy isolation model",
+    "user": {
+     "login": "seonghobae",
+     "id": 8172694,
+     "node_id": "MDQ6VXNlcjgxNzI2OTQ=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/8172694?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/seonghobae",
+     "html_url": "https://github.com/seonghobae",
+     "followers_url": "https://api.github.com/users/seonghobae/followers",
+     "following_url": "https://api.github.com/users/seonghobae/following{/other_user}",
+     "gists_url": "https://api.github.com/users/seonghobae/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/seonghobae/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/seonghobae/subscriptions",
+     "organizations_url": "https://api.github.com/users/seonghobae/orgs",
+     "repos_url": "https://api.github.com/users/seonghobae/repos",
+     "events_url": "https://api.github.com/users/seonghobae/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/seonghobae/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 11917430088,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWNSA",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/area:%20auth",
+      "name": "area: auth",
+      "color": "e99695",
+      "default": false,
+      "description": "Authentication, authorization, identity, or tenant isolation",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917430135,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWNdw",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/priority:%20medium",
+      "name": "priority: medium",
+      "color": "fbca04",
+      "default": false,
+      "description": "Normal-priority or P2 work",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917431628,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWTTA",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/area:%20ci-cd",
+      "name": "area: ci-cd",
+      "color": "0366d6",
+      "default": false,
+      "description": "CI, GitHub Actions, checks, release, or supply chain",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917432091,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWVGw",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/area:%20security",
+      "name": "area: security",
+      "color": "b60205",
+      "default": false,
+      "description": "Security boundary, hardening, or vulnerability prevention",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917432909,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWYTQ",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/area:%20api",
+      "name": "area: api",
+      "color": "fbca04",
+      "default": false,
+      "description": "API, protocol, event, or external contract",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917433398,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWaNg",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/status:%20triaged",
+      "name": "status: triaged",
+      "color": "bfdadc",
+      "default": false,
+      "description": "Open issue has an organization taxonomy assignment",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11917433454,
+      "node_id": "LA_kwDOM_CJBs8AAAACxlWabg",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/type:%20feature",
+      "name": "type: feature",
+      "color": "0e8a16",
+      "default": false,
+      "description": "New or expanded product capability",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 12088647275,
+      "node_id": "LA_kwDOM_CJBs8AAAAC0Ioeaw",
+      "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/labels/maintenance",
+      "name": "maintenance",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-08-10T00:55:37Z",
+    "updated_at": "2026-09-08T02:16:59Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "COLLABORATOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Acquisition / buyer gap\n\nProtected `develop@622e5e6c3d534f230c390f10e3832efadfc01825` has meaningful principal-scoped controls for synchronous idempotency and durable-job ownership, but a fresh source/document search finds no canonical multi-tenant/tenant-isolation contract and no tenant identifier/authority in the product persistence model. Datasource, connector, Kafka/CDC, and deployment configuration are predominantly service-global.\n\nThis is not automatically a demand to add shared-database multi-tenancy. An enterprise ETL product can be defensible as **one trusted tenant per deployment/database/runtime boundary** if that is explicit, enforced, tested, and reflected in packaging/operability. The unsafe state is ambiguity: principal-scoped rows can be mistaken for tenant isolation even though connector credentials, target configuration, broker topics, registry and database authority remain process/deployment scoped.\n\n## RCA\n\n- **Immediate cause:** principal ownership is used where the product needs per-user/job isolation, but there is no separate product-level tenancy model.\n- **Technical root cause:** identity/principal authority, deployment authority, connector credential authority, Kafka/CDC namespace, and database ownership have evolved independently without one tenancy ADR.\n- **Control failure:** tests prove owner-scoped access for selected ETL job/idempotency records but do not prove cross-tenant isolation, because `tenant_id`/tenant context is not an established persisted/runtime concept.\n- **Buyer risk:** a buyer may incorrectly assume shared-runtime tenant isolation from authentication/owner-scoping, or may deploy multiple customers into one instance without a reviewed isolation boundary.\n\n## Distinct bounded architecture options\n\n### Option A — single tenant per deployment (recommended near-term unless evidence requires shared tenancy)\n\n- explicitly define one customer/security tenant per service + PostgreSQL/Kafka/connector-credential deployment boundary;\n- principal identity remains user/workload scope *within* that tenant;\n- prohibit a single runtime/database/connector credential set from being advertised as cross-customer multi-tenant isolation;\n- provide repeatable per-tenant deployment, backup/restore, encryption/key, audit and upgrade evidence;\n- if a host/orchestrator composes multiple tenant instances, keep those boundaries external and versioned rather than hidden cross-service DB sharing.\n\nThis is operationally realistic with current source and requires less high-risk schema churn.\n\n### Option B — first-class shared-runtime multi-tenancy\n\nOnly adopt if buyer requirements justify it. It requires an authenticated tenant context bound to principal/workload identity and propagation through every owned persistence record, idempotency/job namespace, connector config/credential lookup, CDC/Kafka namespace, audit, quotas, API authorization, backups/export/deletion, and migration path. PostgreSQL RLS or schema/database isolation may be evaluated, but no specific mechanism should be selected without a full access-path inventory and realistic cross-tenant tests.\n\n### Reject\n\n- treating authenticated principal name/hash as synonymous with tenant isolation;\n- adding `tenant_id` to only a few tables while global connector/broker/credential state remains shared;\n- inventing a tenant header that callers can self-assert;\n- claiming multi-tenancy from separate Docker Compose networks alone;\n- blanket masking tenant/customer data instead of enforcing authorization and storage/credential boundaries.\n\n## Acceptance\n\n1. canonical PRD/TRD/Architecture/Security/Threat Model/ERD/Operability/Traceability explicitly choose Option A, Option B, or a versioned transition and state the non-goals;\n2. principal/workload identity and tenant authority are separate concepts;\n3. database, Kafka/CDC, connector credentials, service discovery, logs/traces, backups/restore and release operations agree with the chosen boundary;\n4. cross-boundary requests and direct-storage paths fail closed with realistic negative tests;\n5. idempotency and durable-job owner scope cannot be misdocumented as stronger tenant isolation than protected code provides;\n6. data export/deletion/retention and audit evidence are scoped consistently with the chosen tenant unit;\n7. standalone operation remains possible and modular MSA integrations use explicit versioned tenant/service identity rather than hidden shared-database coupling;\n8. any migration from single-tenant deployments to shared-runtime tenancy has rollback/forward-recovery and compatibility evidence;\n9. exact-source CI/security/non-vacuous coverage/review and protected-develop operational acceptance pass before a multi-tenant claim is shipped.\n\n## Current classification\n\n`planned / known_gap`. Option A is the lowest-risk commercial baseline given current global configuration/persistence surfaces, but the canonical product decision should be made and tested rather than inferred from this issue. No source mutation is authorized until the tenancy ADR/data-flow inventory is reconciled with active durable-job, gateway-authentication, service-authentication, connector and deployment work.\n\nRelationships: #159 documentation/traceability; #161 direct ETL service identity; #185 registry identity; #181 DLT data lifecycle; #165 release/deployment provenance.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/timeline",
+    "performed_via_github_app": {
+     "id": 1144995,
+     "client_id": "Iv23liVemv8A9if9v0F2",
+     "slug": "chatgpt-codex-connector",
+     "node_id": "A_kwHOAOQ6Gs4AEXij",
+     "owner": {
+      "login": "openai",
+      "id": 14957082,
+      "node_id": "MDEyOk9yZ2FuaXphdGlvbjE0OTU3MDgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14957082?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/openai",
+      "html_url": "https://github.com/openai",
+      "followers_url": "https://api.github.com/users/openai/followers",
+      "following_url": "https://api.github.com/users/openai/following{/other_user}",
+      "gists_url": "https://api.github.com/users/openai/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/openai/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/openai/subscriptions",
+      "organizations_url": "https://api.github.com/users/openai/orgs",
+      "repos_url": "https://api.github.com/users/openai/repos",
+      "events_url": "https://api.github.com/users/openai/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/openai/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "name": "ChatGPT Codex Connector",
+     "description": "Bring ChatGPT and Codex to your GitHub repositories.",
+     "external_url": "https://www.chatgpt.com",
+     "html_url": "https://github.com/apps/chatgpt-codex-connector",
+     "created_at": "2025-02-14T01:37:05Z",
+     "updated_at": "2026-09-23T18:52:59Z",
+     "permissions": {
+      "actions": "write",
+      "checks": "read",
+      "contents": "write",
+      "emails": "read",
+      "issues": "write",
+      "metadata": "read",
+      "pull_requests": "write",
+      "statuses": "read",
+      "workflows": "write"
+     },
+     "events": [
+      "check_run",
+      "check_suite",
+      "commit_comment",
+      "issues",
+      "issue_comment",
+      "pull_request",
+      "pull_request_review",
+      "pull_request_review_comment",
+      "pull_request_review_thread",
+      "repository",
+      "status",
+      "sub_issues"
+     ]
+    },
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/ContextualWisdomLab/mightyETL/issues/186/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

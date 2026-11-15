@@ -1,0 +1,396 @@
+{
+ "id_item": "I0001",
+ "url": "https://dba.stackexchange.com/questions/200275/replicating-on-premise-sql-server-instance-with-hundreds-of-databases-to-an-azur",
+ "fonte": "dba",
+ "coletado_em": "2026-11-15T10:01:12.708550+00:00",
+ "question": {
+  "caminho": "/questions/200275",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "sql-server",
+      "replication",
+      "sql-server-2016",
+      "azure-sql-database"
+     ],
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "is_answered": true,
+     "view_count": 1667,
+     "answer_count": 1,
+     "score": 1,
+     "last_activity_date": 1649783659,
+     "creation_date": 1521050122,
+     "last_edit_date": 1521548162,
+     "question_id": 200275,
+     "content_license": "CC BY-SA 3.0",
+     "link": "https://dba.stackexchange.com/questions/200275/replicating-on-premise-sql-server-instance-with-hundreds-of-databases-to-an-azur",
+     "title": "Replicating on-premise SQL Server instance with hundreds of databases to an Azure SQL Managed Instance",
+     "body": "<p>I am wanting to replicate an entire SQL Server 2016 on-premise instance of databases (300+) to an <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance\" rel=\"nofollow noreferrer\">Azure SQL Managed Instance</a> for redundancy of a read-replica in case of on-premise downtime. It appears as though I can use <a href=\"https://learn.microsoft.com/en-us/azure/dms/tutorial-sql-server-to-managed-instance\" rel=\"nofollow noreferrer\">Azure Database Migration Service</a> in order to deploy multiple databases, but this seems to imply that this is a one-time migration. </p>\n\n<p>This will not be a one-time migration, and I am wanting to perform transaction replication with a Publish (on-premise SQL) and Subscriber (Azure SQL). <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-cloud-migrate\" rel=\"nofollow noreferrer\">Microsoft has outlined this method</a>, but Publications only allow for a single database to be selected. I would like to explore publishing the full instance of databases, and shipping the logs at a particular interval.</p>\n\n<p>Each of these databases share the same schema, so merging the data into a single database poses problems surrounding application configurations in the event we need to fail-over for read purposes. This is also a temporary solution until we are able to replicate our VMware cluster for Disaster Recovery, and our transactional throughput is on the lower side and is constrained to set working hours.</p>\n\n<p>Is my only option to create publications for each and every database, or can the Azure Data Migration Service be extended for replicating at regular intervals?</p>\n\n<p><strong>Edit:</strong> Another option I've been toying with is creating a single database with each individual tenant as a security schema and file group, and developing an ETL pipeline to pass the tenants to these matching security schemas. In essence I would mimic the database-per-tenant through tenant-per-schema, allowing me to only need to push a single database to the Azure SQL. This might cause more headaches than it would solve, though. Does anyone have experience with this at scale?</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9832
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/200275/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "reply_to_user": {
+      "account_id": 11150831,
+      "reputation": 1887,
+      "user_id": 127141,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/Ic5yh.jpg?s=256",
+      "display_name": "Alberto Morillo",
+      "link": "https://dba.stackexchange.com/users/127141/alberto-morillo"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521230973,
+     "post_id": 200275,
+     "comment_id": 391777,
+     "content_license": "CC BY-SA 3.0",
+     "body": "@Alberto I have each mdf set to a fixed size of 4GB, with 256MB autogrowth allowance. None of them are close to capacity, however. Some of them are rather empty and utilize a minimal 20MB. The largest is 1.9GB, and average 240MB across them all. We&#39;re looking at a rather small footprint right around 80GB if shrunk."
+    },
+    {
+     "owner": {
+      "account_id": 11150831,
+      "reputation": 1887,
+      "user_id": 127141,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/Ic5yh.jpg?s=256",
+      "display_name": "Alberto Morillo",
+      "link": "https://dba.stackexchange.com/users/127141/alberto-morillo"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521229886,
+     "post_id": 200275,
+     "comment_id": 391769,
+     "content_license": "CC BY-SA 3.0",
+     "body": "How many GBs we are talking about those 300 databases."
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "reply_to_user": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521215880,
+     "post_id": 200275,
+     "comment_id": 391728,
+     "content_license": "CC BY-SA 3.0",
+     "body": "I&#39;ve advised that even with a redundant cluster, we&#39;ll still need Enterprise SQL licensing for the HA that they want to achieve. A battle which I foresee being, &quot;I advised this when we scoped out the new VMware cluster, and here&#39;s the multiple e-mails.&quot; But I digress. I will continue to look into log shipping and see how quickly I would be able to implement something and at what costs. I appreciate your help!"
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "reply_to_user": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521215742,
+     "post_id": 200275,
+     "comment_id": 391726,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Thanks @Dan. I&#39;ve read through the page you linked before rather thoroughly, and understand I would likely need to span multiple MI. I currently utilize Ola&#39;s scripts for maintenance as a whole, and I&#39;m comfortable with carrying out these operations. My primary query surrounds whether there is a more efficient method, especially with how quickly Azure SQL is evolving. Unfortunately (and I&#39;ve tried), the execs will not justify Enterprise licensing when we have a capital expenditure upcoming for an identical VMware cluster in our data center for DR, which is a couple months out it seems."
+    },
+    {
+     "owner": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521153647,
+     "post_id": 200275,
+     "comment_id": 391594,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Log shipping is still going to be better than replication (although still messy). 300 LSBackup jobs running simultaneously are likely to cause blocking on MSDB and fail intermittently (I&#39;ve seen this happen before with &#39;only&#39; 100-odd DBs), so you&#39;ll need to roll your own solution. The &#39;easiest&#39; way would probably be to set up LS for each DB using the GUI, then disable all LSBackup and LSCopy jobs and replace them with a combination of <a href=\"http://ola.hallengren.com/\" rel=\"nofollow noreferrer\">Ola&#39;s</a> log backup job and a Powershell copy job. If this sounds like something you&#39;re not comfortable with - get an expert in."
+    },
+    {
+     "owner": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521153463,
+     "post_id": 200275,
+     "comment_id": 391592,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Well I would be sure to make it clear to the business what limitations you&#39;re facing by going with MIs (make sure to review  <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-transact-sql-information\" rel=\"nofollow noreferrer\">this page</a> closely). You may even need to span multiple MIs, as they note a max file limit per instance of 280 files (data + log)."
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "reply_to_user": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521123243,
+     "post_id": 200275,
+     "comment_id": 391465,
+     "content_license": "CC BY-SA 3.0",
+     "body": "@Dan The appeal towards a Managed Instance is primarily the cost being significantly lower and dependent on occupied space. Our databases, while large in volume, are rather small in physical footprint (some being only a few hundred MB). Another issue is that we are running Standard Edition, which is limited to <a href=\"https://learn.microsoft.com/en-us/sql/database-engine/availability-groups/windows/basic-availability-groups-always-on-availability-groups\" rel=\"nofollow noreferrer\">Basic Availability Groups</a>. So while I would love for this to be an option, the unfortunate reality is that I must seek alternatives."
+    },
+    {
+     "owner": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521083321,
+     "post_id": 200275,
+     "comment_id": 391337,
+     "content_license": "CC BY-SA 3.0",
+     "body": "I&#39;m going to suggest maybe taking a step back and considering whether a Managed Instance is the best solution to meet your goals. If your primary goals are to 1. Add HA to your environment and 2. Have your HA be resilient to primary site failures, then Manged Instances aren&#39;t the way to go. Instead I would suggest Azure&#39;s (or AWS) IaaS offerings instead. Then, instead of trying to wrangle replication or log shipping to provide HA (neither of which are true HA), you can build an availability group that spans your on prem servers and cloud servers."
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "reply_to_user": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521078436,
+     "post_id": 200275,
+     "comment_id": 391331,
+     "content_license": "CC BY-SA 3.0",
+     "body": "@Dan It definitely doesn&#39;t <i>need</i> to be transactional replication, but of the avenues that Microsoft lists for pushing to Azure SQL, it&#39;s the primary method listed. Is there a method via log shipping that might accomplish this at scale?"
+    },
+    {
+     "owner": {
+      "account_id": 2104635,
+      "reputation": 686,
+      "user_id": 125593,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/dfecb5bf7966cbcb1f89e78cddccc677?s=256&d=identicon&r=PG",
+      "display_name": "Dan",
+      "link": "https://dba.stackexchange.com/users/125593/dan"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521074486,
+     "post_id": 200275,
+     "comment_id": 391323,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Do you actually <b>need</b> transactional replication? If you&#39;re using it purely as a read-only source during production downtime, then replication is overkill and will cause you far more admin headaches than it&#39;s worth (especially with this volume of databases).  I&#39;d suggest considering log shipping instead. However with 300 DBs, you will need to be very careful in how you configure your LS backup schedules. Staggering them so they aren&#39;t all simultaneously executing - or perhaps even rolling your own LSCopy job and just relying on a scheduled log backup job that hits all DBs."
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9831
+  }
+ },
+ "answers": {
+  "caminho": "/questions/200275/answers",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 11150831,
+      "reputation": 1887,
+      "user_id": 127141,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/Ic5yh.jpg?s=256",
+      "display_name": "Alberto Morillo",
+      "link": "https://dba.stackexchange.com/users/127141/alberto-morillo"
+     },
+     "is_accepted": false,
+     "score": 2,
+     "last_activity_date": 1649783659,
+     "last_edit_date": 1649783659,
+     "creation_date": 1521239860,
+     "answer_id": 200509,
+     "question_id": 200275,
+     "content_license": "CC BY-SA 4.0",
+     "body": "<p>I shared the case scenario with the Azure SQL Database team at Microsoft via an Exchange Mailing list for Azure SQL Databases contributors/MVPs. The answer provided by one of the managers of the team is the following:  &quot;Yes, transactional replication will be the best way at this point if they want to keep the replication running after the migration to Managed Instances.&quot;</p>\n<p>UPDATE: Take now in consideration this new feature (in public preview) named <strong><a href=\"https://techcommunity.microsoft.com/t5/azure-sql-blog/announcing-link-feature-for-managed-instance-now-in-public/ba-p/3259822?wt.mc_id=DP-MVP-4015656\" rel=\"nofollow noreferrer\">Managed Instance Link</a></strong> which allows near real-time data replication from SQL Server to Managed Instance using the proven Always On technology.</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9830
+  }
+ },
+ "answer_comments": {
+  "caminho": "/answers/200509/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 11150831,
+      "reputation": 1887,
+      "user_id": 127141,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/Ic5yh.jpg?s=256",
+      "display_name": "Alberto Morillo",
+      "link": "https://dba.stackexchange.com/users/127141/alberto-morillo"
+     },
+     "reply_to_user": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521260664,
+     "post_id": 200509,
+     "comment_id": 391810,
+     "content_license": "CC BY-SA 3.0",
+     "body": "You can use Transact-SQL and PowerShell to automate setting up replication for each database. <a href=\"https://beanalytics.wordpress.com/2017/02/03/migration-from-sql-server-to-azure-sql-database-using-transactional-replication/\" rel=\"nofollow noreferrer\">beanalytics.wordpress.com/2017/02/03/&hellip;</a>"
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521243568,
+     "post_id": 200509,
+     "comment_id": 391796,
+     "content_license": "CC BY-SA 3.0",
+     "body": "The approach of implementing transaction replication for 300+ databases is the biggest question mark. I would like to find the most efficient manner in which to accomplish this that can be leveraged further down the line."
+    },
+    {
+     "owner": {
+      "account_id": 1442016,
+      "reputation": 1544,
+      "user_id": 37801,
+      "user_type": "registered",
+      "accept_rate": 61,
+      "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+      "display_name": "PicoDeGallo",
+      "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1521243501,
+     "post_id": 200509,
+     "comment_id": 391795,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Thank you for reaching to the Azure SQL team. I agree that transaction replication is likely the best way especially given their <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-cloud-migrate\" rel=\"nofollow noreferrer\">official documentation</a> states this, but the biggest question to me is <i>how</i> given that Publish/Subscription profiles are set up database per database through GUI. It seems as though I may be looking at writing large amount of dynamic SQL, but I have a feeling there must be a more automated way whether it&#39;s via Azure Data Migration Service, Data Factory, or even SSIS."
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9829
+  }
+ }
+}

@@ -1,0 +1,95 @@
+{
+ "id_item": "I2110",
+ "url": "https://stackoverflow.com/questions/72406800/i-have-multiple-structurally-identical-schemas-in-postgres-is-there-a-way-to",
+ "fonte": "stackoverflow",
+ "coletado_em": "2026-11-15T10:16:15.531318+00:00",
+ "question": {
+  "caminho": "/questions/72406800",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "postgresql"
+     ],
+     "owner": {
+      "account_id": 957438,
+      "reputation": 945,
+      "user_id": 982492,
+      "user_type": "registered",
+      "accept_rate": 100,
+      "profile_image": "https://www.gravatar.com/avatar/f8ae2646a7f37aae2d227037c6e30d1c?s=256&d=identicon&r=PG",
+      "display_name": "Tim Pigden",
+      "link": "https://stackoverflow.com/users/982492/tim-pigden"
+     },
+     "is_answered": true,
+     "view_count": 383,
+     "accepted_answer_id": 72408345,
+     "answer_count": 1,
+     "score": 0,
+     "last_activity_date": 1653668388,
+     "creation_date": 1653660901,
+     "question_id": 72406800,
+     "content_license": "CC BY-SA 4.0",
+     "link": "https://stackoverflow.com/questions/72406800/i-have-multiple-structurally-identical-schemas-in-postgres-is-there-a-way-to",
+     "title": "I have multiple, structurally identical schemas in postgres. Is there a way to &quot;code-share&quot; views and queries",
+     "body": "<p>In my multi-tenant postgres database, I have a schema per tenant for my data warehouse with the same tables in each.\nI wish to create views and queries for these tables. If I were programming I would practice DRY and structure my code so that all of these were parameterised by the tenant. How do I achieve a similar structure in postgres?</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9810
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/72406800/comments",
+  "status": 200,
+  "json": {
+   "items": [],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9809
+  }
+ },
+ "answers": {
+  "caminho": "/questions/72406800/answers",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 68410,
+      "reputation": 20690,
+      "user_id": 199607,
+      "user_type": "registered",
+      "accept_rate": 87,
+      "profile_image": "https://www.gravatar.com/avatar/607564f1a15f1899c71b4a9fdfc33ac2?s=256&d=identicon&r=PG",
+      "display_name": "Simon Perepelitsa",
+      "link": "https://stackoverflow.com/users/199607/simon-perepelitsa"
+     },
+     "is_accepted": true,
+     "score": 0,
+     "last_activity_date": 1653668388,
+     "creation_date": 1653668388,
+     "answer_id": 72408345,
+     "question_id": 72406800,
+     "content_license": "CC BY-SA 4.0",
+     "body": "<p>You can run the same queries on different schemas just by changing <code>search_path</code> variable.</p>\n<pre><code>set search_path = schema1;\nselect * from orders; -- resolves to schema1.orders\n\nset search_path = schema2;\nselect * from orders; -- resolves to schema2.orders\n</code></pre>\n<p>As for views, you will have create/drop them individually across all schemas just like you do with the tables.</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9808
+  }
+ },
+ "answer_comments": {
+  "caminho": "/answers/72408345/comments",
+  "status": 200,
+  "json": {
+   "items": [],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9807
+  }
+ }
+}

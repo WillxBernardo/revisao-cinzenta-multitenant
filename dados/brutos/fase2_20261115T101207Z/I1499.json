@@ -1,0 +1,127 @@
+{
+ "id_item": "I1499",
+ "url": "https://github.com/muitneliss/undercroft/issues/459",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:31.691900+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/muitneliss/undercroft/issues/459",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/muitneliss/undercroft/issues/459",
+    "repository_url": "https://api.github.com/repos/muitneliss/undercroft",
+    "labels_url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/labels{/name}",
+    "comments_url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/comments",
+    "events_url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/events",
+    "html_url": "https://github.com/muitneliss/undercroft/issues/459",
+    "id": 5828331404,
+    "node_id": "I_kwDOUeawCM8AAAABW2VHjA",
+    "number": 459,
+    "title": "feat: keep serving a model's last passing version when a new build fails its tests (write-audit-publish)",
+    "user": {
+     "login": "cuongtranba",
+     "id": 4550606,
+     "node_id": "MDQ6VXNlcjQ1NTA2MDY=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/4550606?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/cuongtranba",
+     "html_url": "https://github.com/cuongtranba",
+     "followers_url": "https://api.github.com/users/cuongtranba/followers",
+     "following_url": "https://api.github.com/users/cuongtranba/following{/other_user}",
+     "gists_url": "https://api.github.com/users/cuongtranba/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/cuongtranba/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/cuongtranba/subscriptions",
+     "organizations_url": "https://api.github.com/users/cuongtranba/orgs",
+     "repos_url": "https://api.github.com/users/cuongtranba/repos",
+     "events_url": "https://api.github.com/users/cuongtranba/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/cuongtranba/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 12233101177,
+      "node_id": "LA_kwDOUeawCM8AAAAC2SZPeQ",
+      "url": "https://api.github.com/repos/muitneliss/undercroft/labels/enhancement",
+      "name": "enhancement",
+      "color": "a2eeef",
+      "default": true,
+      "description": "New feature or request",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-13T10:00:48Z",
+    "updated_at": "2026-10-13T11:26:47Z",
+    "closed_at": "2026-10-13T11:26:47Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Before you file\n\n- [x] I searched the open and closed issues and this has not been requested or declined already.\n- [x] I removed customer names, credentials and real data from everything below.\n\n### What are you trying to do, and what stops you today?\n\nWhen a model fails its tests, I want Reports to keep serving the last version that passed, marked as such, instead of the new rows that failed.\n\nToday a build replaces each table in place in `analytics_<slug>` and tests it afterwards (dbt-postgres swaps through `__dbt_tmp` / `__dbt_backup` and commits before the test runs; `packages/db/src/services/dbtProject.ts:442-449`). There is no staging schema, no promote step and no \"last good\" copy, so the only way to protect a figure is a draft model plus a published model per figure, by convention.\n\n### What would you like to happen?\n\nWrite-audit-publish at the platform level:\n\n1. Build into a per-tenant staging schema.\n2. Run the tests there.\n3. Promote into the schema BI reads only the models whose own tests and whose parents passed.\n\nA model that failed keeps its previous published version, and Reports says \"last passing version from run …, current build failing\" (the visibility asked for in #456). The first build of a model with no passing version shows \"no passing version yet\", never the failing rows.\n\n### What do you do instead today?\n\nA draft model and a published model for every important figure. It doubles the model count. BI can still query the draft, because the BI grant covers all of `analytics_<slug>`. A single-model build of the published model bypasses the guard (#457).\n\n### Which part of Undercroft?\n\nModels, dbt and transforms; Reports (questions and dashboards)\n\n### Who would use it?\n\nAn analyst writing dbt models; A member authoring questions and dashboards; A viewer reading reports\n\n### How much does it matter to you?\n\nNice to have\n\n### Version you are on\n\nv1.75.2\n\n### Alternatives you considered\n\nThis is the largest of the four, and it needs an ADR. It touches:\n\n- the role and grant model: a staging schema created in `repeatable/010_provision_tenant.sql`, the BI grant pointing at the promoted schema only, and the `pg_default_acl` gate test;\n- `generate_schema_name` in `dbtProject.ts`;\n- ADR 0077's drop list (`relationsOfModel`, `modelDrop.ts`).\n\nA promoted copy is still a projection (rule 1), not a recovery source.\n\nCheaper steps that cover most of the risk first:\n\n- make failing tests visible (#456);\n- guard single-model builds (#457);\n- richer tests (#457).\n",
+    "closed_by": {
+     "login": "cuongtranba",
+     "id": 4550606,
+     "node_id": "MDQ6VXNlcjQ1NTA2MDY=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/4550606?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/cuongtranba",
+     "html_url": "https://github.com/cuongtranba",
+     "followers_url": "https://api.github.com/users/cuongtranba/followers",
+     "following_url": "https://api.github.com/users/cuongtranba/following{/other_user}",
+     "gists_url": "https://api.github.com/users/cuongtranba/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/cuongtranba/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/cuongtranba/subscriptions",
+     "organizations_url": "https://api.github.com/users/cuongtranba/orgs",
+     "repos_url": "https://api.github.com/users/cuongtranba/repos",
+     "events_url": "https://api.github.com/users/cuongtranba/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/cuongtranba/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/muitneliss/undercroft/issues/459/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

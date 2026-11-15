@@ -1,0 +1,138 @@
+{
+ "id_item": "I1010",
+ "url": "https://github.com/engineerA314/superset/issues/9",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:10.476330+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/engineerA314/superset/issues/9",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/engineerA314/superset/issues/9",
+    "repository_url": "https://api.github.com/repos/engineerA314/superset",
+    "labels_url": "https://api.github.com/repos/engineerA314/superset/issues/9/labels{/name}",
+    "comments_url": "https://api.github.com/repos/engineerA314/superset/issues/9/comments",
+    "events_url": "https://api.github.com/repos/engineerA314/superset/issues/9/events",
+    "html_url": "https://github.com/engineerA314/superset/issues/9",
+    "id": 5517870050,
+    "node_id": "I_kwDOUh9d988AAAABSOQD4g",
+    "number": 9,
+    "title": "perf(chart-data): ensure_totals_available re-runs percent-metric totals query on every request, bypassing QueryCacheManager (INC-B1081392)",
+    "user": {
+     "login": "devin-ai-integration[bot]",
+     "id": 158243242,
+     "node_id": "BOT_kgDOCW6Zqg",
+     "avatar_url": "https://avatars.githubusercontent.com/in/811515?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D",
+     "html_url": "https://github.com/apps/devin-ai-integration",
+     "followers_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/followers",
+     "following_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/following{/other_user}",
+     "gists_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/subscriptions",
+     "organizations_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/orgs",
+     "repos_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/repos",
+     "events_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/received_events",
+     "type": "Bot",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 12271282425,
+      "node_id": "LA_kwDOUh9d988AAAAC22zo-Q",
+      "url": "https://api.github.com/repos/engineerA314/superset/labels/incident-autopilot",
+      "name": "incident-autopilot",
+      "color": "D93F0B",
+      "default": false,
+      "description": "Created by the incident triage automation",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 12272871997,
+      "node_id": "LA_kwDOUh9d988AAAAC24UqPQ",
+      "url": "https://api.github.com/repos/engineerA314/superset/labels/autopilot-managed",
+      "name": "autopilot-managed",
+      "color": "0E8A16",
+      "default": false,
+      "description": "Admit this issue to the Devin remediation control plane",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-09-20T12:42:23Z",
+    "updated_at": "2026-09-20T12:50:46Z",
+    "closed_at": "2026-09-20T12:50:46Z",
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "<!-- devin-autopilot-run:INC-B1081392 -->\n\n**Incident:** `datadog:incident:a75a6a38-caeb-4c08-b0bf-a9a81571b545` (SEV-3, service `luma-embedded-analytics`, scenario CD-1)\n**Attribution confidence:** 0.8 (agent report) — independently confirmed by code inspection at `4511c13` (see \"Confirmation\" below).\n\n## Customer impact\nEmbedded table charts that use percent metrics with `percent_metric_calculation = 'all_records'` intermittently exceed the host app's 5 s render budget under multi-tenant load. Signals at trigger: chart timeout rate 18.7% (threshold 5%), p95 chart latency 6320 ms, 14 tenants affected. Other chart types (`big_number_total`, `echarts_timeseries_line`) on the same dashboards/tenants had 0 timeouts.\n\n## Observed behavior\nOn every synchronous `POST /api/v1/chart/data` for such a table, the \"totals\" query (`SELECT SUM(revenue) FROM orders WHERE tenant_id=? AND order_ts ...`, no GROUP BY, full scan) is executed against the warehouse **even when the whole payload is cache-warm**. Warehouse digest: totals fingerprint ran 164× vs 21 baseline — exactly the number of 200-status chart-data requests — while the grouped query ran only 9× (served from cache). APM traces show `cache_metadata='loaded'`, `superset_status=200`, yet 6.4–7.3 s duration.\n\n## Expected behavior\nThe totals query should run at most once and be served from `QueryCacheManager` (DATA region) thereafter, like the main query. A cache-warm chart-data request should issue zero warehouse queries.\n\n## Root cause / likely code area\n`QueryContextProcessor.get_payload_result()` (`superset/common/query_context_processor.py` ~L646-684) calls `ensure_totals_available()` on every non-`force_cached` request. `ensure_totals_available()` (~L605-631) does:\n\n```python\ntotals_query = self._query_context.queries[totals_idx]\nresult = self._query_context.get_query_result(totals_query)   # <- uncached\n```\n\n`QueryContext.get_query_result` → `QueryContextProcessor.get_query_result` → `self._qc_datasource.get_query_result(query_object)` → `ExploreMixin.get_query_result()` (`superset/models/helpers.py` ~L2604) → `self.query(...)`. There is no `QueryCacheManager` lookup anywhere on this path. Afterwards the same totals query object is also processed by `get_query_results_with_timing` (cached path), so on a warm cache the totals SQL still hits the warehouse once per request.\n\nContrast: the async path `superset/tasks/async_queries.py::_inject_contribution_totals` (~L170-202) explicitly reads the totals dataframe from `QueryCacheManager.get(key=..., region=CacheRegion.DATA)` instead of re-running it — the intended behaviour the sync path lacks.\n\nThe extra columns-less totals query is emitted by `superset-frontend/plugins/plugin-chart-table/src/buildQuery.ts` (~L334-351) when `percent_metric_calculation === 'all_records'`; `normalize_contribution_totals()` selects it as `totals_idx`.\n\n## Reproduction steps\n1. Create a Table chart with a metric and at least one **percent metric** (e.g. `SUM(revenue)`), set *Percent metric calculation* = **All records**, and group by a dimension on a moderately large dataset.\n2. Enable data caching (`DATA_CACHE_CONFIG`) and load the chart twice.\n3. Observe warehouse query log / `db_engine` logs: the no-GROUP-BY `SELECT SUM(revenue) ...` query executes on **both** loads, while the grouped query executes only on the first.\n4. Unit-level: build a `QueryContextProcessor` with two queries (grouped + totals with `columns=[]`), warm the DATA cache for both, mock the datasource `query`/`get_query_result`, call `get_payload_result()` → datasource is still queried once (totals). Existing tests `tests/unit_tests/common/test_query_context_processor.py::test_ensure_totals_available_updates_cache_values` show the mocking setup.\n\n## Evidence\n- RUM: all 36 timeouts are `table_v2` charts (112 views, p95 6810 ms); other viz types 0 timeouts.\n- Every timed-out chart has `percent_metrics=[SUM(revenue)]` + `percent_metric_calculation='all_records'`; the one `row_limit` table is not among the timeouts.\n- Warehouse: totals fingerprint 164× vs 21 baseline (p95 2140 ms, 100k rows scanned); grouped fingerprint 9× vs 12 baseline.\n- Edge gateway 499s rose only on the chart-data route (client aborts on slow-but-successful responses).\n- No deploys in the incident window; HEAD `4511c13` is a psycopg2-binary bump only. Latent defect from the original `all_records` feature (#33656) surfacing under load.\n\n## Acceptance criteria\n- [ ] `ensure_totals_available()` obtains the totals dataframe through the cached path (`get_df_payload_result` / `QueryCacheManager` lookup, mirroring `_inject_contribution_totals`) so the totals SQL executes at most once per cache TTL.\n- [ ] A cache-warm `get_payload_result()` for an `all_records` percent-metric table issues no datasource query (new unit test in `tests/unit_tests/common/test_query_context_processor.py` asserting the datasource is not queried when the totals cache entry is loaded).\n- [ ] Existing tests `test_ensure_totals_available_updates_cache_values` and `test_cache_values_sync_after_ensure_totals_available` still pass; cache keys are unaffected (`contribution_totals` remains stripped from the key).\n- [ ] `force_cached=True` behaviour unchanged.\n\n## Related-component context (not owners of the defect)\n- `engineerA314/devin-demo` (embedded-analytics-product / luma-web): owns the 5000 ms render budget that converts slow 200 responses into RUM timeouts and 499s; surfaces the symptom only.\n- `data-platform/warehouse-config` (analytics-warehouse): healthy; queue depth rose purely from the redundant totals query volume. Missing aggregation/indexing for the 100k-row scan is a contributing factor, and `percent_metric_calculation='row_limit'` or a higher render budget would mitigate the symptom without fixing the redundant query.\n\n## Confirmation notes / caveats\n- Confirmed by static inspection of the code path above at `4511c13`; no runtime reproduction was possible in this environment (no Python venv / pytest for the backend).\n- p50 chart-data latency of ~1.36 s indicates the grouped query is itself non-trivial; the totals query is the dominant but not sole contributor.\n",
+    "closed_by": {
+     "login": "engineerA314",
+     "id": 86403521,
+     "node_id": "MDQ6VXNlcjg2NDAzNTIx",
+     "avatar_url": "https://avatars.githubusercontent.com/u/86403521?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/engineerA314",
+     "html_url": "https://github.com/engineerA314",
+     "followers_url": "https://api.github.com/users/engineerA314/followers",
+     "following_url": "https://api.github.com/users/engineerA314/following{/other_user}",
+     "gists_url": "https://api.github.com/users/engineerA314/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/engineerA314/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/engineerA314/subscriptions",
+     "organizations_url": "https://api.github.com/users/engineerA314/orgs",
+     "repos_url": "https://api.github.com/users/engineerA314/repos",
+     "events_url": "https://api.github.com/users/engineerA314/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/engineerA314/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/engineerA314/superset/issues/9/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/engineerA314/superset/issues/9/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/engineerA314/superset/issues/9/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

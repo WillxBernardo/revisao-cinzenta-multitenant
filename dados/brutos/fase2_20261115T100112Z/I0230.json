@@ -1,0 +1,95 @@
+{
+ "id_item": "I0230",
+ "url": "https://github.com/Fyralisinc/fyraliscore/issues/31",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:33.027997+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31",
+    "repository_url": "https://api.github.com/repos/Fyralisinc/fyraliscore",
+    "labels_url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/labels{/name}",
+    "comments_url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/comments",
+    "events_url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/events",
+    "html_url": "https://github.com/Fyralisinc/fyraliscore/issues/31",
+    "id": 4462934571,
+    "node_id": "I_kwDOSM1-L88AAAABCgL6Kw",
+    "number": 31,
+    "title": "Fix test_ingest_core.py test-setup bugs (missing tenants seed) and add to CI",
+    "user": {
+     "login": "Prajwal-Adhikari",
+     "id": 66841209,
+     "node_id": "MDQ6VXNlcjY2ODQxMjA5",
+     "avatar_url": "https://avatars.githubusercontent.com/u/66841209?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/Prajwal-Adhikari",
+     "html_url": "https://github.com/Prajwal-Adhikari",
+     "followers_url": "https://api.github.com/users/Prajwal-Adhikari/followers",
+     "following_url": "https://api.github.com/users/Prajwal-Adhikari/following{/other_user}",
+     "gists_url": "https://api.github.com/users/Prajwal-Adhikari/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/Prajwal-Adhikari/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/Prajwal-Adhikari/subscriptions",
+     "organizations_url": "https://api.github.com/users/Prajwal-Adhikari/orgs",
+     "repos_url": "https://api.github.com/users/Prajwal-Adhikari/repos",
+     "events_url": "https://api.github.com/users/Prajwal-Adhikari/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/Prajwal-Adhikari/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-05-17T08:56:48Z",
+    "updated_at": "2026-05-17T08:56:48Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "COLLABORATOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Summary\n\nThe 15 tests in `services/ingestion/tests/test_ingest_core.py` currently fail in any environment with the post-0037 schema. Root cause is a missing tenants-table seed in the test setup; the `tenant_id` fixture at [services/ingestion/tests/conftest.py:186](services/ingestion/tests/conftest.py#L186) returns a fresh `uuid7()` without inserting a corresponding `tenants` row, and the FK constraints `observations_tenant_fk` / `actors_tenant_fk` are `DEFERRABLE INITIALLY IMMEDIATE` (verified via `pg_constraint`: `condeferrable=True, condeferred=False`).\n\nMigration 0037's header explicitly says this works only when tests wrap in transactions that get rolled back, but `test_ingest_core.py` uses `gateway_pool.execute(...)` calls that auto-commit. Result: FK fires immediately on every test.\n\n## Why this matters now (assignee: owner of the legacy `ingest()` path)\n\n**This is a pre-M5 dependency.** The M5 pre-cutover gate (see `docs/ingestion/04-implementation-plan.md` §M5) uses a shadow-comparison strategy: the new Kafka-path writer runs alongside the legacy `ingest()`, and we compare counts. **Count parity is not correctness parity.** If the legacy baseline has no verified behavioural coverage in CI, the shadow comparison is measuring two unverified paths against each other. The M5 gate cannot meaningfully evaluate \"does the new path match the old path\" without a verified old path.\n\n**Compounding:** these tests are also not currently in CI — `.github/workflows/real-llm-nightly.yml` is the only workflow that runs pytest and it scopes to `tests/real_llm/tests/` only. So the legacy ingestion path has had no automated regression coverage. Fixing the test-setup bugs without also wiring CI leaves the same blind spot.\n\n## Suggested fix\n\n1. **Add a `seed_tenant` fixture in `services/ingestion/tests/conftest.py`** that inserts a row into `tenants` and yields the id. Update the `tenant_id` fixture to depend on it (or supersede it).\n2. **Convert `gateway_pool.execute(...)` calls in test setup paths** that touch tenant-scoped tables to either:\n   - use the seeded tenant id, or\n   - wrap in `async with conn.transaction(): await conn.execute(\"SET CONSTRAINTS ALL DEFERRED\")` per the 0037 migration header's documented pattern, with rollback at test exit.\n3. **Add the suite to CI.** A second workflow (`integration.yml` or extension of an existing one) needs to spin up Postgres + run `pytest services/ services/ingestion/`. The Compose setup already exists (`scripts/docker-migrate.sh`, `dogfood_up.sh`).\n\n## Acceptance criteria (M5 gate condition)\n\nPer the post-M1 plan update (`docs/ingestion/04-implementation-plan.md` §M5):\n\n> **(7) `test_ingest_core.py` is green in CI** — must be green before the shadow-comparison results in condition (2) can be evaluated meaningfully.\n\n## Discovery context\n\nFound during M1 (`feat/ingestion-m1-substrate`) closeout, 2026-05-17. M1 final gate explicitly excluded this suite from its test-pass-count report because the failures are pre-existing and unrelated to M1's substrate work.\n\ncc: owner of the legacy `services/ingestion/ingest()` code path.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/Fyralisinc/fyraliscore/issues/31/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

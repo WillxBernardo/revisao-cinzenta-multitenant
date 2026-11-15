@@ -1,0 +1,186 @@
+{
+ "id_item": "I1683",
+ "url": "https://github.com/pingcap/ticdc/issues/6160",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:42.813273+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/pingcap/ticdc/issues/6160",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/pingcap/ticdc/issues/6160",
+    "repository_url": "https://api.github.com/repos/pingcap/ticdc",
+    "labels_url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/labels{/name}",
+    "comments_url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/comments",
+    "events_url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/events",
+    "html_url": "https://github.com/pingcap/ticdc/issues/6160",
+    "id": 5333718591,
+    "node_id": "I_kwDOL-en9s8AAAABPeoWPw",
+    "number": 6160,
+    "title": "Changefeed stop replicating after TiCDC server scale in",
+    "user": {
+     "login": "pingyu",
+     "id": 1907938,
+     "node_id": "MDQ6VXNlcjE5MDc5Mzg=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1907938?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/pingyu",
+     "html_url": "https://github.com/pingyu",
+     "followers_url": "https://api.github.com/users/pingyu/followers",
+     "following_url": "https://api.github.com/users/pingyu/following{/other_user}",
+     "gists_url": "https://api.github.com/users/pingyu/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/pingyu/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/pingyu/subscriptions",
+     "organizations_url": "https://api.github.com/users/pingyu/orgs",
+     "repos_url": "https://api.github.com/users/pingyu/repos",
+     "events_url": "https://api.github.com/users/pingyu/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/pingyu/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 8012972088,
+      "node_id": "LA_kwDOL-en9s8AAAAB3ZxAOA",
+      "url": "https://api.github.com/repos/pingcap/ticdc/labels/type/bug",
+      "name": "type/bug",
+      "color": "fc2929",
+      "default": false,
+      "description": "The issue is confirmed as a bug.",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9498095707,
+      "node_id": "LA_kwDOL-en9s8AAAACNiFwWw",
+      "url": "https://api.github.com/repos/pingcap/ticdc/labels/can't%20reproduce",
+      "name": "can't reproduce",
+      "color": "aaaaaa",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-09-03T07:35:40Z",
+    "updated_at": "2026-10-19T07:15:43Z",
+    "closed_at": "2026-10-19T07:15:37Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### What did you do?\n\n1. Start up a cluster with 10+ TiCDC instances.\n2. Create changefeed, and wait for becoming normal.\n3. Scale in TiCDC to only 1 instance.\n\n### What did you expect to see?\n\nThe changefeeed is normal.\n\n### What did you see instead?\n\nThe changefeed stop replicating since about 10:52.\n\nAfter scale out TiCDC back to 10+ instances at about 12:18, the changefeed become normal again.\n\n<img width=\"4976\" height=\"472\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/4bed31ee-ca2f-4e68-b974-4dba82587f6b\" />\n\n<img width=\"2494\" height=\"672\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/b707557c-cc22-4dfb-b64c-34b7e5732885\" />\n\nMetrics: [link](https://staging-clinic.pingcap.com/grafana/d/YiGL8hBZ0aac/tidb-serverless-ticdc-new-arch?orgId=1&var-org=9666&var-org_type=cloud&var-tidb_cluster=10898924262875450388&var-cluster_id=10898924262875450388&var-cluster_name=pingyu-cdc-up&var-tenant_id=1369847559691457297&var-tenant_name=testinfra-essentialv1-starter-staging&var-control_plane_info=us-east-1-f01%2Faws-us-east-1%2Fdevtier-infra&var-keyspace_id=20651&var-keyspace_name=4T95tqqy5TYLLNy&var-changefeed=All&var-ticdc_instance=All&var-tikv_instance=All&var-spike_threshold=All&var-runtime_instance=All&from=1788402594998&to=1788412518351).\nLogs: [link](https://staging-clinic.pingcap.com/grafana/explore?orgId=1&left=%7B%22datasource%22:%22o11y-loki-data%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22editorMode%22:%22builder%22,%22expr%22:%22%7Bcluster%3D%5C%22staging-us-east-1-f01%5C%22,%20namespace%3D%5C%22tidb-serverless%5C%22,%20container%3D%5C%22ticdc%5C%22%7D%20%7C%3D%20%604T95tqqy5TYLLNy%60%22,%22queryType%22:%22range%22%7D%5D,%22range%22:%7B%22from%22:%221788400800000%22,%22to%22:%221788411599000%22%7D%7D&var-cluster_id=10898924262875450388&var-control_plane_info=us-east-1-f01%252Faws-us-east-1%252Fdevtier-infra)\n\n\n### Versions of the cluster\n\nUpstream TiDB cluster version (execute `SELECT tidb_version();` in a MySQL client):\n\n```console\nv8.5.3 (CSE)\n```\n\nUpstream TiKV version (execute `tikv-server --version`):\n\n```console\nv26.3.11-nextgen\n```\n\nTiCDC version (execute `cdc version`):\n\n```console\nv26.3.4-nextgen\n```",
+    "closed_by": {
+     "login": "wk989898",
+     "id": 55834428,
+     "node_id": "MDQ6VXNlcjU1ODM0NDI4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/55834428?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/wk989898",
+     "html_url": "https://github.com/wk989898",
+     "followers_url": "https://api.github.com/users/wk989898/followers",
+     "following_url": "https://api.github.com/users/wk989898/following{/other_user}",
+     "gists_url": "https://api.github.com/users/wk989898/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/wk989898/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/wk989898/subscriptions",
+     "organizations_url": "https://api.github.com/users/wk989898/orgs",
+     "repos_url": "https://api.github.com/users/wk989898/repos",
+     "events_url": "https://api.github.com/users/wk989898/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/wk989898/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/pingcap/ticdc/issues/6160/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/pingcap/ticdc/issues/comments/6261821681",
+     "html_url": "https://github.com/pingcap/ticdc/issues/6160#issuecomment-6261821681",
+     "issue_url": "https://api.github.com/repos/pingcap/ticdc/issues/6160",
+     "id": 6261821681,
+     "node_id": "IC_kwDOL-en9s8AAAABdTvQ8Q",
+     "user": {
+      "login": "wk989898",
+      "id": 55834428,
+      "node_id": "MDQ6VXNlcjU1ODM0NDI4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/55834428?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wk989898",
+      "html_url": "https://github.com/wk989898",
+      "followers_url": "https://api.github.com/users/wk989898/followers",
+      "following_url": "https://api.github.com/users/wk989898/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wk989898/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wk989898/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wk989898/subscriptions",
+      "organizations_url": "https://api.github.com/users/wk989898/orgs",
+      "repos_url": "https://api.github.com/users/wk989898/repos",
+      "events_url": "https://api.github.com/users/wk989898/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wk989898/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-10-19T07:15:37Z",
+     "updated_at": "2026-10-19T07:15:37Z",
+     "body": "<img width=\"1451\" height=\"715\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/0f62916c-ee3b-4403-88a9-4a68eada7d7a\" />\nCan't reproduce",
+     "author_association": "COLLABORATOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/pingcap/ticdc/issues/comments/6261821681/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

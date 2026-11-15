@@ -1,0 +1,548 @@
+{
+ "id_item": "I0003",
+ "url": "https://discourse.getdbt.com/t/how-can-i-do-loop-inside-loop-and-commit-for-each-iteration/20116",
+ "fonte": "dbt_forum",
+ "coletado_em": "2026-11-15T10:12:07.717125+00:00",
+ "topico": {
+  "status": 200,
+  "json": {
+   "post_stream": {
+    "posts": [
+     {
+      "id": 28806,
+      "name": "Boazyw",
+      "username": "boazyw",
+      "avatar_template": "/user_avatar/discourse.getdbt.com/boazyw/{size}/5439_2.png",
+      "created_at": "2025-08-14T00:06:59.128Z",
+      "cooked": "<h2><a name=\"p-28806-the-problem-im-having-1\" class=\"anchor\" href=\"#p-28806-the-problem-im-having-1\" aria-label=\"Heading link\"></a>The problem I’m having:</h2>\n<p>I’m working with multi-tenant Snowflake tables and have a dbt project that requires executing nested loops with commits at each iteration.</p>\n<p>The outer loop processes each customer, while the inner loop runs logic over a range of dates that are unique for each customer based on their data.</p>\n<p>After committing the results for the first day, I need to use  the data I created in the next iteration for the same customer.</p>\n<p>However, from what I’ve seen, dbt doesn’t support this kind of control flow or commit behavior natively.</p>\n<p>Do you know of a better solution or recommended approach to achieve this within dbt?</p>\n<h2><a name=\"p-28806-what-ive-already-tried-2\" class=\"anchor\" href=\"#p-28806-what-ive-already-tried-2\" aria-label=\"Heading link\"></a>What I’ve already tried</h2>\n<p>As a workaround, I wrote a stored procedure to handle it, but I understand that this isn’t considered best practice in dbt.</p>\n<h2><a name=\"p-28806-some-example-code-or-error-messages-3\" class=\"anchor\" href=\"#p-28806-some-example-code-or-error-messages-3\" aria-label=\"Heading link\"></a>Some example code or error messages</h2>\n<pre><code class=\"lang-auto\">CREATE OR REPLACE PROCEDURE DMS_PROD_DB.STG.SP_CHARGER_STATUS()\nRETURNS VARCHAR\nLANGUAGE SQL\nEXECUTE AS CALLER\nAS '\n    DECLARE\n        current_db STRING := CURRENT_DATABASE();\n        current_sch STRING := CURRENT_SCHEMA();\n        analytics_dim_schema STRING;\n        stg_schema STRING;\n        result_msg STRING := '''';\n        -- Client processing variables\n        current_client_id STRING;\n        current_client_name STRING;\n        start_date DATE;\n        end_date DATE;\n        current_date DATE;\n        date_count INTEGER := 0;\n        client_count INTEGER := 0;\n        total_clients INTEGER := 0;\n        records_processed INTEGER := 0;\n        total_records INTEGER := 0;\n    BEGIN\n            LET client_query STRING := ''\n                WITH ChargerStatus AS (\n                    SELECT \n                        UNIQUE_ID,\n                        MAX(STATUS_DATE) AS max_status_date\n                    FROM '' || stg_schema || ''.CHARGER_STATUS_STG\n                    GROUP BY UNIQUE_ID\n                ),\n                MinChangedOn AS (\n                    SELECT \n                        UNIQUE_ID,\n                        MIN(COALESCE(changed_on_base_line,changed_on))::DATE AS min_changed_on\n                    FROM '' || analytics_dim_schema || ''.FACT_STATION_STATUS_CHANGE_LOG\n                    WHERE (CHANGED_ON::DATE &gt;= ''''2024-07-01'''' OR CHANGED_ON_BASE_LINE::DATE &gt;= ''''2024-07-01'''')\n                    GROUP BY UNIQUE_ID\n                ),\n                LastRun AS (\n                    SELECT DISTINCT\n                        TENANT_ID AS UNIQUE_ID,\n                        dateadd(day,-1,LAST_RUN_DATE) AS LAST_RUN_DATE,\n                        CLIENT_NAME\n                    FROM '' || analytics_dim_schema || ''.DIM_SOURCE\n                    WHERE TABLE_NAME = ''''STATION_STATUS_CHANGE_LOG'''' \n                      AND NOT is_deleted\n                      AND NOT is_suspended \n                      AND last_run_date = current_date\n                )\n                SELECT \n                    f.UNIQUE_ID,\n                    COALESCE(lr.CLIENT_NAME, ''''Unknown'''') AS CLIENT_NAME,\n                    COALESCE(cs.max_status_date,f.min_changed_on) AS START_DATE,\n                    lr.LAST_RUN_DATE AS END_DATE\n                FROM MinChangedOn f\n                INNER JOIN LastRun lr \n                    ON lr.UNIQUE_ID = f.UNIQUE_ID\n                LEFT JOIN ChargerStatus cs \n                    ON cs.UNIQUE_ID = f.UNIQUE_ID\n                ORDER BY f.UNIQUE_ID'';\n            \n            LET client_result RESULTSET := (EXECUTE IMMEDIATE client_query);\n            LET found_clients BOOLEAN := FALSE;\n\n            FOR client_record IN client_result DO\n                found_clients := TRUE;\n                current_client_id := client_record.UNIQUE_ID;\n                current_client_name := client_record.CLIENT_NAME;\n                start_date := client_record.START_DATE;\n                end_date := client_record.END_DATE;\n                client_count := client_count + 1;\n                result_msg := result_msg || ''Client '' || client_count || '': '' || current_client_name || '' ('' || current_client_id || '')\n'';\n                result_msg := result_msg || ''Date range: '' || start_date || '' to '' || end_date || ''\n'';\n                date_count := 0;\n                current_date := start_date;\n                WHILE (current_date &lt;= end_date) DO\n                    date_count := date_count + 1;\n                    \n                    BEGIN\n                        LET process_query STRING := ''\n                            INSERT INTO '' || stg_schema || ''.CHARGER_STATUS_STG (\n                                charger_gk, unique_id, status_date, socket_id, station_id,\n                                available, charging, faulted, unavailable, new, unknown,\n                                reserved, discharging, paused, preparing, finishing,\n                                in_maintenance, max_status_value, managed, client_name, client_region,\n                                filename, row_number_in_file, row_insert_date, row_update_date,\n                                row_from_bucket_name, row_update_by_user\n                            )\n                            WITH cte_station_socket_source as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_CONNECTOR    \n                                WHERE unique_id = '''''' || current_client_id || '''''' \n                            ),\n                            cte_station_source as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_CHARGER \n                                WHERE unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_station_owner_data_source as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_CHARGER_OWNER \n                                WHERE unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_configuration_source as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_CONFIGURATION \n                                WHERE param_name = ''''stationServerSocketBlocksChargingSocketStatus'''' AND unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_dic_socket_status_source as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_CONNECTOR_STATUS\n                                WHERE unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_station_status_change_log_source as (\n                                SELECT \n                                    unique_id, id, station_id, station_status_id, \n                                    COALESCE(changed_on_base_line,changed_on) AS CHANGED_ON, \n                                    offline, old_station_status_id, station_socket_id, \n changed_on as original_changed_on\n                                FROM '' || analytics_dim_schema || ''.FACT_STATION_STATUS_CHANGE_LOG a\n                                WHERE ( changed_on::DATE              = '''''' || current_date || ''''''  OR\n                                        changed_on_base_line::DATE = '''''' || current_date || ''''''  \n                                      )\n                                    AND STATION_SOCKET_ID IS NOT NULL\n                                    AND unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_station_charge_transaction_source as (\n                                SELECT \n                                    unique_id, id, station_socket_id, start_card_id, stop_card_id, \n                                    COALESCE(start_on_base_line, start_on) AS START_ON, stopped_on, \n                                    meter_read_on_start, meter_read_on_stop, \n                                FROM '' || analytics_dim_schema || ''.FACT_STATION_CHARGE_TRANSACTION\n                                WHERE ( start_on::DATE           = '''''' || current_date || '''''' OR\n                                        start_on_base_line::DATE = '''''' || current_date || ''''''\n                                      )\n                                    AND unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_dim_station_history_provision as (\n                                SELECT * \n                                FROM '' || analytics_dim_schema || ''.DIM_STATION_HISTORY_PROVISION\n                                WHERE unique_id = '''''' || current_client_id || ''''''\n                            ),\n           cte_station_status_change_log_source_prev_changed_on as (\n                                SELECT a.*,\n                                    COALESCE(\n                                        LAG(a.changed_on) OVER (PARTITION BY a.unique_id, a.station_socket_id ORDER BY a.changed_on), \n                                        a.changed_on::date\n                                    ) AS previous_changed_on\n                                FROM cte_station_status_change_log_source a\n                                INNER JOIN cte_dim_station_history_provision b\n                                    ON  a.unique_id  = b.unique_id AND\n                                        a.station_id = b.charger_id AND\n                                        (a.changed_on_base_line between b.from_date_time and coalesce(b.to_date_time, CURRENT_TIMESTAMP)\n                                        OR\n                                        a.original_changed_on between b.from_date_time and coalesce(b.to_date_time, CURRENT_TIMESTAMP))\n                                --- start change\n                            ),\n                            cte_filtered_sockets AS (\n                                SELECT ss.unique_id, ss.connector_id, ss.charger_id, \n                                    s.usage_start_date, ss.evse_identity_key,\n                                    COALESCE(s.deleted,0) AS DELETED, s.provisioning_date, s.managed\n                                FROM cte_station_socket_source ss\n                                INNER JOIN cte_station_source s \n                                    ON ss.charger_id = s.charger_id AND ss.unique_id = s.unique_id\n                                INNER JOIN cte_station_owner_data_source so \n                                    ON so.charger_owner_id = s.station_owner_id AND so.unique_id = s.unique_id\n                                INNER JOIN cte_dim_station_history_provision a\n                                    ON  a.unique_id  = ss.unique_id AND\n                                        a.charger_id = ss.charger_id AND\n                                        '''''' || current_date || '''''' between a.from_date::date and coalesce(a.TO_DATE, CURRENT_TIMESTAMP::DATE)\n                                WHERE\n                                '''''' || current_date || ''''''  &lt;= coalesce(ss.is_deleted_date,CURRENT_TIMESTAMP)::date  \n                                AND\n                                (   coalesce(s.deleted,0) = 0 \n                                    or\n                                    (coalesce(s.deleted,0) = 1 and '''''' || current_date || '''''' &lt;= s.modified_on::date)\n                                )\n                            ),\n                            cte_station_sockets as (\n                                SELECT\n                                    stg_y.unique_id AS UNIQUE_ID,\n                                    '''''' || current_date || '''''' AS STATUS_DATE,\n                                    stg_y.socket_id AS SOCKET_ID,\n                                    stg_y.station_id AS STATION_ID,\n                                    CASE WHEN stg_y.max_status_value = ''''AVAILABLE'''' THEN 86400 ELSE 0 END AS AVAILABLE,\n                                    CASE WHEN stg_y.max_status_value = ''''CHARGING'''' THEN 86400 ELSE 0 END AS CHARGING,\n                                    CASE WHEN stg_y.max_status_value = ''''FAULTED'''' THEN 86400 ELSE 0 END AS FAULTED,\n                                    CASE WHEN stg_y.max_status_value = ''''UNAVAILABLE'''' THEN 86400 ELSE 0 END AS UNAVAILABLE,\n                                    CASE WHEN stg_y.max_status_value = ''''NEW'''' THEN 86400 ELSE 0 END AS NEW,\n                                    CASE WHEN stg_y.max_status_value = ''''UNKNOWN'''' THEN 86400 ELSE 0 END AS UNKNOWN,\n                                    CASE WHEN stg_y.max_status_value = ''''RESERVED'''' THEN 86400 ELSE 0 END AS RESERVED,\n                                    CASE WHEN stg_y.max_status_value = ''''DISCHARGING'''' THEN 86400 ELSE 0 END AS DISCHARGING,\n                                    CASE WHEN stg_y.max_status_value = ''''PAUSED'''' THEN 86400 ELSE 0 END AS PAUSED,\n                                    CASE WHEN stg_y.max_status_value = ''''PREPARING'''' THEN 86400 ELSE 0 END AS PREPARING,\n                                    CASE WHEN stg_y.max_status_value = ''''FINISHING'''' THEN 86400 ELSE 0 END AS FINISHING,\n                                    stg_y.in_maintenance AS IN_MAINTENANCE,\n                                    stg_y.max_status_value AS MAX_STATUS_VALUE, \n                                    stg_y.managed AS MANAGED,\n                                    stg_y.client_name, stg_y.client_region, stg_y.filename,\n                                    stg_y.row_number_in_file, stg_y.row_insert_date, stg_y.row_update_date,\n                                    stg_y.row_from_bucket_name, stg_y.row_update_by_user\n                                FROM '' || stg_schema || ''.CHARGER_STATUS_STG stg_y\n                                INNER JOIN cte_filtered_sockets s\n                                    ON s.connector_id = stg_y.socket_id AND s.unique_id = stg_y.unique_id\n                                WHERE stg_y.status_date = DATEADD(day,-1, '''''' || current_date || '''''')\n                                  /* AND s.usage_start_date::DATE &lt;= stg_y.status_date */\n                                  AND stg_y.unique_id = '''''' || current_client_id || ''''''\n                            ),\n                            cte_socket_block_status as (\n                                SELECT c.unique_id AS UNIQUE_ID,\n                                    COALESCE(dss.connector_status_id, 3) AS BLOCK_STATUS_ID\n                                FROM cte_configuration_source c\n                                INNER JOIN cte_dic_socket_status_source dss \n                                    ON dss.connector_status_value = c.param_value AND dss.unique_id = c.unique_id\n                            ),\n                            cte_max_change as (\n                                SELECT cl.unique_id AS UNIQUE_ID, \n                                    cl.station_socket_id AS STATION_SOCKET_ID, \n                                    MAX(changed_on) AS MAX_CHANGED_ON\n                                FROM cte_station_status_change_log_source cl\n                                WHERE CAST(cl.changed_on AS DATE) = '''''' || current_date || ''''''\n                                GROUP BY cl.unique_id, cl.station_socket_id\n                            ),\n                            cte_status_changes as (\n                                SELECT \n                                    cl.unique_id AS UNIQUE_ID,\n                                    '''''' || current_date || '''''' AS STATUS_DATE,\n                                    cl.station_socket_id AS SOCKET_ID,\n                                    cl.station_id AS STATION_ID,\n                                    CASE WHEN cl.minor_status_changed = 1 \n                                        AND cl.old_station_socket_status_id = sbs.block_status_id\n                                        AND cl.old_station_offline = 0\n                                        AND ct.station_socket_id &gt; 0 THEN ''''AVAILABLE''''\n                                        WHEN cl.old_station_offline = 1 OR cl.old_station_socket_status_id = 5 THEN ''''UNKNOWN''''\n                                        ELSE dss.connector_status_value \n                                    END AS STATUS_VALUE,\n                                    CASE WHEN cl.old_disabled = 1 THEN 1 ELSE 0 END AS IN_MAINTENANCE,\n                                    DATEDIFF(MICROSECOND,\n                                        CASE WHEN cl.previous_changed_on &lt; '''''' || current_date || '''''' \n                                        THEN '''''' || current_date || '''''' ELSE cl.previous_changed_on END,\n                                        cl.changed_on\n                                    ) / 1000 / 1000 AS STATUS_TIME,\n                                    DATEADD(MINUTE,-1,cl.previous_changed_on) AS OLD_STATION_STATUS_CHANGE_ON_MIN_BACK,\n                                    DATEADD(MINUTE, 1,cl.previous_changed_on) AS OLD_STATION_STATUS_CHANGE_ON_MIN_FORWARD,\n                                    cl.changed_on   AS CHANGED_ON,\n                                    s.managed       AS MANAGED,\n                                    cl.client_name, cl.client_region, cl.filename, cl.row_number_in_file,\n                                    cl.row_insert_date, cl.row_update_date, cl.row_from_bucket_name, cl.row_update_by_user,\n                                    ''''1'''' AS UNION_ORDER\n                                FROM cte_station_status_change_log_source_prev_changed_on cl\n                                INNER JOIN cte_filtered_sockets s\n                                    ON s.connector_id = cl.station_socket_id AND s.unique_id = cl.unique_id\n                                LEFT JOIN cte_socket_block_status sbs ON sbs.unique_id = cl.unique_id\n                                INNER JOIN cte_dic_socket_status_source dss \n                                    ON dss.connector_status_id = cl.old_station_socket_status_id AND dss.unique_id = cl.unique_id\n                                LEFT JOIN (\n                                    SELECT ss.unique_id AS UNIQUE_ID, ss1.connector_id AS STATION_SOCKET_ID,\n                                        sct.start_on::DATE AS START_ON_DATE, ss1.charger_id AS CHARGER_ID,\n                                        ss.connector_id AS STATION_SOCKET_ID_ORG, sct.start_on AS START_ON\n                                    FROM cte_filtered_sockets ss\n                                    FULL OUTER JOIN cte_filtered_sockets ss1\n                                        ON ss.unique_id = ss1.unique_id AND ss.connector_id &lt;&gt; ss1.connector_id\n                                        AND ss.charger_id = ss1.charger_id AND ss.evse_identity_key = ss1.evse_identity_key                     INNER JOIN cte_station_charge_transaction_source sct \n                                        ON sct.station_socket_id = ss1.connector_id AND sct.unique_id = ss1.unique_id\n                                    WHERE sct.start_on::DATE = '''''' || current_date || ''''''\n                                ) ct\n                                    ON ct.station_socket_id_org = cl.station_socket_id AND ct.station_socket_id &lt;&gt; cl.station_socket_id\n                                    AND ct.unique_id = cl.unique_id\n                                    AND cl.station_socket_status_id &lt;&gt; cl.old_station_socket_status_id\n                                    AND ct.start_on BETWEEN dateadd(MINUTE,-1,cl.previous_changed_on) \n                                    AND dateadd(MINUTE, 1,cl.previous_changed_on)\n                               \n                            ),\n                            cte_status_value as (\n                                SELECT sc.unique_id, sc.status_date, sc.socket_id, \n                                    MAX(sc.status_value) as status_value\n                                FROM cte_status_changes sc\n                                WHERE sc.union_order = ''''2''''\n                                GROUP BY sc.unique_id, sc.status_date, sc.socket_id\n                            ),\n                            cte_group_measures AS (\n                                SELECT up.unique_id AS UNIQUE_ID, up.status_date AS STATUS_DATE,\n                                    up.socket_id AS SOCKET_ID, up.station_id AS STATION_ID,\n                                    up.status_value AS STATUS_VALUE, SUM(up.status_time) AS STATUS_TIME,\n                                    MAX(up.in_maintenance) AS IN_MAINTENANCE,\n                                    MAX(cte_status_value.status_value) AS MAX_STATUS_VALUE,\n                                    MAX(up.managed) AS MANAGED,\n                                    MAX(up.client_name) AS CLIENT_NAME, MAX(up.client_region) AS CLIENT_REGION,\n                                    MAX(up.filename) AS FILENAME, MAX(up.row_number_in_file) AS ROW_NUMBER_IN_FILE,\n                                    MAX(up.row_insert_date) AS ROW_INSERT_DATE, MAX(up.row_update_date) AS ROW_UPDATE_DATE,\n                                    MAX(up.row_from_bucket_name) AS ROW_FROM_BUCKET_NAME, MAX(up.row_update_by_user) AS ROW_UPDATE_BY_USER\n                                FROM cte_status_changes up\n                                LEFT JOIN cte_status_value\n                                    ON up.unique_id = cte_status_value.unique_id AND up.status_date = cte_status_value.status_date\n                                    AND up.socket_id = cte_status_value.socket_id\n                                GROUP BY up.unique_id, up.status_date, up.socket_id, up.station_id, up.status_value\n                            ),\n                            cte_daily_status_times as (\n                                SELECT \n                                    gm.unique_id AS UNIQUE_ID, gm.status_date AS STATUS_DATE,\n                                    gm.socket_id AS SOCKET_ID, MAX(gm.station_id) AS STATION_ID,\n                                    SUM(CASE WHEN gm.status_value = ''''AVAILABLE'''' THEN gm.status_time ELSE 0 END) AS AVAILABLE,\n                                    SUM(CASE WHEN gm.status_value = ''''CHARGING'''' THEN gm.status_time ELSE 0 END) AS CHARGING,\n                                    SUM(CASE WHEN gm.status_value = ''''FAULTED'''' THEN gm.status_time ELSE 0 END) AS FAULTED,\n                                    SUM(CASE WHEN gm.status_value = ''''UNAVAILABLE'''' THEN gm.status_time ELSE 0 END) AS UNAVAILABLE,\n                                    SUM(CASE WHEN gm.status_value = ''''NEW'''' THEN gm.status_time ELSE 0 END) AS NEW,\n                                    SUM(CASE WHEN gm.status_value = ''''UNKNOWN'''' THEN gm.status_time ELSE 0 END) AS UNKNOWN,\n                                    SUM(CASE WHEN gm.status_value = ''''RESERVED'''' THEN gm.status_time ELSE 0 END) AS RESERVED,\n                                    SUM(CASE WHEN gm.status_value = ''''DISCHARGING'''' THEN gm.status_time ELSE 0 END) AS DISCHARGING,\n                                    SUM(CASE WHEN gm.status_value = ''''PAUSED'''' THEN gm.status_time ELSE 0 END) AS PAUSED,\n                                    SUM(CASE WHEN gm.status_value = ''''PREPARING'''' THEN gm.status_time ELSE 0 END) AS PREPARING,\n                                    SUM(CASE WHEN gm.status_value = ''''FINISHING'''' THEN gm.status_time ELSE 0 END) AS FINISHING,\n                                    MAX(gm.in_maintenance)::BOOLEAN AS IN_MAINTENANCE,\n                                    MAX(gm.max_status_value) AS MAX_STATUS_VALUE,\n                                    MAX(gm.managed) AS MANAGED,\n                                    MAX(gm.client_name) AS CLIENT_NAME, MAX(gm.client_region) AS CLIENT_REGION,\n                                    MAX(gm.filename) AS FILENAME, MAX(gm.row_number_in_file) AS ROW_NUMBER_IN_FILE,\n                                    MAX(gm.row_insert_date) AS ROW_INSERT_DATE, MAX(gm.row_update_date) AS ROW_UPDATE_DATE,\n                                    MAX(gm.row_from_bucket_name) AS ROW_FROM_BUCKET_NAME, MAX(gm.row_update_by_user) AS ROW_UPDATE_BY_USER\n                                FROM cte_group_measures gm\n                                GROUP BY gm.unique_id, gm.status_date, gm.socket_id\n                                \n                                UNION \n                                SELECT \n                                    ss.unique_id AS UNIQUE_ID, ss.status_date AS STATUS_DATE,\n                                    ss.socket_id AS SOCKET_ID, ss.station_id AS STATION_ID,\n                                    ss.available AS AVAILABLE, ss.charging AS CHARGING, ss.faulted AS FAULTED,\n                                    ss.unavailable AS UNAVAILABLE, ss.new AS NEW, ss.unknown AS UNKNOWN,\n                                    ss.reserved AS RESERVED, ss.discharging AS DISCHARGING, ss.paused AS PAUSED,\n                                    ss.preparing AS PREPARING, ss.finishing AS FINISHING,\n                                    ss.in_maintenance AS IN_MAINTENANCE, ss.max_status_value AS MAX_STATUS_VALUE,\n                                    ss.managed AS MANAGED,\n                                    ss.client_name AS CLIENT_NAME, ss.client_region AS CLIENT_REGION,\n                                    ss.filename AS FILENAME, ss.row_number_in_file AS ROW_NUMBER_IN_FILE,\n                                    ss.row_insert_date AS ROW_INSERT_DATE, ss.row_update_date AS ROW_UPDATE_DATE,\n                                    ss.row_from_bucket_name AS ROW_FROM_BUCKET_NAME, ss.row_update_by_user AS ROW_UPDATE_BY_USER\n                                FROM cte_station_sockets ss\n                                WHERE NOT EXISTS (\n                                    SELECT 1\n                                    FROM cte_group_measures gm\n                                    WHERE gm.unique_id = ss.unique_id AND gm.status_date = ss.status_date AND gm.socket_id = ss.socket_id\n                                )\n                            )\n                            SELECT     \n                                MD5(unique_id || ''''_'''' || status_date || ''''_'''' || socket_id) as charger_gk,\n                                unique_id AS UNIQUE_ID,\n                                status_date::DATE AS STATUS_DATE,\n                                socket_id::NUMBER AS SOCKET_ID,\n                                station_id::NUMBER AS STATION_ID,\n                                available::NUMBER(38,8) AS AVAILABLE,\n                                charging::NUMBER(38,8) AS CHARGING,\n                                faulted::NUMBER(38,8) AS FAULTED,\n                                unavailable::NUMBER(38,8) AS UNAVAILABLE,\n                                new::NUMBER(38,8) AS NEW,\n                                unknown::NUMBER(38,8) AS UNKNOWN,\n                                reserved::NUMBER(38,8) AS RESERVED,\n                                discharging::NUMBER(38,8) AS DISCHARGING,\n                                paused::NUMBER(38,8) AS PAUSED,\n                                preparing::NUMBER(38,8) AS PREPARING,\n                                finishing::NUMBER(38,8) AS FINISHING,\n                                in_maintenance::BOOLEAN AS IN_MAINTENANCE,\n                                max_status_value::VARCHAR AS MAX_STATUS_VALUE,\n                                managed AS MANAGED,\n                                client_name AS CLIENT_NAME,\n                                client_region AS CLIENT_REGION,\n                                filename AS FILENAME,\n                                row_number_in_file AS ROW_NUMBER_IN_FILE,\n                                row_insert_date AS ROW_INSERT_DATE,\n                                CURRENT_TIMESTAMP AS ROW_UPDATE_DATE,\n                                row_from_bucket_name AS ROW_FROM_BUCKET_NAME,\n                                ''''SP_CHARGER_STATUS'''' AS ROW_UPDATE_BY_USER\n                            FROM cte_daily_status_times final_results\n                            WHERE NOT EXISTS (\n                                /* Prevent duplicate records */\n                                SELECT 1 FROM '' || stg_schema || ''.CHARGER_STATUS_STG existing\n                                WHERE existing.unique_id = final_results.unique_id\n                                  AND existing.status_date = final_results.status_date\n                                  AND existing.socket_id = final_results.socket_id\n                            )'';\n                        \n</code></pre>",
+      "post_number": 1,
+      "post_type": 1,
+      "posts_count": 1,
+      "updated_at": "2025-08-14T00:06:59.128Z",
+      "reply_count": 0,
+      "reply_to_post_number": null,
+      "quote_count": 0,
+      "incoming_link_count": 49,
+      "reads": 4,
+      "readers_count": 3,
+      "score": 245.8,
+      "yours": false,
+      "topic_id": 20116,
+      "topic_slug": "how-can-i-do-loop-inside-loop-and-commit-for-each-iteration",
+      "display_username": "Boazyw",
+      "primary_group_name": null,
+      "flair_name": null,
+      "flair_url": null,
+      "flair_bg_color": null,
+      "flair_color": null,
+      "flair_group_id": null,
+      "badges_granted": [],
+      "version": 1,
+      "can_edit": false,
+      "can_delete": false,
+      "can_recover": false,
+      "can_see_hidden_post": false,
+      "can_wiki": false,
+      "read": true,
+      "user_title": null,
+      "bookmarked": false,
+      "actions_summary": [],
+      "moderator": false,
+      "admin": false,
+      "staff": false,
+      "user_id": 11908,
+      "hidden": false,
+      "trust_level": 0,
+      "deleted_at": null,
+      "user_deleted": false,
+      "edit_reason": null,
+      "can_view_edit_history": true,
+      "wiki": false,
+      "post_url": "/t/how-can-i-do-loop-inside-loop-and-commit-for-each-iteration/20116/1",
+      "calendar_details": [],
+      "reactions": [],
+      "current_user_reaction": null,
+      "reaction_users_count": 0,
+      "current_user_used_main_reaction": false,
+      "can_accept_answer": false,
+      "can_unaccept_answer": false,
+      "accepted_answer": false,
+      "topic_accepted_answer": null,
+      "can_vote": false
+     }
+    ],
+    "stream": [
+     28806
+    ]
+   },
+   "timeline_lookup": [
+    [
+     1,
+     458
+    ]
+   ],
+   "suggested_topics": [],
+   "tags": [
+    {
+     "id": 96,
+     "name": "dbt-core",
+     "slug": "dbt-core"
+    }
+   ],
+   "tags_descriptions": {},
+   "fancy_title": "How can I do loop inside loop and commit for each iteration?",
+   "id": 20116,
+   "title": "How can I do loop inside loop and commit for each iteration?",
+   "posts_count": 1,
+   "created_at": "2025-08-14T00:06:59.032Z",
+   "views": 112,
+   "reply_count": 0,
+   "like_count": 0,
+   "last_posted_at": "2025-08-14T00:06:59.128Z",
+   "visible": true,
+   "closed": false,
+   "archived": false,
+   "has_summary": false,
+   "archetype": "regular",
+   "slug": "how-can-i-do-loop-inside-loop-and-commit-for-each-iteration",
+   "category_id": 19,
+   "word_count": 1960,
+   "deleted_at": null,
+   "user_id": 11908,
+   "featured_link": null,
+   "pinned_globally": false,
+   "pinned_at": null,
+   "pinned_until": null,
+   "image_url": null,
+   "slow_mode_seconds": 0,
+   "draft": null,
+   "draft_key": "topic_20116",
+   "draft_sequence": null,
+   "unpinned": null,
+   "pinned": false,
+   "current_post_number": 1,
+   "highest_post_number": 1,
+   "deleted_by": null,
+   "actions_summary": [
+    {
+     "id": 4,
+     "count": 0,
+     "hidden": false,
+     "can_act": false
+    },
+    {
+     "id": 8,
+     "count": 0,
+     "hidden": false,
+     "can_act": false
+    },
+    {
+     "id": 10,
+     "count": 0,
+     "hidden": false,
+     "can_act": false
+    },
+    {
+     "id": 7,
+     "count": 0,
+     "hidden": false,
+     "can_act": false
+    }
+   ],
+   "chunk_size": 20,
+   "bookmarked": false,
+   "topic_timer": null,
+   "message_bus_last_id": 0,
+   "participant_count": 1,
+   "show_read_indicator": false,
+   "thumbnails": null,
+   "slow_mode_enabled_until": null,
+   "board_memberships": [],
+   "related_topics": [
+    {
+     "fancy_title": "Modeling inserts-in-a-loop in dbt",
+     "id": 3170,
+     "title": "Modeling inserts-in-a-loop in dbt",
+     "slug": "modeling-inserts-in-a-loop-in-dbt",
+     "posts_count": 2,
+     "reply_count": 0,
+     "highest_post_number": 2,
+     "image_url": null,
+     "created_at": "2021-10-11T17:02:20.076Z",
+     "last_posted_at": "2021-10-14T07:04:54.698Z",
+     "bumped": true,
+     "bumped_at": "2021-10-14T07:04:54.698Z",
+     "archetype": "regular",
+     "unseen": false,
+     "pinned": false,
+     "unpinned": null,
+     "visible": true,
+     "closed": false,
+     "archived": false,
+     "bookmarked": null,
+     "liked": null,
+     "tags": [],
+     "tags_descriptions": {},
+     "like_count": 0,
+     "views": 4779,
+     "category_id": 20,
+     "featured_link": null,
+     "op_like_count": 0,
+     "has_accepted_answer": false,
+     "posters": [
+      {
+       "extras": null,
+       "description": "Original Poster",
+       "user": {
+        "id": 1686,
+        "username": "aa_will",
+        "name": "",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/a/96bed5/{size}.png",
+        "trust_level": 0
+       }
+      },
+      {
+       "extras": "latest",
+       "description": "Most Recent Poster",
+       "user": {
+        "id": 1693,
+        "username": "DanielHorvath",
+        "name": "",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/d/ecc23a/{size}.png",
+        "trust_level": 0
+       }
+      }
+     ]
+    },
+    {
+     "fancy_title": "dbt hooks and multiple sql statements",
+     "id": 20577,
+     "title": "dbt hooks and multiple sql statements",
+     "slug": "dbt-hooks-and-multiple-sql-statements",
+     "posts_count": 3,
+     "reply_count": 0,
+     "highest_post_number": 3,
+     "image_url": null,
+     "created_at": "2026-02-10T18:27:14.301Z",
+     "last_posted_at": "2026-02-18T11:43:11.424Z",
+     "bumped": true,
+     "bumped_at": "2026-02-18T11:43:11.424Z",
+     "archetype": "regular",
+     "unseen": false,
+     "pinned": false,
+     "unpinned": null,
+     "visible": true,
+     "closed": false,
+     "archived": false,
+     "bookmarked": null,
+     "liked": null,
+     "tags": [],
+     "tags_descriptions": {},
+     "like_count": 1,
+     "views": 227,
+     "category_id": 19,
+     "featured_link": null,
+     "op_like_count": 0,
+     "has_accepted_answer": false,
+     "posters": [
+      {
+       "extras": null,
+       "description": "Original Poster",
+       "user": {
+        "id": 12525,
+        "username": "chrisbailiss",
+        "name": "Chris",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/c/4da419/{size}.png",
+        "trust_level": 0
+       }
+      },
+      {
+       "extras": null,
+       "description": "Recent Poster",
+       "user": {
+        "id": 12500,
+        "username": "spramanik",
+        "name": "Siddhartha Pramanik",
+        "avatar_template": "/user_avatar/discourse.getdbt.com/spramanik/{size}/6216_2.png",
+        "trust_level": 1
+       }
+      },
+      {
+       "extras": "latest",
+       "description": "Most Recent Poster",
+       "user": {
+        "id": 3632,
+        "username": "emanueol",
+        "name": "Emanuel Oliveira",
+        "avatar_template": "/user_avatar/discourse.getdbt.com/emanueol/{size}/6213_2.png",
+        "trust_level": 1
+       }
+      }
+     ]
+    },
+    {
+     "fancy_title": "How to configure dbt to only incrementally process values it has not processed before?",
+     "id": 12587,
+     "title": "How to configure dbt to only incrementally process values it has not processed before?",
+     "slug": "how-to-configure-dbt-to-only-incrementally-process-values-it-has-not-processed-before",
+     "posts_count": 2,
+     "reply_count": 0,
+     "highest_post_number": 2,
+     "image_url": null,
+     "created_at": "2024-03-22T17:21:19.881Z",
+     "last_posted_at": "2024-03-24T19:56:02.162Z",
+     "bumped": true,
+     "bumped_at": "2024-03-24T19:56:02.162Z",
+     "archetype": "regular",
+     "unseen": false,
+     "pinned": false,
+     "unpinned": null,
+     "visible": true,
+     "closed": true,
+     "archived": false,
+     "bookmarked": null,
+     "liked": null,
+     "tags": [
+      {
+       "id": 38,
+       "name": "snowflake",
+       "slug": "snowflake"
+      },
+      {
+       "id": 18,
+       "name": "incremental",
+       "slug": "incremental"
+      }
+     ],
+     "tags_descriptions": {},
+     "like_count": 2,
+     "views": 2248,
+     "category_id": 19,
+     "featured_link": null,
+     "op_like_count": 0,
+     "has_accepted_answer": true,
+     "posters": [
+      {
+       "extras": "latest",
+       "description": "Original Poster, Most Recent Poster, Accepted Answer",
+       "user": {
+        "id": 7165,
+        "username": "davidl123",
+        "name": "",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/d/779978/{size}.png",
+        "trust_level": 0
+       }
+      },
+      {
+       "extras": null,
+       "description": "Recent Poster",
+       "user": {
+        "id": -1,
+        "username": "system",
+        "name": "system",
+        "avatar_template": "https://us1.discourse-cdn.com/flex020/uploads/getdbt/original/1X/a7a7ca1fe379aaf90952b0e13118a817babcd14f.png",
+        "admin": true,
+        "moderator": true,
+        "trust_level": 4
+       }
+      }
+     ]
+    },
+    {
+     "fancy_title": "This works in SnowFlake but not in dbt cloud?",
+     "id": 18682,
+     "title": "This works in SnowFlake but not in dbt cloud?",
+     "slug": "this-works-in-snowflake-but-not-in-dbt-cloud",
+     "posts_count": 1,
+     "reply_count": 0,
+     "highest_post_number": 1,
+     "image_url": null,
+     "created_at": "2025-03-16T19:03:32.832Z",
+     "last_posted_at": "2025-03-16T19:03:32.902Z",
+     "bumped": true,
+     "bumped_at": "2025-03-16T19:03:32.902Z",
+     "archetype": "regular",
+     "unseen": false,
+     "pinned": false,
+     "unpinned": null,
+     "visible": true,
+     "closed": false,
+     "archived": false,
+     "bookmarked": null,
+     "liked": null,
+     "tags": [
+      {
+       "id": 62,
+       "name": "dbt-cloud",
+       "slug": "dbt-cloud"
+      },
+      {
+       "id": 38,
+       "name": "snowflake",
+       "slug": "snowflake"
+      }
+     ],
+     "tags_descriptions": {},
+     "like_count": 0,
+     "views": 145,
+     "category_id": 19,
+     "featured_link": null,
+     "op_like_count": 0,
+     "has_accepted_answer": false,
+     "posters": [
+      {
+       "extras": "latest single",
+       "description": "Original Poster, Most Recent Poster",
+       "user": {
+        "id": 11026,
+        "username": "FarmboyEsq",
+        "name": "Steve",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/f/cab0a1/{size}.png",
+        "trust_level": 1
+       }
+      }
+     ]
+    },
+    {
+     "fancy_title": "How to change execution commands with dbt jobs",
+     "id": 5407,
+     "title": "How to change execution commands with dbt jobs",
+     "slug": "how-to-change-execution-commands-with-dbt-jobs",
+     "posts_count": 6,
+     "reply_count": 2,
+     "highest_post_number": 6,
+     "image_url": null,
+     "created_at": "2022-11-23T18:19:08.012Z",
+     "last_posted_at": "2023-04-17T12:24:22.681Z",
+     "bumped": true,
+     "bumped_at": "2023-04-17T12:24:22.681Z",
+     "archetype": "regular",
+     "unseen": false,
+     "pinned": false,
+     "unpinned": null,
+     "visible": true,
+     "closed": false,
+     "archived": false,
+     "bookmarked": null,
+     "liked": null,
+     "tags": [
+      {
+       "id": 53,
+       "name": "orchestration-and-deployment",
+       "slug": "orchestration-and-deployment"
+      },
+      {
+       "id": 13,
+       "name": "variables",
+       "slug": "variables"
+      }
+     ],
+     "tags_descriptions": {
+      "orchestration-and-deployment": ""
+     },
+     "like_count": 2,
+     "views": 2357,
+     "category_id": 19,
+     "featured_link": null,
+     "op_like_count": 1,
+     "has_accepted_answer": false,
+     "posters": [
+      {
+       "extras": null,
+       "description": "Original Poster",
+       "user": {
+        "id": 2950,
+        "username": "danieljnmello",
+        "name": "Daniel",
+        "avatar_template": "https://avatars.discourse-cdn.com/v4/letter/d/e8c25b/{size}.png",
+        "trust_level": 1
+       }
+      },
+      {
+       "extras": null,
+       "description": "Recent Poster",
+       "user": {
+        "id": 476,
+        "username": "joellabes",
+        "name": "Joel Labes",
+        "avatar_template": "/user_avatar/discourse.getdbt.com/joellabes/{size}/3980_2.png",
+        "flair_name": "dbt_labs",
+        "flair_url": "https://us1.discourse-cdn.com/flex020/uploads/getdbt/original/2X/e/ef68c3538f6cce29e108243aeade244f718239a1.png",
+        "flair_bg_color": "ffffff",
+        "flair_group_id": 41,
+        "admin": true,
+        "moderator": true,
+        "trust_level": 4
+       }
+      },
+      {
+       "extras": "latest",
+       "description": "Most Recent Poster",
+       "user": {
+        "id": 4313,
+        "username": "felixachi976",
+        "name": "Felix Achi",
+        "avatar_template": "/user_avatar/discourse.getdbt.com/felixachi976/{size}/2263_2.png",
+        "trust_level": 0
+       }
+      }
+     ]
+    }
+   ],
+   "summarizable": false,
+   "has_cached_summary": false,
+   "has_livestream": null,
+   "livestream_chat_active": false,
+   "valid_reactions": [
+    "heart",
+    "+1",
+    "laughing",
+    "open_mouth",
+    "clap",
+    "confetti_ball",
+    "hugs"
+   ],
+   "has_accepted_answer": false,
+   "shared_issue_count": 0,
+   "can_create_shared_issue": false,
+   "shared_issue_visible": true,
+   "can_vote": false,
+   "vote_count": 0,
+   "user_voted": false,
+   "details": {
+    "can_edit": false,
+    "notification_level": 1,
+    "participants": [
+     {
+      "id": 11908,
+      "username": "boazyw",
+      "name": "Boazyw",
+      "avatar_template": "/user_avatar/discourse.getdbt.com/boazyw/{size}/5439_2.png",
+      "post_count": 1,
+      "primary_group_name": null,
+      "flair_name": null,
+      "flair_url": null,
+      "flair_color": null,
+      "flair_bg_color": null,
+      "flair_group_id": null,
+      "trust_level": 0
+     }
+    ],
+    "created_by": {
+     "id": 11908,
+     "username": "boazyw",
+     "name": "Boazyw",
+     "avatar_template": "/user_avatar/discourse.getdbt.com/boazyw/{size}/5439_2.png"
+    },
+    "last_poster": {
+     "id": 11908,
+     "username": "boazyw",
+     "name": "Boazyw",
+     "avatar_template": "/user_avatar/discourse.getdbt.com/boazyw/{size}/5439_2.png"
+    }
+   },
+   "bookmarks": []
+  }
+ },
+ "posts_extra": []
+}

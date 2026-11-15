@@ -1,0 +1,172 @@
+{
+ "id_item": "I0669",
+ "url": "https://github.com/apache/fluss/issues/3307",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:04.606055+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/apache/fluss/issues/3307",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/apache/fluss/issues/3307",
+    "repository_url": "https://api.github.com/repos/apache/fluss",
+    "labels_url": "https://api.github.com/repos/apache/fluss/issues/3307/labels{/name}",
+    "comments_url": "https://api.github.com/repos/apache/fluss/issues/3307/comments",
+    "events_url": "https://api.github.com/repos/apache/fluss/issues/3307/events",
+    "html_url": "https://github.com/apache/fluss/issues/3307",
+    "id": 4434317937,
+    "node_id": "I_kwDONIZ9ns8AAAABCE5ScQ",
+    "number": 3307,
+    "title": "Fluss binlog source fails checkpoint/savepoint with NPE in FlinkSourceEnumerator.snapshotState",
+    "user": {
+     "login": "lgtm4e",
+     "id": 196609838,
+     "node_id": "U_kgDOC7gHLg",
+     "avatar_url": "https://avatars.githubusercontent.com/u/196609838?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/lgtm4e",
+     "html_url": "https://github.com/lgtm4e",
+     "followers_url": "https://api.github.com/users/lgtm4e/followers",
+     "following_url": "https://api.github.com/users/lgtm4e/following{/other_user}",
+     "gists_url": "https://api.github.com/users/lgtm4e/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/lgtm4e/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/lgtm4e/subscriptions",
+     "organizations_url": "https://api.github.com/users/lgtm4e/orgs",
+     "repos_url": "https://api.github.com/users/lgtm4e/repos",
+     "events_url": "https://api.github.com/users/lgtm4e/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/lgtm4e/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-05-13T02:54:53Z",
+    "updated_at": "2026-10-14T07:26:05Z",
+    "closed_at": "2026-10-14T07:26:05Z",
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": {
+     "id": 93570,
+     "node_id": "IT_kwDNuP_OAAFtgg",
+     "name": "Bug",
+     "description": "An unexpected problem or behavior",
+     "color": "red",
+     "created_at": "2024-01-25T09:11:09Z",
+     "updated_at": "2024-07-26T10:04:57Z",
+     "is_enabled": true
+    },
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Search before asking\n\n- [x] I searched in the [issues](https://github.com/apache/fluss/issues) and found nothing similar.\n\n\n### Fluss version\n\n0.9.0 (latest release)\n\n### Please describe the bug 🐞\n\n## Description\n\nWhen consuming a Fluss binlog table using Flink SQL, the Flink job fails during checkpoint/savepoint triggering with a `NullPointerException` in `FlinkSourceEnumerator.snapshotState`.\n\nThe exception occurs consistently when executing checkpoint/savepoint operations (including stop-with-savepoint).\n\nIt seems `leaseContext` is null when `snapshotState()` is invoked.\n\n---\n\n## Environment\n\n* Flink: 1.20.3\n* Fluss: 0.9.0-incubating\n* Connector: `fluss-flink-1.20-0.9.0-incubating.jar`\n\n---\n\n## Source Table\n\n```sql\nCREATE TABLE fluss_catalog.dwd_layer.dwd_cust_info_history (\n  change_type STRING,\n  change_log_offset BIGINT NOT NULL,\n  change_date STRING NOT NULL,\n  change_commit_time TIMESTAMP(3),\n  tenant_id STRING NOT NULL,\n  cust_id BIGINT NOT NULL,\n  sex INT,\n  birthday DATE,\n  age INT,\n  org_id BIGINT,\n  org_full_name STRING,\n  cust_state INT,\n  src_crtime TIMESTAMP(3),\n  src_uptime TIMESTAMP(3),\n  valid_from TIMESTAMP(3),\n  etl_time TIMESTAMP(3),\n  PRIMARY KEY (change_date, tenant_id, cust_id, change_log_offset) NOT ENFORCED\n) PARTITIONED BY (change_date) WITH (\n  'table.datalake.enabled' = 'true',\n  'table.datalake.freshness' = '1min',\n  'bucket.num' = '4'\n);\n```\n\n---\n\n## Insert SQL\n\n```sql\nINSERT INTO fluss_catalog.dwd_layer.dwd_cust_info_history\nSELECT\n  _change_type AS change_type,\n  _log_offset AS change_log_offset,\n  DATE_FORMAT(_commit_timestamp, 'yyyyMMdd') AS change_date,\n  CAST(_commit_timestamp AS TIMESTAMP(3)) AS change_commit_time,\n  `after`.tenant_id,\n  `after`.cust_id,\n  `after`.sex,\n  `after`.birthday,\n  CASE\n    WHEN `after`.birthday IS NOT NULL AND `after`.birthday <= CURRENT_DATE\n      THEN CAST(TIMESTAMPDIFF(YEAR, `after`.birthday, CURRENT_DATE) AS INT)\n    WHEN `after`.age IS NOT NULL AND `after`.age > 0 THEN `after`.age\n    ELSE NULL\n  END AS age,\n  `after`.org_id,\n  `after`.org_full_name,\n  `after`.cust_state,\n  `after`.crtime AS src_crtime,\n  `after`.uptime AS src_uptime,\n  COALESCE(`after`.uptime, `after`.crtime, CAST(_commit_timestamp AS TIMESTAMP(3))) AS valid_from,\n  CAST(CURRENT_TIMESTAMP AS TIMESTAMP(3)) AS etl_time\nFROM fluss_catalog.ods_mysql.`ods_cust_info$binlog`\n/*+ OPTIONS('scan.startup.mode' = 'earliest') */\nWHERE `after`.tenant_id IS NOT NULL\n  AND `after`.cust_id IS NOT NULL\n  AND `after`.cust_id <> -1\n  AND _log_offset IS NOT NULL\n  AND _commit_timestamp IS NOT NULL\n  AND _change_type IN ('insert', 'update');\n```\n\n---\n\n## Error\n\n```text\n[ERROR] Could not execute SQL statement. Reason:\njava.lang.NullPointerException: java.lang.NullPointerException: Cannot invoke \"org.apache.fluss.flink.source.reader.LeaseContext.getKvSnapshotLeaseId()\" because \"this.leaseContext\" is null\n```\n\n---\n\n## Full Stack Trace\n\n```text\n2026-05-13 02:36:03,796 INFO  org.apache.flink.runtime.jobmaster.JobMaster                 [] - Triggering stop-with-savepoint for job 9894357cf8b86e0a2c5d78b335598c50.\n2026-05-13 02:36:03,801 INFO  org.apache.flink.runtime.checkpoint.CheckpointCoordinator    [] - Triggering checkpoint 2 (type=SavepointType{name='Suspend Savepoint', postCheckpointAction=SUSPEND, formatType=CANONICAL}) @ 1778639763798 for job 9894357cf8b86e0a2c5d78b335598c50.\n2026-05-13 02:36:04,412 WARN  org.apache.flink.runtime.checkpoint.CheckpointFailureManager [] - Failed to trigger or complete checkpoint 2 for job 9894357cf8b86e0a2c5d78b335598c50. (0 consecutive failed attempts so far)\norg.apache.flink.runtime.checkpoint.CheckpointException: Trigger checkpoint failure.\n\tat org.apache.flink.runtime.checkpoint.CheckpointCoordinator.lambda$getCheckpointException$17(CheckpointCoordinator.java:2365) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat java.base/java.util.Optional.orElseGet(Unknown Source) ~[?:?]\n\tat org.apache.flink.runtime.checkpoint.CheckpointCoordinator.getCheckpointException(CheckpointCoordinator.java:2364) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.runtime.checkpoint.CheckpointCoordinator.onTriggerFailure(CheckpointCoordinator.java:1056) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.runtime.checkpoint.CheckpointCoordinator.onTriggerFailure(CheckpointCoordinator.java:1034) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.runtime.checkpoint.CheckpointCoordinator.lambda$startTriggeringCheckpoint$7(CheckpointCoordinator.java:760) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat java.base/java.util.concurrent.CompletableFuture.uniHandle(Unknown Source) ~[?:?]\n\tat java.base/java.util.concurrent.CompletableFuture$UniHandle.tryFire(Unknown Source) ~[?:?]\n\tat java.base/java.util.concurrent.CompletableFuture$Completion.run(Unknown Source) ~[?:?]\n\tat org.apache.flink.util.MdcUtils.lambda$wrapRunnable$1(MdcUtils.java:70) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) [?:?]\n\tat java.base/java.util.concurrent.FutureTask.run(Unknown Source) [?:?]\n\tat java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source) [?:?]\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [?:?]\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [?:?]\n\tat java.base/java.lang.Thread.run(Unknown Source) [?:?]\nCaused by: java.lang.NullPointerException: Cannot invoke \"org.apache.fluss.flink.source.reader.LeaseContext.getKvSnapshotLeaseId()\" because \"this.leaseContext\" is null\n\tat org.apache.fluss.flink.source.enumerator.FlinkSourceEnumerator.snapshotState(FlinkSourceEnumerator.java:1031) ~[fluss-flink-1.20-0.9.0-incubating.jar:0.9.0-incubating]\n\tat org.apache.fluss.flink.source.enumerator.FlinkSourceEnumerator.snapshotState(FlinkSourceEnumerator.java:100) ~[fluss-flink-1.20-0.9.0-incubating.jar:0.9.0-incubating]\n\tat org.apache.flink.runtime.source.coordinator.SourceCoordinator.toBytes(SourceCoordinator.java:577) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.runtime.source.coordinator.SourceCoordinator.lambda$checkpointCoordinator$7(SourceCoordinator.java:421) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.runtime.source.coordinator.SourceCoordinator.lambda$runInEventLoop$10(SourceCoordinator.java:530) ~[flink-dist-1.20.3.jar:1.20.3]\n\tat org.apache.flink.util.ThrowableCatchingRunnable.run(ThrowableCatchingRunnable.java:40) ~[flink-dist-1.20.3.jar:1.20.3]\n\t... 6 more\n2026-05-13 02:36:04,414 INFO  org.apache.flink.runtime.source.coordinator.SourceCoordinator [] - Marking checkpoint 2 as aborted for source Source: ods_cust_info$binlog[35].\n```\n\n---\n\n## Additional Observations\n\n* The job itself runs normally before checkpoint/savepoint is triggered.\n* The failure happens specifically during checkpoint/savepoint snapshotting.\n* The source table is a Fluss binlog table: `ods_cust_info$binlog`\n* The issue appears related to `leaseContext` lifecycle/initialization inside `FlinkSourceEnumerator`.\n\n---\n\n## Questions\n\n1. Is this a known issue in Fluss 0.9.0-incubating?\n2. Is there any workaround or configuration to avoid this issue?\n3. Has this issue already been fixed in a newer Fluss version?\n\nThanks.\n\n\n### Solution\n\n_No response_\n\n### Are you willing to submit a PR?\n\n- [ ] I'm willing to submit a PR!",
+    "closed_by": {
+     "login": "lgtm4e",
+     "id": 196609838,
+     "node_id": "U_kgDOC7gHLg",
+     "avatar_url": "https://avatars.githubusercontent.com/u/196609838?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/lgtm4e",
+     "html_url": "https://github.com/lgtm4e",
+     "followers_url": "https://api.github.com/users/lgtm4e/followers",
+     "following_url": "https://api.github.com/users/lgtm4e/following{/other_user}",
+     "gists_url": "https://api.github.com/users/lgtm4e/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/lgtm4e/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/lgtm4e/subscriptions",
+     "organizations_url": "https://api.github.com/users/lgtm4e/orgs",
+     "repos_url": "https://api.github.com/users/lgtm4e/repos",
+     "events_url": "https://api.github.com/users/lgtm4e/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/lgtm4e/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/apache/fluss/issues/3307/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/apache/fluss/issues/3307/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/apache/fluss/issues/3307/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/apache/fluss/issues/comments/4438010270",
+     "html_url": "https://github.com/apache/fluss/issues/3307#issuecomment-4438010270",
+     "issue_url": "https://api.github.com/repos/apache/fluss/issues/3307",
+     "id": 4438010270,
+     "node_id": "IC_kwDONIZ9ns8AAAABCIapng",
+     "user": {
+      "login": "leonardBang",
+      "id": 5163645,
+      "node_id": "MDQ6VXNlcjUxNjM2NDU=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5163645?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/leonardBang",
+      "html_url": "https://github.com/leonardBang",
+      "followers_url": "https://api.github.com/users/leonardBang/followers",
+      "following_url": "https://api.github.com/users/leonardBang/following{/other_user}",
+      "gists_url": "https://api.github.com/users/leonardBang/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/leonardBang/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/leonardBang/subscriptions",
+      "organizations_url": "https://api.github.com/users/leonardBang/orgs",
+      "repos_url": "https://api.github.com/users/leonardBang/repos",
+      "events_url": "https://api.github.com/users/leonardBang/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/leonardBang/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-05-13T06:27:04Z",
+     "updated_at": "2026-05-13T06:27:04Z",
+     "body": "This is a fixed issue in https://github.com/apache/fluss/issues/2743",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/apache/fluss/issues/comments/4438010270/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

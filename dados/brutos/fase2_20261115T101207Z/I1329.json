@@ -1,0 +1,163 @@
+{
+ "id_item": "I1329",
+ "url": "https://github.com/lakeraven/corvid/issues/388",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:24.402423+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/lakeraven/corvid/issues/388",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/lakeraven/corvid/issues/388",
+    "repository_url": "https://api.github.com/repos/lakeraven/corvid",
+    "labels_url": "https://api.github.com/repos/lakeraven/corvid/issues/388/labels{/name}",
+    "comments_url": "https://api.github.com/repos/lakeraven/corvid/issues/388/comments",
+    "events_url": "https://api.github.com/repos/lakeraven/corvid/issues/388/events",
+    "html_url": "https://github.com/lakeraven/corvid/issues/388",
+    "id": 4544519615,
+    "node_id": "I_kwDOR7kZ088AAAABDt_dvw",
+    "number": 388,
+    "title": "ADR 0006: RPMS deployment topology — direct adapter vs customer-side connector",
+    "user": {
+     "login": "kbighorse",
+     "id": 93388,
+     "node_id": "MDQ6VXNlcjkzMzg4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/93388?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/kbighorse",
+     "html_url": "https://github.com/kbighorse",
+     "followers_url": "https://api.github.com/users/kbighorse/followers",
+     "following_url": "https://api.github.com/users/kbighorse/following{/other_user}",
+     "gists_url": "https://api.github.com/users/kbighorse/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/kbighorse/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/kbighorse/subscriptions",
+     "organizations_url": "https://api.github.com/users/kbighorse/orgs",
+     "repos_url": "https://api.github.com/users/kbighorse/repos",
+     "events_url": "https://api.github.com/users/kbighorse/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/kbighorse/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-05-28T23:31:16Z",
+    "updated_at": "2026-07-28T20:49:14Z",
+    "closed_at": "2026-07-28T20:48:40Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Why\n\nToday corvid's implicit deployment model is **SaaS reaches inbound into each customer's RPMS** (VPN / proxy / private CA). That works for one customer; it scales poorly to 5–50 tribal sites with heterogeneous IHS-OIT firewall postures. The May 27 IHS correspondence (Daniel McMurtrey, Portland Area) confirms that customer-side firewall is OIT-Group-Policy-controlled, with the authoritative security spec held at the Area Office — not at the tribal site.\n\nBefore we harden pooling, retry, circuit-breaker, or model decoupling, we need a decision on the production deployment shape.\n\n## Three modes to evaluate\n\n- **Mode 1 — Single-tenant direct.** One corvid host, one pinned adapter. Useful today.\n- **Mode 2 — Multi-tenant direct (inbound to each customer RPMS).** SaaS reaches into customer networks via VPN/proxy/private CA. Per-tenant routing. Painful at scale.\n- **Mode 3 — Customer-side connector (recommended north star).** Small Lakeraven-provided binary runs inside the customer network; opens an *outbound* persistent connection (mTLS WebSocket or queue) to corvid SaaS; proxies RPMS reads/writes locally. Customer firewall only needs outbound egress.\n\n## Decisions this ADR must settle\n\n- Recommended deployment topology (Modes 1/2/3) and the rationale.\n- For Mode 3 connector: transport (mTLS WebSocket vs queue), reconnect/backoff, message envelope.\n- Where RPMS credentials live (customer-side in Mode 3; secret-manager-referenced in Mode 1/2).\n- Adapter router shape — factory/config resolver, not static registry. Resolves to either a direct adapter or a connector-shaped adapter.\n- Audit ownership: which side records the RPC-level audit trail vs the workflow-level decision.\n- **RPMS broker session user-context** — service account vs per-end-user DUZ. This answer gates the rpms-rpc pool key shape (one global slot vs keyed on user/facility).\n\n## Blocks\n\nThis ADR gates the following:\n- AdapterRouter implementation\n- rpms-rpc connection pool design (pool key needs the user-context answer)\n- Operational runbook (Mode 2 vs Mode 3 docs are very different)\n- Customer-side connector binary design\n\n## Out of scope\n\n- Implementation of any mode — this is a decision artifact only.",
+    "closed_by": {
+     "login": "kbighorse",
+     "id": 93388,
+     "node_id": "MDQ6VXNlcjkzMzg4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/93388?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/kbighorse",
+     "html_url": "https://github.com/kbighorse",
+     "followers_url": "https://api.github.com/users/kbighorse/followers",
+     "following_url": "https://api.github.com/users/kbighorse/following{/other_user}",
+     "gists_url": "https://api.github.com/users/kbighorse/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/kbighorse/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/kbighorse/subscriptions",
+     "organizations_url": "https://api.github.com/users/kbighorse/orgs",
+     "repos_url": "https://api.github.com/users/kbighorse/repos",
+     "events_url": "https://api.github.com/users/kbighorse/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/kbighorse/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/lakeraven/corvid/issues/388/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/lakeraven/corvid/issues/388/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/lakeraven/corvid/issues/388/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/lakeraven/corvid/issues/comments/5109520676",
+     "html_url": "https://github.com/lakeraven/corvid/issues/388#issuecomment-5109520676",
+     "issue_url": "https://api.github.com/repos/lakeraven/corvid/issues/388",
+     "id": 5109520676,
+     "node_id": "IC_kwDOR7kZ088AAAABMI0ZJA",
+     "user": {
+      "login": "kbighorse",
+      "id": 93388,
+      "node_id": "MDQ6VXNlcjkzMzg4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/93388?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kbighorse",
+      "html_url": "https://github.com/kbighorse",
+      "followers_url": "https://api.github.com/users/kbighorse/followers",
+      "following_url": "https://api.github.com/users/kbighorse/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kbighorse/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kbighorse/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kbighorse/subscriptions",
+      "organizations_url": "https://api.github.com/users/kbighorse/orgs",
+      "repos_url": "https://api.github.com/users/kbighorse/repos",
+      "events_url": "https://api.github.com/users/kbighorse/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kbighorse/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-07-28T20:49:14Z",
+     "updated_at": "2026-07-28T20:49:14Z",
+     "body": "Recorded by ADR 0006 (#397, merged 2026-07-28): customer-side connector (Mode 3, outbound mTLS WebSocket) is the north star; Mode 1 direct kept for pilots/dev; Mode 2 inbound not built. All six decisions settled, incl. the `(tenant, facility)` rpms-rpc pool key with a named per-user-DUZ revisit trigger. Contingent premise (PRC-data PHI content in legacy RPMS) tracked in #409 — refines emphasis, not the decision. Unblocks #390, #391, #392, and the rpms-rpc pool design.",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/lakeraven/corvid/issues/comments/5109520676/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,163 @@
+{
+ "id_item": "I1997",
+ "url": "https://github.com/utterlyforked/modernization-poc/issues/1",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:47.427879+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1",
+    "repository_url": "https://api.github.com/repos/utterlyforked/modernization-poc",
+    "labels_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/labels{/name}",
+    "comments_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/comments",
+    "events_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/events",
+    "html_url": "https://github.com/utterlyforked/modernization-poc/issues/1",
+    "id": 5776256145,
+    "node_id": "I_kwDORBCWl88AAAABWEqskQ",
+    "number": 1,
+    "title": "Fix dbt schema tests",
+    "user": {
+     "login": "oa-andrewtaylor",
+     "id": 206674775,
+     "node_id": "U_kgDODFGbVw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/206674775?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/oa-andrewtaylor",
+     "html_url": "https://github.com/oa-andrewtaylor",
+     "followers_url": "https://api.github.com/users/oa-andrewtaylor/followers",
+     "following_url": "https://api.github.com/users/oa-andrewtaylor/following{/other_user}",
+     "gists_url": "https://api.github.com/users/oa-andrewtaylor/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/oa-andrewtaylor/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/oa-andrewtaylor/subscriptions",
+     "organizations_url": "https://api.github.com/users/oa-andrewtaylor/orgs",
+     "repos_url": "https://api.github.com/users/oa-andrewtaylor/repos",
+     "events_url": "https://api.github.com/users/oa-andrewtaylor/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/oa-andrewtaylor/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-10-09T09:56:23Z",
+    "updated_at": "2026-10-09T10:28:02Z",
+    "closed_at": "2026-10-09T10:28:02Z",
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "\n**Goal:** `dbt test` runs and passes against the real model.\n\n## Context\n`dbt-project/models/schema.yml` declares model `person_unified` with columns `tenant_id, legacy_id, name, extra_field`.\nProblems:\n- The model file is `models/person_unified.sql` but sets `alias='person'`; the output table has no `name` column\n  (it has `firstname`, `surname`). The `name` not_null test will error.\n- No uniqueness test on the incremental key `(tenant_id, legacy_id)` (the table has `UNIQUE(tenant_id, legacy_id)` in\n  `postgres-init/new_system.sql`).\n- `schema.yml` source `staging.person_staging` is declared but the SQL does not use `source()`; it selects from\n  `person_staging` directly. Either switch the SQL to `{{ source('staging','person_staging') }}` or leave as is.\n\n## Tasks\n1. Replace the `name` test with `firstname` and `surname` not_null.\n2. Add a `unique` combination test on `(tenant_id, legacy_id)` (use `dbt_utils.unique_combination_of_columns` -> needs\n   `packages.yml` + `dbt deps`, or a singular test in `dbt-project/tests/`, which needs no package).\n3. Add `accepted_values` for `tenant_id` (tenant_a1, a2, b1, b2).\n4. Run: `docker compose exec cdc-consumer dbt test --project-dir /dbt --profiles-dir /dbt` (stack must be up).\n\n## Done when\n`dbt test` exits 0 with data present; deliberately inserting a duplicate key or a bad tenant makes it fail.\nDo not touch consumer/API code.\n\n---\n## Shared project context (all tickets)\n- Pipeline: 4 legacy Postgres DBs (tenants `tenant_a1`, `tenant_a2` = Legacy A with `data_1/2/3`;\n  `tenant_b1`, `tenant_b2` = Legacy B with `data_a/b/c`) -> Debezium -> Kafka topics\n  `legacy_<x>.public.person` -> `cdc-consumer/consumer.py` -> `person_staging` (new-system DB)\n  -> `dbt run` (`dbt-project/models/person_unified.sql`, incremental, alias `person`) -> `person`.\n- `data_2` (A) and `data_c` (B) both map to `extra_field`. `modernized_only` (DATE) exists only in the new system.\n- API (Flask, `api/api.py`, port 5000): `GET/POST/PUT /api/persons`, `/api/legacy/<tenant>/persons[/<id>]`, `/api/health`.\n  POST/PUT write to the legacy DB; the change returns via CDC.\n- Compose services (`docker-compose.yml`): kafka, schema-registry, postgres-legacy-{a1,a2,b1,b2},\n  postgres-new-system, debezium (8083), cdc-consumer, api (5000), web (8000).\n  Credentials: legacy `legacyuser/legacypass` (dbs `legacy_a1` etc.), new system `newuser/newpass` (db `new_system`).\n- Currently there are NO automated tests. `TESTING.md` is a manual runbook.",
+    "closed_by": {
+     "login": "utterlyforked",
+     "id": 1433187,
+     "node_id": "MDQ6VXNlcjE0MzMxODc=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1433187?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/utterlyforked",
+     "html_url": "https://github.com/utterlyforked",
+     "followers_url": "https://api.github.com/users/utterlyforked/followers",
+     "following_url": "https://api.github.com/users/utterlyforked/following{/other_user}",
+     "gists_url": "https://api.github.com/users/utterlyforked/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/utterlyforked/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/utterlyforked/subscriptions",
+     "organizations_url": "https://api.github.com/users/utterlyforked/orgs",
+     "repos_url": "https://api.github.com/users/utterlyforked/repos",
+     "events_url": "https://api.github.com/users/utterlyforked/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/utterlyforked/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/comments/6078965640",
+     "html_url": "https://github.com/utterlyforked/modernization-poc/issues/1#issuecomment-6078965640",
+     "issue_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/1",
+     "id": 6078965640,
+     "node_id": "IC_kwDORBCWl88AAAABalWniA",
+     "user": {
+      "login": "oa-andrewtaylor",
+      "id": 206674775,
+      "node_id": "U_kgDODFGbVw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/206674775?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/oa-andrewtaylor",
+      "html_url": "https://github.com/oa-andrewtaylor",
+      "followers_url": "https://api.github.com/users/oa-andrewtaylor/followers",
+      "following_url": "https://api.github.com/users/oa-andrewtaylor/following{/other_user}",
+      "gists_url": "https://api.github.com/users/oa-andrewtaylor/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/oa-andrewtaylor/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/oa-andrewtaylor/subscriptions",
+      "organizations_url": "https://api.github.com/users/oa-andrewtaylor/orgs",
+      "repos_url": "https://api.github.com/users/oa-andrewtaylor/repos",
+      "events_url": "https://api.github.com/users/oa-andrewtaylor/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/oa-andrewtaylor/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-10-09T10:20:26Z",
+     "updated_at": "2026-10-09T10:20:26Z",
+     "body": "Work pushed on branch `issue-1-fix-dbt-schema-tests` (2 commits).\n\n**9e02de8 - Fix dbt schema tests and add key uniqueness test**\n- Replaced the nonexistent `name` tests with `firstname` / `surname` `not_null`.\n- Added `accepted_values` on `tenant_id` (tenant_a1, a2, b1, b2).\n- Added a singular test, `dbt-project/tests/person_unique_tenant_legacy_id.sql`, for the `(tenant_id, legacy_id)` key. No `dbt_utils` package needed.\n- Left `person_unified.sql` as is (it still selects from `person_staging` directly rather than `source()`).\n\n**4c11a73 - Self-contained Docker test runner**\n- Task 4 as written (`docker compose exec cdc-consumer dbt test`) needs the full stack up. Instead, `./test.sh` runs everything in Docker against a throwaway Postgres built from `postgres-init/new_system.sql`, so it needs only Docker on the host and doesn't touch the main stack.\n- pytest tests in `tests/dbt/test_person_unified.py`:\n  - `dbt test` passes on valid seeded data\n  - fails on an unknown tenant (checks the `accepted_values` test is the one that failed)\n  - fails on a duplicate `(tenant_id, legacy_id)` (checks the singular test failed)\n- Reports are written to `test-results/junit.xml` and `test-results/summary.json`, and `test.sh` exits non-zero on failure.\n\n**Verification:** ran `./test.sh` - 3/3 passed. `dbt test` was not run against the live compose stack.",
+     "author_association": "NONE",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/comments/6078965640/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

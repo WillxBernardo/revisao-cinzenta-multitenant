@@ -1,0 +1,136 @@
+{
+ "id_item": "I0002",
+ "url": "https://dba.stackexchange.com/questions/41325/schema-information-within-trigger",
+ "fonte": "dba",
+ "coletado_em": "2026-11-15T10:01:18.180735+00:00",
+ "question": {
+  "caminho": "/questions/41325",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "postgresql",
+      "trigger",
+      "schema"
+     ],
+     "owner": {
+      "account_id": 174981,
+      "reputation": 15,
+      "user_id": 23258,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/bea14f3d5be1ba0522a047f8d46837f3?s=256&d=identicon&r=PG",
+      "display_name": "mjpeters_",
+      "link": "https://dba.stackexchange.com/users/23258/mjpeters"
+     },
+     "is_answered": true,
+     "view_count": 1107,
+     "accepted_answer_id": 41331,
+     "answer_count": 1,
+     "score": 0,
+     "last_activity_date": 1516326583,
+     "creation_date": 1367427474,
+     "last_edit_date": 1516326583,
+     "question_id": 41325,
+     "content_license": "CC BY-SA 3.0",
+     "link": "https://dba.stackexchange.com/questions/41325/schema-information-within-trigger",
+     "title": "Schema information within Trigger?",
+     "body": "<p>Background : (Multi-tenant design;separate schema per customer, all table structures identical;Data-warehouse / non-OLTP system here; Postgres 9.2.x).</p>\n\n<p>Reviewing patterns for the following problem:  I have a matview that needs to be updated if an underlying condition is altered (in this case, an inclusion BOOLEAN).</p>\n\n<p>Was considering implementing a TRIGGER, on update, which would then either execute the matview creation UDF or possibly call 'NOTIFY' to be handled by some listening event, perhaps at a later point in time as the immediate matview update isn't necessarily required.</p>\n\n<p>Workflow :</p>\n\n<ul>\n<li><p>UPDATE made to some underlying table.</p></li>\n<li><p>TRIGGER is executed.</p></li>\n<li><p>(Obtain schema information here).  </p></li>\n<li><p>Either,</p>\n\n<ul>\n<li>EXECUTE matview creation </li>\n<li>NOTIFY command for queue / processing at a later time.</li>\n</ul></li>\n</ul>\n\n<p>First question, am I on the right track here or are there other, more efficient / effective patterns I should review?</p>\n\n<p>Given the nature of my multi-tenant design, is it possible to obtain the current schema from the underlying table from which the trigger event was called as I'll need that information to pass into my matview creation UDF.</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9828
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/41325/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 174981,
+      "reputation": 15,
+      "user_id": 23258,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/bea14f3d5be1ba0522a047f8d46837f3?s=256&d=identicon&r=PG",
+      "display_name": "mjpeters_",
+      "link": "https://dba.stackexchange.com/users/23258/mjpeters"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1367503211,
+     "post_id": 41325,
+     "comment_id": 72737,
+     "content_license": "CC BY-SA 3.0",
+     "body": "I found the answer to my second question, in case anyone else is looking : TG_TABLE_SCHEMA and TG_TABLE_NAME <a href=\"http://www.postgresql.org/docs/current/static/plpgsql-trigger.html\" rel=\"nofollow noreferrer\">TRIGGERS</a>"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9827
+  }
+ },
+ "answers": {
+  "caminho": "/questions/41325/answers",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 904738,
+      "reputation": 187417,
+      "user_id": 3684,
+      "user_type": "registered",
+      "accept_rate": 50,
+      "profile_image": "https://www.gravatar.com/avatar/ed7cecf2bd835cf5670d271d0d104f51?s=256&d=identicon&r=PG",
+      "display_name": "Erwin Brandstetter",
+      "link": "https://dba.stackexchange.com/users/3684/erwin-brandstetter"
+     },
+     "is_accepted": true,
+     "score": 1,
+     "last_activity_date": 1367490826,
+     "last_edit_date": 1492087364,
+     "creation_date": 1367431200,
+     "answer_id": 41331,
+     "question_id": 41325,
+     "content_license": "CC BY-SA 3.0",
+     "body": "<p>If the effect isn't required until a later point in time, I would execute the payload at that later point in time and not via trigger. This way you can collect multiple updates on the underlying table and avoid redundant calls of the DDL script.</p>\n\n<p>Depending on your circumstances, a <code>timestamp</code> column or simple <code>boolean</code> flag in the underlying table might suffice to mark rows that should trigger delayed events.</p>\n\n<blockquote>\n  <p>is it possible to obtain the current schema from the underlying table ..</p>\n</blockquote>\n\n<p>Yes. You can query practically any possible detail from the <a href=\"http://www.postgresql.org/docs/current/interactive/catalogs.html\" rel=\"nofollow noreferrer\">system catalogs</a> or from the standardized (but much slower) <a href=\"http://www.postgresql.org/docs/current/interactive/information-schema.html\" rel=\"nofollow noreferrer\">information schema</a>.  Furthermore, in a trigger procedure you have the <a href=\"http://www.postgresql.org/docs/9.1/static/plpgsql-trigger.html\" rel=\"nofollow noreferrer\"><code>TG_TABLE_SCHEMA</code></a> variable set.</p>\n\n<p>This related answer has more information and an example:<br>\n<a href=\"https://dba.stackexchange.com/questions/22362/how-do-i-list-all-columns-for-a-specified-table/22420#22420\">How do I list all columns for a specified table</a></p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9826
+  }
+ },
+ "answer_comments": {
+  "caminho": "/answers/41331/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 174981,
+      "reputation": 15,
+      "user_id": 23258,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/bea14f3d5be1ba0522a047f8d46837f3?s=256&d=identicon&r=PG",
+      "display_name": "mjpeters_",
+      "link": "https://dba.stackexchange.com/users/23258/mjpeters"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1367434231,
+     "post_id": 41331,
+     "comment_id": 72606,
+     "content_license": "CC BY-SA 3.0",
+     "body": "This solution, a <code>timestamp</code> column or simple <code>boolean</code> flag will work perfectly, thanks!"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9825
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "id_item": "I1470",
+ "url": "https://github.com/mikefarah/yq/discussions/1223",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:30.156668+00:00",
+ "discussion": [
+  {
+   "status": 200,
+   "json": {
+    "data": {
+     "repository": {
+      "discussion": {
+       "title": "Merging dbt source yaml files to preserve existing elements, add new tables, columns",
+       "url": "https://github.com/mikefarah/yq/discussions/1223",
+       "createdAt": "2022-05-23T15:28:24Z",
+       "author": {
+        "login": "davesgonechina"
+       },
+       "body": "The data transformation tool dbt uses [source.yaml](https://docs.getdbt.com/docs/building-a-dbt-project/using-sources#testing-and-documenting-sources) files to expose, document and test raw data tables. While there is tooling that will generate fresh yaml that includes any schema changes since it last ran, the original file accumulates additional yaml elements that are typically added manually such as `description`, `tests`, etc.\r\n\r\nI have been unable to find the right combination of yq parameters to merge the old file (with accumulated nested metdata) and the new file (that has tables and columns that no longer exist). Either the result is the same as the old file, or it is the same as the new file. I have tried various combinations of:\r\n\r\n`yq ea 'select(fileIndex == 0) * select(fileIndex == 1)' original.yaml update.yaml` --results == update.yaml\r\n`yq ea 'select(fileIndex == 0) *? select(fileIndex == 1)' update.yaml original.yaml` --results == original.yaml\r\n`yq ea 'select(fileIndex == 0) *n select(fileIndex == 1)' update.yaml original.yaml` --results == update.yaml\r\n\r\nFor the moment, I am not concerned with changes such as deleted tables or columns (that would be a great bonus), and I'm only concerned with the `tables:` section of this yaml format.\r\n\r\nSo for example if I have the following where the original has two tables with descriptive metadata, and then I have an update yaml file that has a new table `customers_orders` and there's also a new column added to `orders` called `creation_timestamp`.\r\n\r\nAppreciate any help!\r\n\r\n**_original.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        description: One record per customer.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the customers table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: email_address\r\n            description: customer email address.\r\n      - name: orders\r\n        description: One record per order. Includes cancelled and deleted orders.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the orders table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: status\r\n            description: Note that the status can change over time\r\n```\r\n\r\n**_update.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        columns:\r\n          - name: id\r\n          - name: email_address\r\n      - name: customers_orders\r\n        columns:\r\n          - name: customer_id\r\n          - name: order_id\r\n      - name: orders\r\n        columns:\r\n          - name: id\r\n          - name: status\r\n          - name: creation_timestamp\r\n```\r\n\r\n**_merged.yaml_**\r\n```\r\nversion: 2\r\n\r\nsources:\r\n  - name: jaffle_shop\r\n    description: This is a replica of the Postgres database used by our app\r\n    tables:\r\n      - name: customers\r\n        description: One record per customer.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the customers table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: email_address\r\n            description: customer email address.\r\n      - name: customers_orders\r\n        columns:\r\n          - name: customer_id\r\n          - name: order_id\r\n      - name: orders\r\n        description: One record per order. Includes cancelled and deleted orders.\r\n        columns:\r\n          - name: id\r\n            description: Primary key of the orders table\r\n            tests:\r\n              - unique\r\n              - not_null\r\n          - name: status\r\n            description: Note that the status can change over time\r\n          - name: creation_timestamp\r\n```\r\n",
+       "category": {
+        "name": "Q&A"
+       },
+       "comments": {
+        "pageInfo": {
+         "hasNextPage": false,
+         "endCursor": "Y3Vyc29yOnYyOpK0MjAyMi0wNS0yM1QyMjoxNzo1MVrOACrXag=="
+        },
+        "nodes": [
+         {
+          "author": {
+           "login": "mikefarah"
+          },
+          "createdAt": "2022-05-23T22:17:51Z",
+          "body": "Ok I understand what you are trying to do. The `yq` merge operator however is a naive merge, it has no knowledge of your datastructure (and does not know, for instance, that the 'name' field uniquely identifies entries). The naive merge just merges the data structures matching on the yaml key name, and arrays are either appended together, or merged together by their index position.\r\n\r\nThat said, there is a more complex merge that you can use this script here: https://mikefarah.gitbook.io/yq/operators/multiply-merge#merge-arrays-of-objects-together-matching-on-a-key\r\n\r\nHowever this only does a single level of merge, where you actually need two; one on the table name, and then again on the matching column. I think you can still do this in `yq` by extending that script...could get hairy though\r\n",
+          "replies": {
+           "nodes": [
+            {
+             "author": {
+              "login": "davesgonechina"
+             },
+             "createdAt": "2022-05-24T17:26:55Z",
+             "body": "@mikefarah cheers for the quick reply - I've had some success with [yamlpath's deep merge on Arrays-of-Hashes](https://github.com/wwkimball/yamlpath/wiki/yaml-merge-Array-of-Hash-Options)."
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

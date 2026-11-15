@@ -1,0 +1,113 @@
+{
+ "id_item": "I0831",
+ "url": "https://github.com/cliftonc/drizzle-cube/discussions/469",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:18.271262+00:00",
+ "discussion": [
+  {
+   "status": 200,
+   "json": {
+    "data": {
+     "repository": {
+      "discussion": {
+       "title": "support for dynamic schema",
+       "url": "https://github.com/cliftonc/drizzle-cube/discussions/469",
+       "createdAt": "2026-03-06T17:04:14Z",
+       "author": {
+        "login": "IntranetFactory"
+       },
+       "body": "We do not use drizzle, we use database per tenant, so each of our tenants has a different schema. We know all semantic information for each tenant. \r\n\r\nWould it be possible to generate the schema at runtime and not rely on a hardcoded schema ?\r\n\r\n",
+       "category": {
+        "name": "Ideas"
+       },
+       "comments": {
+        "pageInfo": {
+         "hasNextPage": false,
+         "endCursor": "Y3Vyc29yOnYyOpK0MjAyNi0wMy0wOFQwOToyMToxOFrOAPS-BQ=="
+        },
+        "nodes": [
+         {
+          "author": {
+           "login": "IntranetFactory"
+          },
+          "createdAt": "2026-03-06T17:17:54Z",
+          "body": "So just generating the drizzle \"pieces\" based on the cube definition when a new table: property exists in the cube.",
+          "replies": {
+           "nodes": []
+          }
+         },
+         {
+          "author": {
+           "login": "cliftonc"
+          },
+          "createdAt": "2026-03-07T04:10:07Z",
+          "body": "Ok, this is an interesting one ... its technically possible - but it depends on *how* dynamic you mean?  \r\n\r\nI was working yesterday on an app that integrates DC (https://www.drizby.com/) and it has a feature where it introspects the database and generates all the schema for you (as drizzle-kit can do this), the code for that is here:  https://github.com/cliftonc/drizby/blob/main/src/routes/schema-files.ts#L328.  It then uses AI to generate all the cubes as well: https://github.com/cliftonc/drizby/blob/main/src/routes/schema-files.ts#L440 :) \r\n\r\nBut this is designed to be run by an admin, verified etc. and then expected to remain quite static.\r\n\r\nThe other option would be to create a reporting database, where you do a nightly (or hourly?) bulk load into that and use a normalised schema (e.g. generic fields) that you map each clients data to in that transformation + add tables that give labels to those fields per tenant.  If you don't need near real time dashboards then this would definitely be the fastest and most robust.",
+          "replies": {
+           "nodes": []
+          }
+         },
+         {
+          "author": {
+           "login": "IntranetFactory"
+          },
+          "createdAt": "2026-03-07T09:30:02Z",
+          "body": "I think I need it completely dynamic. I'm having a semantic model where all information is stored in Postgres like entities/tables, fields/columns, relationships, permissions, roles. It's an \"active model\" so when a tenant creates a record in entities a new table is created, when a record is added to fields a column is created in the database. fields have rich meta data like validation rules and custom field types like lookup (allowing to select a record from another table) or parent (generating a master detail relationship). That active model is implemented in plpgsql. Referential integrity, RLS/RBAC is enforced by postgres. Access happens with PostgREST. So when a you add a column to a table the API is also immediately updated. I'm having an dynamic generated UI based on the meta data (Shadcn/Tanstack Router/Tanstack Query) and an MCP server (hono based) which could be used to manage the metadata and to run PostgREST queries. \r\n\r\nSo for example I can give Claude Cowork a csv file with my exported leads \"create an App similar to Salesforce Leads and upload my data\" it works quite a while, but I then get a web app like Salesforce Leads, an API endpoint, a webhook receiver and I can ask \"how many hot leads do we have\". It will be MIT licensed and is still work in progress. But what I described above works already.\r\n\r\nPostgREST can only handle simple queries, so a query like \"show me the number of leads per source from the last 30 days compared with the 30 days before\" PostgREST is no option. When I provide meta data claude is fairly good in generating complex queries, but not reliable enough. So I evaluated \"SQL compilers\" with the goal to embed it. dbt MetricFlow looked good, but it's Python and just the \"compiler\" is open source. Malloy data looked better and is on the JS/TS technology stack. But their UI components look dated, and is SolidJs wrapped into a React component.\r\n\r\nThen I happened to come across your project, and it seems like the perfect match for my requirements. I'm sorry for being so long-winded. I think, however, that it explains my perhaps unusual requirements.\r\n\r\nSo my \"completely dynamic\" means I get a json with a semantic model from my API. I now need to convert that in to drizzle schema and cubes at runtime. It seems that it should be possible and I'll prototype that today.",
+          "replies": {
+           "nodes": [
+            {
+             "author": {
+              "login": "cliftonc"
+             },
+             "createdAt": "2026-03-07T09:33:26Z",
+             "body": "Sounds super interesting!  I do think its technically feasible to do, and you can register / deregister cubes dynamically now (I added that for drizby) ... so good luck!"
+            }
+           ]
+          }
+         },
+         {
+          "author": {
+           "login": "IntranetFactory"
+          },
+          "createdAt": "2026-03-07T23:34:15Z",
+          "body": "I made a first poc - seems to work quite well.\r\n\r\nThe semantic model / cubes[] can be defined in json like https://github.com/IntranetFactory/drizzle-cube-try-site/blob/dynamic-cube/entity_cubes.json  \r\n\r\nThe json is then used to generate a matching drizzle model at runtime and to generate the Cube[].  That allows to see drizzle just as an internal implementation detail, so I'm not sure if this feature could be of public interest or just covers my use case.",
+          "replies": {
+           "nodes": []
+          }
+         },
+         {
+          "author": {
+           "login": "cliftonc"
+          },
+          "createdAt": "2026-03-08T05:25:11Z",
+          "body": "Definitely interesting for others, one of the early design choices I made (vs other semantinc layer engines like cube.dev or Looker) was to not introduce a YAML language for defining the cubes, as I wanted to be able to use typescript.  This (if you blur your eyes) is actually putting that in.\r\n\r\nhttps://cube.dev/docs/product/data-modeling/syntax\r\n\r\nI think one question would be \"Why not use the cube yaml syntax?\" - I'm a bit on the fence, it creates an interesting migration path (in both directions), but then I dont like yaml that much vs just using json.  What do you think given its your work and your use case?",
+          "replies": {
+           "nodes": []
+          }
+         },
+         {
+          "author": {
+           "login": "IntranetFactory"
+          },
+          "createdAt": "2026-03-08T09:21:18Z",
+          "body": "I'm also no fan of yaml. I would use jsonc, but I assume that probably a cube yaml file could easily be converted to jsonc in both directions. In my use case I already have an endpoint returning my semantic model as json, I now just need to convert that structure to the cube model.",
+          "replies": {
+           "nodes": [
+            {
+             "author": {
+              "login": "cliftonc"
+             },
+             "createdAt": "2026-03-08T09:24:33Z",
+             "body": "No worries, I am fine with it as json - conversion wouldn't be difficult."
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

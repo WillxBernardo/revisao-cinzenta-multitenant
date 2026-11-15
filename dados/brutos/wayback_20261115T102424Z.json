@@ -1,0 +1,226 @@
+[
+ {
+  "url": "https://github.com/PeerDB-io/peerdb/issues/3935",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102429/https://github.com/PeerDB-io/peerdb/issues/3935",
+  "content_location": "",
+  "data": "2026-11-15T10:24:47.062085+00:00"
+ },
+ {
+  "url": "https://github.com/TabularEditor/TabularEditor/issues/673",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102549/https://github.com/TabularEditor/TabularEditor/issues/673",
+  "content_location": "",
+  "data": "2026-11-15T10:26:08.950762+00:00"
+ },
+ {
+  "url": "https://github.com/apache/pulsar/issues/5481",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102709/https://github.com/apache/pulsar/issues/5481",
+  "content_location": "",
+  "data": "2026-11-15T10:27:24.976084+00:00"
+ },
+ {
+  "url": "https://github.com/avniproject/avni-server/issues/1072",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102748/https://github.com/avniproject/avni-server/issues/1072",
+  "content_location": "",
+  "data": "2026-11-15T10:28:04.670973+00:00"
+ },
+ {
+  "url": "https://github.com/cliftonc/drizzle-cube/discussions/469",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102828/https://github.com/cliftonc/drizzle-cube/discussions/469",
+  "content_location": "",
+  "data": "2026-11-15T10:28:45.023838+00:00"
+ },
+ {
+  "url": "https://github.com/debezium/dbz/issues/170",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102908/https://github.com/debezium/dbz/issues/170",
+  "content_location": "",
+  "data": "2026-11-15T10:29:24.629256+00:00"
+ },
+ {
+  "url": "https://github.com/debezium/dbz/issues/1876",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115102948/https://github.com/debezium/dbz/issues/1876",
+  "content_location": "",
+  "data": "2026-11-15T10:30:04.488635+00:00"
+ },
+ {
+  "url": "https://github.com/debezium/dbz/issues/2874",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103028/https://github.com/debezium/dbz/issues/2874",
+  "content_location": "",
+  "data": "2026-11-15T10:30:44.809056+00:00"
+ },
+ {
+  "url": "https://github.com/debezium/dbz/issues/592",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103157/https://github.com/debezium/dbz/issues/592",
+  "content_location": "",
+  "data": "2026-11-15T10:32:12.552825+00:00"
+ },
+ {
+  "url": "https://github.com/dlt-hub/dlt/issues/4297",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103352/https://github.com/dlt-hub/dlt/issues/4297",
+  "content_location": "",
+  "data": "2026-11-15T10:34:17.067203+00:00"
+ },
+ {
+  "url": "https://github.com/drasi-project/drasi-platform/issues/84",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103440/https://github.com/drasi-project/drasi-platform/issues/84",
+  "content_location": "",
+  "data": "2026-11-15T10:34:56.692944+00:00"
+ },
+ {
+  "url": "https://github.com/duckdb/duckdb-postgres/issues/321",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103520/https://github.com/duckdb/duckdb-postgres/issues/321",
+  "content_location": "",
+  "data": "2026-11-15T10:35:36.865187+00:00"
+ },
+ {
+  "url": "https://github.com/estuary/connectors/issues/1643",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103652/https://github.com/estuary/connectors/issues/1643",
+  "content_location": "",
+  "data": "2026-11-15T10:37:10.415600+00:00"
+ },
+ {
+  "url": "https://github.com/metabase/metabase/issues/76878",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115103834/https://github.com/metabase/metabase/issues/76878",
+  "content_location": "",
+  "data": "2026-11-15T10:38:55.337401+00:00"
+ },
+ {
+  "url": "https://github.com/risingwavelabs/risingwave/issues/24853",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115104015/https://github.com/risingwavelabs/risingwave/issues/24853",
+  "content_location": "",
+  "data": "2026-11-15T10:40:37.052560+00:00"
+ },
+ {
+  "url": "https://github.com/tazama-lf/biar/issues/120",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115104101/https://github.com/tazama-lf/biar/issues/120",
+  "content_location": "",
+  "data": "2026-11-15T10:41:16.990107+00:00"
+ },
+ {
+  "url": "https://github.com/tazama-lf/biar/issues/127",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115104140/https://github.com/tazama-lf/biar/issues/127",
+  "content_location": "",
+  "data": "2026-11-15T10:41:56.611595+00:00"
+ },
+ {
+  "url": "https://github.com/tazama-lf/biar/issues/185",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115104220/https://github.com/tazama-lf/biar/issues/185",
+  "content_location": "",
+  "data": "2026-11-15T10:42:36.861807+00:00"
+ },
+ {
+  "url": "https://github.com/timescale/timescaledb/issues/5787",
+  "tentativa": 1,
+  "status": 200,
+  "url_final": "https://web.archive.org/web/20261115104300/https://github.com/timescale/timescaledb/issues/5787",
+  "content_location": "",
+  "data": "2026-11-15T10:43:18.748573+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "tentativa": 1,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "content_location": "",
+  "data": "2026-11-15T10:44:29.284300+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "tentativa": 2,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "content_location": "",
+  "data": "2026-11-15T10:45:37.279928+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "tentativa": 3,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/29548901/should-i-partition-by-tenant-or-group-of-tenants-for-offline-data-store",
+  "content_location": "",
+  "data": "2026-11-15T10:47:44.962943+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "tentativa": 1,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "content_location": "",
+  "data": "2026-11-15T10:51:42.880401+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "tentativa": 2,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "content_location": "",
+  "data": "2026-11-15T10:52:49.855813+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "tentativa": 3,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+  "content_location": "",
+  "data": "2026-11-15T10:55:07.443387+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "tentativa": 1,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "content_location": "",
+  "data": "2026-11-15T10:58:35.002324+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "tentativa": 2,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "content_location": "",
+  "data": "2026-11-15T10:59:42.130534+00:00"
+ },
+ {
+  "url": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "tentativa": 3,
+  "status": 520,
+  "url_final": "https://web.archive.org/save/https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+  "content_location": "",
+  "data": "2026-11-15T11:01:50.259377+00:00"
+ }
+]

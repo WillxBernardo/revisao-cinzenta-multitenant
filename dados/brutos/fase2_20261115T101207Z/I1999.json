@@ -1,0 +1,127 @@
+{
+ "id_item": "I1999",
+ "url": "https://github.com/utterlyforked/modernization-poc/issues/16",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:50.406397+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16",
+    "repository_url": "https://api.github.com/repos/utterlyforked/modernization-poc",
+    "labels_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/labels{/name}",
+    "comments_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/comments",
+    "events_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/events",
+    "html_url": "https://github.com/utterlyforked/modernization-poc/issues/16",
+    "id": 5790742238,
+    "node_id": "I_kwDORBCWl88AAAABWSe23g",
+    "number": 16,
+    "title": "dbt: two staged events for one key in a batch wedge the pipeline (duplicate key)",
+    "user": {
+     "login": "utterlyforked",
+     "id": 1433187,
+     "node_id": "MDQ6VXNlcjE0MzMxODc=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1433187?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/utterlyforked",
+     "html_url": "https://github.com/utterlyforked",
+     "followers_url": "https://api.github.com/users/utterlyforked/followers",
+     "following_url": "https://api.github.com/users/utterlyforked/following{/other_user}",
+     "gists_url": "https://api.github.com/users/utterlyforked/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/utterlyforked/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/utterlyforked/subscriptions",
+     "organizations_url": "https://api.github.com/users/utterlyforked/orgs",
+     "repos_url": "https://api.github.com/users/utterlyforked/repos",
+     "events_url": "https://api.github.com/users/utterlyforked/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/utterlyforked/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 10062326207,
+      "node_id": "LA_kwDORBCWl88AAAACV8Lpvw",
+      "url": "https://api.github.com/repos/utterlyforked/modernization-poc/labels/bug",
+      "name": "bug",
+      "color": "d73a4a",
+      "default": true,
+      "description": "Something isn't working",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-10T11:21:12Z",
+    "updated_at": "2026-10-10T15:58:08Z",
+    "closed_at": "2026-10-10T15:58:08Z",
+    "assignee": null,
+    "author_association": "OWNER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\nIf two staged events for the same `(tenant_id, legacy_id)` land in one dbt batch, `person_unified.sql` (incremental) hits\n`person_tenant_id_legacy_id_key` (\"duplicate key value violates unique constraint\"). The batch is never marked processed,\nso every later `dbt run` retries the same batch and fails: the pipeline is wedged until someone intervenes. Already known\nfrom #4 (the `poisons_stack` xfails); this ticket tracks the fix.\n\n## New evidence (found while working #12)\n`make test-resilience` on branch `issue-12-offset-commit-after-failed-stage`: `test_offset_replay__verify` fails. After the\noffset reset the consumer replays all history; `tenant_a1` id 5 appears twice in Kafka (staged at 11:04:07 and 11:04:24\nin the preceding `legacy_down` scenario, probably Debezium re-emitting the row after the legacy DB restarted), so both\nevents are in one batch. Postgres logs the duplicate key error, `dbt transformation failed:` follows (blank, see below),\nand the canary row never reaches `person`. So a normal offset replay can trigger it, not just rapid updates.\n\n## Suggested fix\nIn the model, reduce each batch to the latest staged event per `(tenant_id, source_id)` (e.g. `row_number() over\n(partition by tenant_id, source_id order by id desc) = 1`) before the incremental merge/insert. Check DELETE handling at\nthe same time (DELETE events are currently dead-lettered, see #12), since \"latest event wins\" must not resurrect a deleted row.\n\nSmall related improvement: `run_dbt_transformation` prints `result.stderr`, but dbt writes errors to stdout, so failures are\nlogged blank. Log the tail of stdout too.\n\n## Done when\n- [ ] Two events for one key in one batch no longer fail `dbt run` (dbt model test in `tests/dbt`).\n- [ ] The `poisons_stack` xfails in `tests/e2e/test_edge_cases.py` that this fixes are removed (strict xfail will tell us which).\n- [ ] `test_offset_replay__verify` passes on a stack that has had the legacy-down scenario run before it.\n\nRelated: #4, #12.\n",
+    "closed_by": {
+     "login": "utterlyforked",
+     "id": 1433187,
+     "node_id": "MDQ6VXNlcjE0MzMxODc=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1433187?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/utterlyforked",
+     "html_url": "https://github.com/utterlyforked",
+     "followers_url": "https://api.github.com/users/utterlyforked/followers",
+     "following_url": "https://api.github.com/users/utterlyforked/following{/other_user}",
+     "gists_url": "https://api.github.com/users/utterlyforked/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/utterlyforked/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/utterlyforked/subscriptions",
+     "organizations_url": "https://api.github.com/users/utterlyforked/orgs",
+     "repos_url": "https://api.github.com/users/utterlyforked/repos",
+     "events_url": "https://api.github.com/users/utterlyforked/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/utterlyforked/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/utterlyforked/modernization-poc/issues/16/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

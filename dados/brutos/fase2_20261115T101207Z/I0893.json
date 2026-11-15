@@ -1,0 +1,140 @@
+{
+ "id_item": "I0893",
+ "url": "https://github.com/debezium/dbz/issues/2874",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:50.918465+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/2874",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/debezium/dbz/issues/2874",
+    "repository_url": "https://api.github.com/repos/debezium/dbz",
+    "labels_url": "https://api.github.com/repos/debezium/dbz/issues/2874/labels{/name}",
+    "comments_url": "https://api.github.com/repos/debezium/dbz/issues/2874/comments",
+    "events_url": "https://api.github.com/repos/debezium/dbz/issues/2874/events",
+    "html_url": "https://github.com/debezium/dbz/issues/2874",
+    "id": 5860064160,
+    "node_id": "I_kwDOQZg79s8AAAABXUl7oA",
+    "number": 2874,
+    "title": "Reduce connector heap when capturing many databases with identical table layouts",
+    "user": {
+     "login": "JustMaris",
+     "id": 24903212,
+     "node_id": "MDQ6VXNlcjI0OTAzMjEy",
+     "avatar_url": "https://avatars.githubusercontent.com/u/24903212?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/JustMaris",
+     "html_url": "https://github.com/JustMaris",
+     "followers_url": "https://api.github.com/users/JustMaris/followers",
+     "following_url": "https://api.github.com/users/JustMaris/following{/other_user}",
+     "gists_url": "https://api.github.com/users/JustMaris/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/JustMaris/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/JustMaris/subscriptions",
+     "organizations_url": "https://api.github.com/users/JustMaris/orgs",
+     "repos_url": "https://api.github.com/users/JustMaris/repos",
+     "events_url": "https://api.github.com/users/JustMaris/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/JustMaris/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 9733695486,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxn_g",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/core-library",
+      "name": "component/core-library",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733696788,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxtFA",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/mariadb-connector",
+      "name": "component/mariadb-connector",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733696924,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxtnA",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/mysql-connector",
+      "name": "component/mysql-connector",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733700357,
+      "node_id": "LA_kwDOQZg79s8AAAACRCx7BQ",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/type/task",
+      "name": "type/task",
+      "color": "c5def5",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-15T04:26:21Z",
+    "updated_at": "2026-10-15T09:34:41Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Problem\n\nA binlog connector that captures many databases with identical table layouts (a multi-tenant setup: one database per tenant, the same few hundred tables in each) keeps a very large part of its heap after the schema read, most of it duplicated or no longer needed once the snapshot is over. At 1,000 databases x 350 tables the live heap is several GiB, and it grows linearly with the number of databases.\n\n`schema.history.internal.memory.optimization` (dbz#1813) already interns the relational model (`TableId`, `TableImpl`, `ColumnImpl`, ...) and takes this from 6,129 MiB to 4,499 MiB in my setup. The rest is mostly objects it doesn't cover, plus state that is retained for the life of the task.\n\n### Setup\n\n- Debezium 3.7.0.Final, MariaDB connector, MariaDB 11.8, JDK 21, G1, Strimzi-style Connect worker\n- `snapshot.mode=no_data`, `schema.history.internal.store.only.captured.tables.ddl=true`, `schema.history.internal.memory.optimization=on`\n- 1,000 captured databases x 350 tables (average ~18 columns, 3-4k distinct column definitions overall), identical layout in every database\n- \"Live heap\" = class histogram after a full GC (`jcmd GC.class_histogram`); settled heap with periodic full GCs agrees within ~100 MiB\n\n### What holds the memory (JFR old-object sampling + class histogram)\n\n1. `BinlogSnapshotChangeEventSource.schemaEvents` (a `LinkedHashSet<SchemaChangeEvent>`) is filled while reading the table structure and never cleared after the events are dispatched. The source object lives as long as the task, so all of them (703,001 in this setup) stay reachable. Nothing reads the set afterwards.\n2. `AbstractSnapshotChangeEventSource.execute` registers the snapshot context as the `SNAPSHOT_CONTEXT` bean and never removes it, so `capturedTables`, `capturedSchemaTables` and the `tables` model stay reachable through the bean registry for the life of the task.\n3. `Tables.CachingTableFilter` memoizes the include decision for every table it is asked about, including the excluded ones. The snapshot asks about every table on the server, so the cache holds one `TableId` per table on the server (3.26M entries on a server with 9,000 databases of which 1,000 were captured), and the `TableId`s are separate copies from the interned ones in the table model.\n4. `TableSchemaBuilder.addField` builds a new `ConnectSchema` plus parameter maps for every column of every table (7.5M `ConnectSchema`/30M map entries at this scale, more than half of the heap) although they are equal across tables.\n5. `TableSchemaBuilder.convertersForColumns` creates one converter lambda per column per table (7.07M lambdas, 175 MiB), identical for identical columns.\n\n### Proposal\n\nFive small changes, each independent:\n\n1. Clear `schemaEvents` once the events are dispatched.\n2. Remove the `SNAPSHOT_CONTEXT` bean after a successful snapshot (the bean registry has `remove`). I found no reader of the bean in the modules in this repository; it is a public constant, so I'd like to hear if anything relies on it after the snapshot.\n3. Make `CachingTableFilter` keep included decisions (bounded by what is captured, interned so they share instances with the table model) and a bounded set of excluded ones (cleared when it reaches 10k).\n4. Intern the column `Schema` in `TableSchemaBuilder.addField`, through the existing `Interner`, so it follows `schema.history.internal.memory.optimization` (`off` is unchanged).\n5. Share the provider's value converter between identical columns through a small pooled wrapper, again through `Interner`; custom converters and column mappers are never shared.\n\n### Measured effect (fresh read, live heap after full GC)\n\n| 1,000 captured databases | live heap |\n|---|---|\n| 3.7.0.Final, `memory.optimization=off` | 6,129 MiB |\n| `on` | 4,499 MiB |\n| `on` + 4 (prototype) | 2,348 MiB |\n| `on` + 1 + 4 | 1,637 MiB |\n\nOn a server that also holds 8,000 databases that are not captured (so items 2, 3 and 5 matter):\n\n| | live heap |\n|---|---|\n| `on` + 1 + 4 | 1,937 MiB |\n| + 2 + 3 | 1,511 MiB |\n| + 5 | 1,324 MiB |\n\nLinear scaling afterwards: about 1 MiB per captured database on the same layout. After the changes the heap is dominated by per-table Kafka Connect struct schemas (their field lists and name maps); I'm looking at sharing those separately in Kafka (`ConnectSchema`), which would be a different change.\n\nStreaming is unaffected in my checks (events flow, `execute-snapshot` signals still run); the Debezium test suite has not been run against these changes yet, that is what the pull request's CI is for.\n\n### Questions\n\n- Is extending `schema.history.internal.memory.optimization` to the Connect schemas and converters (items 4 and 5) the right switch, or would you prefer a separate option?\n- Anything that depends on the `SNAPSHOT_CONTEXT` bean or on `schemaEvents` after the snapshot has completed?\n- One pull request with separate commits, or one per item?\n\nI have this working on 3.7.0.Final and the affected classes are unchanged on `main`; I'll open a pull request with tests unless you prefer a different approach.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/2874/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/debezium/dbz/issues/2874/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/2874/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

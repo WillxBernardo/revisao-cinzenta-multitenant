@@ -1,0 +1,201 @@
+{
+ "id_item": "I2099",
+ "url": "https://stackoverflow.com/questions/34154359/how-to-create-users-with-limited-read-only-rights-in-multitenant-data-warehouse",
+ "fonte": "stackoverflow",
+ "coletado_em": "2026-11-15T10:16:01.781116+00:00",
+ "question": {
+  "caminho": "/questions/34154359",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "sql-server",
+      "view",
+      "database-schema"
+     ],
+     "owner": {
+      "account_id": 6500111,
+      "reputation": 1,
+      "user_id": 5031273,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/20a91466e31b9f392973a01c4cae6f99?s=256&d=identicon&r=PG&f=y&so-version=2",
+      "display_name": "Gyan garg",
+      "link": "https://stackoverflow.com/users/5031273/gyan-garg"
+     },
+     "is_answered": false,
+     "view_count": 47,
+     "closed_date": 1449738163,
+     "answer_count": 0,
+     "score": 0,
+     "last_activity_date": 1449573129,
+     "creation_date": 1449573129,
+     "question_id": 34154359,
+     "link": "https://stackoverflow.com/questions/34154359/how-to-create-users-with-limited-read-only-rights-in-multitenant-data-warehouse",
+     "closed_reason": "Duplicate",
+     "title": "How to create users with limited read-only rights in Multitenant Data warehouse with one schema per tenant with views only in MS SQl server 2014",
+     "body": "<p>I want to create a data warehouse where data for all tenants are stored in tables under dbo schema. and now I want to create separate schema per tenant so I can create separate users. along with I wish to create views in these tenant specific schema for relevant data only. users created for these schema will have read-only rights on these schemas. Now problem occurs when I create user and grant right on their specific schema but not on dbo. as views created in any schema are reading data from dbo internaly so sql statements gets failed saying that user doesn't have permission on dbo schema. If I grant permission on dbo schema then user gets access to all data.</p>\n\n<p>Can I somehow make it possible to keep data stored centralized and users created for any schema with specific access.</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9821
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/34154359/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 6500111,
+      "reputation": 1,
+      "user_id": 5031273,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/20a91466e31b9f392973a01c4cae6f99?s=256&d=identicon&r=PG&f=y&so-version=2",
+      "display_name": "Gyan garg",
+      "link": "https://stackoverflow.com/users/5031273/gyan-garg"
+     },
+     "reply_to_user": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449738159,
+     "post_id": 34154359,
+     "comment_id": 56140588,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Thanks a lot, and yes that resolved my problem."
+    },
+    {
+     "owner": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449579349,
+     "post_id": 34154359,
+     "comment_id": 56059583,
+     "content_license": "CC BY-SA 3.0",
+     "body": "Sorry Gyan, I had misunderstood your question.  See this previously answered question: <a href=\"http://stackoverflow.com/questions/368414/grant-select-on-a-view-not-base-table\" title=\"grant select on a view not base table\">stackoverflow.com/questions/368414/&hellip;</a>.  Alternatively SQL Sever 2014 and above support row level permissions.  See: <a href=\"https://msdn.microsoft.com/en-us/library/dn765131.aspx\" rel=\"nofollow noreferrer\">msdn.microsoft.com/en-us/library/dn765131.aspx</a>."
+    },
+    {
+     "owner": {
+      "account_id": 6500111,
+      "reputation": 1,
+      "user_id": 5031273,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/20a91466e31b9f392973a01c4cae6f99?s=256&d=identicon&r=PG&f=y&so-version=2",
+      "display_name": "Gyan garg",
+      "link": "https://stackoverflow.com/users/5031273/gyan-garg"
+     },
+     "reply_to_user": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449578299,
+     "post_id": 34154359,
+     "comment_id": 56059001,
+     "content_license": "CC BY-SA 3.0",
+     "body": "a custom app we are writing and I know we can manage it in our app easily, problem is that we need to ensure them that noone else can access their data, if required we can demo them database access too and where it will create problem."
+    },
+    {
+     "owner": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449575547,
+     "post_id": 34154359,
+     "comment_id": 56057105,
+     "content_license": "CC BY-SA 3.0",
+     "body": "But how will they do this?  Via MS Access, Analysis Services, a custom app you are writing?"
+    },
+    {
+     "owner": {
+      "account_id": 6500111,
+      "reputation": 1,
+      "user_id": 5031273,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/20a91466e31b9f392973a01c4cae6f99?s=256&d=identicon&r=PG&f=y&so-version=2",
+      "display_name": "Gyan garg",
+      "link": "https://stackoverflow.com/users/5031273/gyan-garg"
+     },
+     "reply_to_user": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449575441,
+     "post_id": 34154359,
+     "comment_id": 56057036,
+     "content_license": "CC BY-SA 3.0",
+     "body": "they must be able to access only views in their schema so that they can not see other client&#39;s data."
+    },
+    {
+     "owner": {
+      "account_id": 3034533,
+      "reputation": 5050,
+      "user_id": 2572928,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/TcMR5.png?s=256",
+      "display_name": "David Rushton",
+      "link": "https://stackoverflow.com/users/2572928/david-rushton"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1449574700,
+     "post_id": 34154359,
+     "comment_id": 56056571,
+     "content_license": "CC BY-SA 3.0",
+     "body": "How will your users access the data warehouse?"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9820
+  }
+ },
+ "answers": {
+  "caminho": "/questions/34154359/answers",
+  "status": 200,
+  "json": {
+   "items": [],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9819
+  }
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "id_item": "I0884",
+ "url": "https://github.com/dbt-labs/dbt/discussions/7705",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:46.739069+00:00",
+ "discussion": [
+  {
+   "status": 200,
+   "json": {
+    "data": {
+     "repository": {
+      "discussion": {
+       "title": "How to handle convergent models?",
+       "url": "https://github.com/dbt-labs/dbt/discussions/7705",
+       "createdAt": "2023-05-25T17:47:21Z",
+       "author": {
+        "login": "p-hebert"
+       },
+       "body": "## Problem\r\n\r\nWe would like to have assistance with regard on how to structure our dbt models given our data model structure (convergent proprietary models into a standardized data model).\r\n\r\n**Given the following data model:**\r\n\r\n- Multitenant model where each tenant has a separate BigQuery dataset in which their respective data is loaded, then transformed.\r\n- We integrate multiple competing providers that cover the same domain entities with different table structures; for each category of competing providers, a tenant will have data from only one of the competing providers.\r\n\r\nFor example, here's a simplified/genralized representation of a subset of the analytics DAG for two tenants respectively using different competing providers:\r\n\r\n```\r\nTenant A (Provider P1):\r\n\r\nP1.schedule --> std_schedule\r\nP1.order --> std_order\r\nP1.order_item --> std_order\r\n\r\nTenant B (Provider P2):\r\n\r\nP2.t_schtemp --> std_schedule\r\nP2.t_billinvoice --> std_order\r\nP2.t_billitem --> std_order\r\n```\r\n\r\n**Then how can we structure our dbt project to dynamically switch between providers?**\r\n\r\n## Proposed solution\r\n\r\nOur current (incomplete) understanding of how to support multiple concurrent implementation of a given model (e.g. std_schedule, std_order) is the following:\r\n\r\n1. One dbt execution per tenant (given they have different impl & schema)\r\n2. Tag sources (`P1.*`, `P2.*`) with the provider identifier (e.g. `acme_provider`, `corp_provider`)\r\n3. Have a single model file for a standardized (common) model (e.g. std_schedule, std_order)\r\n4. Split each provider custom implementations into separate SQL files to be included using jinja's `include`\r\n5. Implement the standard models as switches between implementation using the passed tags\r\n\r\nWould that work?\r\n- Does dbt support jinja's include? / Should the includes be marked as excluded in the dbt project?\r\n- Would dbt be able to correctly write a manifest when tags are passed?\r\n- Would dbt be able to correctly interpret the jinja2 SQL given the appropriate tags?\r\n- How would this work if we wanted to integrate with dbt Cloud?\r\n\r\n\r\nAlternatively, if you have a better model to propose, we are all ears!\r\n\r\nThanks so much for your answer 🙏 😄 ",
+       "category": {
+        "name": "Q&A"
+       },
+       "comments": {
+        "pageInfo": {
+         "hasNextPage": false,
+         "endCursor": "Y3Vyc29yOnYyOpK0MjAyMy0xMC0xNlQxNTozMzo1NlrOAG9NoQ=="
+        },
+        "nodes": [
+         {
+          "author": {
+           "login": "p-hebert"
+          },
+          "createdAt": "2023-10-16T15:33:56Z",
+          "body": "Closing in favor of #8863",
+          "replies": {
+           "nodes": []
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

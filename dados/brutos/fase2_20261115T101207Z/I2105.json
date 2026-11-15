@@ -1,0 +1,145 @@
+{
+ "id_item": "I2105",
+ "url": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+ "fonte": "stackoverflow",
+ "coletado_em": "2026-11-15T10:16:05.736156+00:00",
+ "question": {
+  "caminho": "/questions/58629089",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "azure",
+      "powerbi",
+      "multi-tenant",
+      "powerbi-embedded"
+     ],
+     "owner": {
+      "account_id": 13068463,
+      "reputation": 397,
+      "user_id": 9518627,
+      "user_type": "registered",
+      "profile_image": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s256-rj/photo.jpg",
+      "display_name": "anonuser1",
+      "link": "https://stackoverflow.com/users/9518627/anonuser1"
+     },
+     "is_answered": true,
+     "view_count": 3497,
+     "accepted_answer_id": 58631588,
+     "answer_count": 1,
+     "score": 1,
+     "last_activity_date": 1572506237,
+     "creation_date": 1572450334,
+     "question_id": 58629089,
+     "content_license": "CC BY-SA 4.0",
+     "link": "https://stackoverflow.com/questions/58629089/multi-tenancy-in-power-bi-embedded",
+     "title": "Multi-tenancy in Power BI Embedded",
+     "body": "<p>I have a multi-tenant web application and I am using a database per tenant approach. The web application will also use Power BI Embedded to show reports based on the data for that particular tenant and all reports for each tenant will have the same format but the data source will be different.</p>\n\n<p>From what I've seen, there is not straightforward way to implement multi-tenancy in Power BI, such as passing the data source as parameter. I managed to find two ways how to make Power BI embedded multi-tenant. Either use row-level security which would mean that I need to have a single data warehouse for all the tenant's data, and this is not an option for me. The other option would be having a workspace per tenant.</p>\n\n<p>For the second option I would have a template workspace from which a copy will be created for each new tenant. This tutorial here describes how to do it: <a href=\"https://powerbi.microsoft.com/fr-fr/blog/duplicate-workspaces-using-the-power-bi-rest-apis-a-step-by-step-tutorial/\" rel=\"nofollow noreferrer\">https://powerbi.microsoft.com/fr-fr/blog/duplicate-workspaces-using-the-power-bi-rest-apis-a-step-by-step-tutorial/</a> .</p>\n\n<p>Can the same thing be done through the Power BI C# SDK? I would also need to change the data source used per workspace. How can I do this for all reports in my workspace?</p>\n\n<p>Finally, has someone discovered an easier way how to implement multi-tenancy with Power BI embedded or is this it?</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9818
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/58629089/comments",
+  "status": 200,
+  "json": {
+   "items": [],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9817
+  }
+ },
+ "answers": {
+  "caminho": "/questions/58629089/answers",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 7547507,
+      "reputation": 13520,
+      "user_id": 8649393,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/MMPbq.png?s=256",
+      "display_name": "Andrey Nikolov",
+      "link": "https://stackoverflow.com/users/8649393/andrey-nikolov"
+     },
+     "is_accepted": true,
+     "score": 4,
+     "last_activity_date": 1572506237,
+     "last_edit_date": 1572506237,
+     "creation_date": 1572459768,
+     "answer_id": 58631588,
+     "question_id": 58629089,
+     "content_license": "CC BY-SA 4.0",
+     "body": "<p>It depends on your data source type (SQL Server, SSAS, CSV files, etc.) and data connectivity mode (import, direct query, etc.). If you can use parameters, then one of your options is to allow the newly cloned report to switch it's data source itself by using <a href=\"https://www.red-gate.com/simple-talk/sql/bi/power-bi-introduction-working-with-parameters-in-power-bi-desktop-part-4/\" rel=\"nofollow noreferrer\">connection specific parameters</a>. To do this, open <code>Power Query Editor</code> by clicking <code>Edit Queries</code> and in <code>Manage Parameters</code> define two new text parameters, lets name them <code>ServerName</code> and <code>DatabaseName</code>:</p>\n\n<p><a href=\"https://i.sstatic.net/vAzYi.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/vAzYi.png\" alt=\"enter image description here\"></a></p>\n\n<p><a href=\"https://i.sstatic.net/o1y2E.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/o1y2E.png\" alt=\"enter image description here\"></a></p>\n\n<p>Set their current values to point to one of your data sources, e.g. <code>SQLSERVER2016</code> and <code>AdventureWorks2016</code>. Then right click your query in the report and open <code>Advanced Editor</code>. Find the server name and database name in the M code:</p>\n\n<p><a href=\"https://i.sstatic.net/Iz6hq.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/Iz6hq.png\" alt=\"enter image description here\"></a></p>\n\n<p>and replace them with the parameters defined above, so the M code will look like this:</p>\n\n<p><a href=\"https://i.sstatic.net/WU8EP.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/WU8EP.png\" alt=\"enter image description here\"></a></p>\n\n<p>Now you can close and apply changes and your report should work as before. But now when you want to change the data source, do it using <code>Edit Parameters</code>:</p>\n\n<p><a href=\"https://i.sstatic.net/HkDSh.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/HkDSh.png\" alt=\"enter image description here\"></a></p>\n\n<p>and change the server and/or database name to point to the other data source, that you want to use for your report:</p>\n\n<p><a href=\"https://i.sstatic.net/RBmyH.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/RBmyH.png\" alt=\"enter image description here\"></a></p>\n\n<p>After changing parameter values, Power BI Desktop will ask you to apply the changes and reload the data from the new data source. To change the parameter values (i.e. the data source) of a report published in Power BI Service, go to dataset's settings and enter new server and/or database name (check the gateway settings too, if this is on-premise data source):</p>\n\n<p><a href=\"https://i.sstatic.net/5Dkm8.png\" rel=\"nofollow noreferrer\"><img src=\"https://i.sstatic.net/5Dkm8.png\" alt=\"enter image description here\"></a></p>\n\n<p>After changing the data source, refresh your dataset to get the data from the new data source. With Power BI Pro account you can do this 8 times per 24 hours, while if the dataset is in a dedicated capacity, this limit is raised to 48 times per 24 hours.</p>\n\n<p>To do this programatically, use <a href=\"https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/updateparameters\" rel=\"nofollow noreferrer\"><code>Update Parameters</code></a> / <a href=\"https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/updateparametersingroup\" rel=\"nofollow noreferrer\"><code>Update Parameters In Group</code></a> and <a href=\"https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/refreshdataset\" rel=\"nofollow noreferrer\"><code>Refresh Dataset</code></a> / <a href=\"https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/refreshdatasetingroup\" rel=\"nofollow noreferrer\"><code>Refresh Dataset In Group</code></a> REST API calls. For example, you can do this with PowerShell like this:</p>\n\n<pre><code>Import-Module MicrosoftPowerBIMgmt\nImport-Module MicrosoftPowerBIMgmt.Profile\n\n$password = \"xxxxx\" | ConvertTo-SecureString -asPlainText -Force\n$username = \"xxxxx@yyyyy.com\" \n$credential = New-Object System.Management.Automation.PSCredential($username, $password)\n\nConnect-PowerBIServiceAccount -Credential $credential\n\nInvoke-PowerBIRestMethod -Url 'groups/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/datasets/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/UpdateParameters' -Method Post -Body '{\n  \"updateDetails\": [\n    {\n      \"name\": \"ServerName\",\n      \"newValue\": \"SQLSERVER2019\"\n    },\n    {\n      \"name\": \"DatabaseName\",\n      \"newValue\": \"AdventureWorks2019\"\n    }\n  ]\n}'\nInvoke-PowerBIRestMethod -Url 'groups/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/datasets/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/refreshes' -Method Post\n\nDisconnect-PowerBIServiceAccount\n</code></pre>\n\n<p>If you can't use parameters, e.g. Live connection to SSAS,  the connection string could be changed using <a href=\"https://learn.microsoft.com/en-us/rest/api/power-bi/datasets/updatedatasourcesingroup\" rel=\"nofollow noreferrer\">Update Datasources In Group</a> REST API call. In PowerShell this could be done like this:</p>\n\n<pre><code>Import-Module MicrosoftPowerBIMgmt\nImport-Module MicrosoftPowerBIMgmt.Profile\n\n$password = \"xxxxx\" | ConvertTo-SecureString -asPlainText -Force\n$username = \"xxxxx@yyyyy.com\" \n$credential = New-Object System.Management.Automation.PSCredential($username, $password)\n\nConnect-PowerBIServiceAccount -Credential $credential\n\nInvoke-PowerBIRestMethod -Url 'groups/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/datasets/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/Default.UpdateDatasources' -Method Post -Body '{\n  \"updateDetails\": [\n    {\n      \"datasourceSelector\": {\n        \"datasourceType\": \"AnalysisServices\",\n        \"connectionDetails\": {\n          \"server\": \"My-As-Server\",\n          \"database\": \"My-As-Database\"\n        }\n      },\n      \"connectionDetails\": {\n        \"server\": \"New-As-Server\",\n        \"database\": \"New-As-Database\"\n      }\n    }\n  ]\n}'\n\nDisconnect-PowerBIServiceAccount\n</code></pre>\n\n<p>Note, that you need to provide both old and new server and database names.</p>\n\n<p>In C# you can do the same in a very similar way, even without Power BI Client:</p>\n\n<pre><code>var group_id = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\nvar dataset_id = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\nvar client = new HttpClient();\nclient.DefaultRequestHeaders.Add(\"Accept\", \"application/json\");\nclient.DefaultRequestHeaders.Add(\"Authorization\", \"Bearer \" + accessToken);\n\nvar restUrlUpdateParameters = $\"https://api.powerbi.com/v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/Default.UpdateParameters\";\nvar postData = new { updateDetails = new[] { new { name = \"ServerName\", newValue = \"NEWSERVER\" }, new { name = \"DatabaseName\", newValue = \"Another_AdventureWorks2016\" } } };\nvar responseUpdate = client.PostAsync(restUrlUpdateParameters, new StringContent(JsonConvert.SerializeObject(postData), Encoding.UTF8, \"application/json\")).Result;\n\nvar restUrlRefreshDataset = $\"https://api.powerbi.com/v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/refreshes\";\nvar responseRefresh = client.PostAsync(restUrlRefreshDataset, null).Result;\n</code></pre>\n\n<p>Using the Power BI C# client can make you life easier, e.g. refreshing the report can be made this way:</p>\n\n<pre><code>var group_id = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\nvar dataset_id = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\nvar credentials = new TokenCredentials(accessToken, \"Bearer\");\n\nusing (var client = new PowerBIClient(new Uri(\"https://api.powerbi.com\"), credentials))\n{\n    client.Datasets.RefreshDatasetInGroup(group_id, dataset_id);\n}\n</code></pre>\n\n<p>When calling the API, you need to provide an access token. To acquire it use <a href=\"https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-libraries\" rel=\"nofollow noreferrer\">ADAL</a> or <a href=\"https://github.com/AzureAD/microsoft-authentication-library-for-dotnet\" rel=\"nofollow noreferrer\">MSAL</a> libraries, e.g. with code like this:</p>\n\n<pre><code>private static string resourceUri = \"https://analysis.windows.net/powerbi/api\";\nprivate static string authorityUri = \"https://login.windows.net/common/\"; // It was https://login.windows.net/common/oauth2/authorize in prior versions\nprivate static string clientId = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"; // Register at https://dev.powerbi.com/apps\nprivate static string groupId = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\nprivate static string reportId = \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\";\n\nprivate static AuthenticationContext authContext = new AuthenticationContext(authorityUri, new TokenCache());\n\n\npublic string Authenticate()\n{\n    AuthenticationResult authenticationResult = null;\n\n    // First check is there token in the cache\n    try\n    {\n        authenticationResult = authContext.AcquireTokenSilentAsync(resourceUri, clientId).Result;\n    }\n    catch (AggregateException ex)\n    {\n        AdalException ex2 = ex.InnerException as AdalException;\n        if ((ex2 == null) || (ex2 != null &amp;&amp; ex2.ErrorCode != \"failed_to_acquire_token_silently\"))\n        {\n            MessageBox.Show(ex.Message);\n            return;\n        }\n    }\n\n    if (authenticationResult == null)\n    {\n        var uc = new UserPasswordCredential(\"user@example.com, \"Strong password\");\n        try\n        {\n            authenticationResult = authContext.AcquireTokenAsync(resourceUri, clientId, uc).Result;\n        }\n        catch (Exception ex)\n        {\n            MessageBox.Show(ex.Message + ex.InnerException == null ? \"\" : Environment.NewLine + ex.InnerException.Message);\n            return;\n        }\n    }\n\n    if (authenticationResult == null)\n        MessageBox.Show(\"Call failed.\");\n    else\n    {\n        return authenticationResult.AccessToken;\n    }\n}       \n</code></pre>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9816
+  }
+ },
+ "answer_comments": {
+  "caminho": "/answers/58631588/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 7547507,
+      "reputation": 13520,
+      "user_id": 8649393,
+      "user_type": "registered",
+      "profile_image": "https://i.sstatic.net/MMPbq.png?s=256",
+      "display_name": "Andrey Nikolov",
+      "link": "https://stackoverflow.com/users/8649393/andrey-nikolov"
+     },
+     "reply_to_user": {
+      "account_id": 2554173,
+      "reputation": 508,
+      "user_id": 2216555,
+      "user_type": "registered",
+      "accept_rate": 58,
+      "profile_image": "https://i.sstatic.net/FJymV.png?s=256",
+      "display_name": "AleX_",
+      "link": "https://stackoverflow.com/users/2216555/alex"
+     },
+     "edited": false,
+     "score": 1,
+     "creation_date": 1621316606,
+     "post_id": 58631588,
+     "comment_id": 119451208,
+     "content_license": "CC BY-SA 4.0",
+     "body": "@AleX_ Parameters are report/dataset thing, not per-user thing. All users viewing one report will see the same data. You will need separate instances of the report for each user, or at least separate datasets (which can be combined with <a href=\"https://learn.microsoft.com/en-us/javascript/api/overview/powerbi/bind-report-datasets\" rel=\"nofollow noreferrer\">dynamic binding</a> for example). Otherwise, you must combine all the data from all the sources into a single dataset, and filter the data based on the current user (also check <a href=\"https://learn.microsoft.com/en-us/power-bi/admin/service-admin-rls\" rel=\"nofollow noreferrer\">Row-Level Security</a>)."
+    },
+    {
+     "owner": {
+      "account_id": 2554173,
+      "reputation": 508,
+      "user_id": 2216555,
+      "user_type": "registered",
+      "accept_rate": 58,
+      "profile_image": "https://i.sstatic.net/FJymV.png?s=256",
+      "display_name": "AleX_",
+      "link": "https://stackoverflow.com/users/2216555/alex"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1621287684,
+     "post_id": 58631588,
+     "comment_id": 119445667,
+     "content_license": "CC BY-SA 4.0",
+     "body": "Thanks for comprehensive response, when using this method, are two users (from two different clients) able to access their data bases when accessing the same report at the same time? Is there a way to bundle the Parameters as part of the power bi embedded component?"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9815
+  }
+ }
+}

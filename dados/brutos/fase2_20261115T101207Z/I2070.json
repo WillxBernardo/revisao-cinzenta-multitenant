@@ -1,0 +1,118 @@
+{
+ "id_item": "I2070",
+ "url": "https://github.com/wso2/identity-customer-data-service/issues/296",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:56.292788+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296",
+    "repository_url": "https://api.github.com/repos/wso2/identity-customer-data-service",
+    "labels_url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/labels{/name}",
+    "comments_url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/comments",
+    "events_url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/events",
+    "html_url": "https://github.com/wso2/identity-customer-data-service/issues/296",
+    "id": 5168004419,
+    "node_id": "I_kwDOOWBvyc8AAAABNAl9Qw",
+    "number": 296,
+    "title": "RFC: Smart Schema Synthesizer",
+    "user": {
+     "login": "KD23243",
+     "id": 86454991,
+     "node_id": "MDQ6VXNlcjg2NDU0OTkx",
+     "avatar_url": "https://avatars.githubusercontent.com/u/86454991?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/KD23243",
+     "html_url": "https://github.com/KD23243",
+     "followers_url": "https://api.github.com/users/KD23243/followers",
+     "following_url": "https://api.github.com/users/KD23243/following{/other_user}",
+     "gists_url": "https://api.github.com/users/KD23243/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/KD23243/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/KD23243/subscriptions",
+     "organizations_url": "https://api.github.com/users/KD23243/orgs",
+     "repos_url": "https://api.github.com/users/KD23243/repos",
+     "events_url": "https://api.github.com/users/KD23243/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/KD23243/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 8422696904,
+      "node_id": "LA_kwDOOWBvyc8AAAAB9ggnyA",
+      "url": "https://api.github.com/repos/wso2/identity-customer-data-service/labels/Type/New%20Feature",
+      "name": "Type/New Feature",
+      "color": "1d76db",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 8422696954,
+      "node_id": "LA_kwDOOWBvyc8AAAAB9ggn-g",
+      "url": "https://api.github.com/repos/wso2/identity-customer-data-service/labels/Type/Epic",
+      "name": "Type/Epic",
+      "color": "1d76db",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-08-17T03:44:52Z",
+    "updated_at": "2026-09-22T05:21:12Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "\n## 1. Problem\n\nToday, onboarding a source system into CDS is a manual, expert-driven exercise:\n\n1. An admin hand-authors the org's [profile schema](https://github.com/wso2/identity-customer-data-service/blob/main/docs/concepts/profile-schema.md) — every attribute, its `value_type`, `mutability`, `merge_strategy`, `multi_valued` flag.\n2. For every source system, someone works out which of that source's fields correspond to which CDS attribute, and writes the transformation by hand.\n3. If three sources call the same real-world thing `email1`, `mail`, and `emailAddress`, all three mappings are authored separately and independently — and any mistake surfaces later as a duplicate profile or a failed unification rule.\n\n\n\n**The core idea: customers should not have to configure mappings by hand. They should be able to keep the schemas they already have, hand CDS their data, and let CDS work out the rest.**\n\n---\n\n## 2. Goals / Non-goals\n\n**Goals**\n\n- Build a **per-source schema** from real data, without the customer describing their source up front.\n- Build a **global CDS profile schema** — the canonical, org-wide profile shape — as the semantic union of all source schemas.\n- Generate the **source → global transformation** for every source field, including name mapping, type coercion, and value normalisation.\n- Recognise that semantically identical fields with different names (`email1`, `mail`, `emailAddress`) are the same attribute, using both field names *and* the values themselves.\n- Keep a human in the loop: everything the synthesizer produces is a **proposal** that an admin reviews, edits, and approves before it goes live.\n\n\n---\n\n## 3. Concepts\n\n| Term | Meaning |\n|---|---|\n| **Source** | A registered system that sends data to CDS (a CRM, a loyalty app, a support desk). A **new first-class entity** (D2) — it carries its own endpoint, credentials, sample set, schema version, and mapping version. |\n| **Source schema** | The inferred shape of *one* source's data, in that source's own vocabulary (`email1`, `fName`, `mobile_no`). |\n| **Global profile schema** | The canonical org-wide CDS profile schema — the one the rest of CDS (unification, consent, merge) actually operates on. |\n| **Mapping** | The per-source transformation: `source_field → global_attribute`, plus any type coercion / normalisation. |\n\n\nThe key structural point: **there are N + 1 schemas.** One per source, plus one global. The source schemas exist so the customer can keep speaking their own language, the global schema exists so CDS has one consistent internal vocabulary.\n\n---\n\n## 4. Intake modes\n\nThe customer can feed the synthesizer in three ways. All three converge on the same pipeline.\n\n| Mode | How it works | When to use |\n|---|---|---|\n| **Push samples** | Register the sources in CDS, then POST a handful of representative payloads per source. | Fastest path. Good for evaluation and for sources that can't expose an endpoint. |\n| **Bulk import** | Hand CDS a full export (CSV/JSON/NDJSON). Synthesis runs over the whole dataset, and the same import can then be replayed to actually load profiles. | Migration from an existing CDP/CRM. |\n\nSample size matters for inference quality — a single record can't tell you whether a field is nullable, multi-valued, or an enum. Suggested floor: **(How many, need AI team help) records per source**, with the UI warning below that and degrading confidence scores accordingly.\n\n---\n\n## 5. The synthesis pipeline\n\n**1. Collect and stage.** Gather the sample set for every source in the job and hold it for the duration of the job only. \n\n**2. LLM synthesis call.** The model receives the samples from *all* sources together — cross-source context is what lets it see that `email1`, `mail`, and `emailAddress` are one concept plus the CDS schema contract (Which can be baked in): the legal `value_type` values, the three scopes, the `mutability` and `merge_strategy` options, the immutable core attributes it must never propose, and the IS-owned attributes it should map onto rather than recreate. It returns per-source schemas, a global schema, mappings, and a **confidence score with cited evidence** per cluster.\n\nThe model must justify every cluster against these signals, and the review UI renders them back to the admin:\n\n| Signal | Example |\n|---|---|\n| Normalised name similarity | `email1`, `mail`, `emailAddress` → normalise to `email` |\n| Value pattern | All three fields match the email regex at >95% |\n| Value-set overlap | The same literal values (`jane@acme.com`) appear in all three fields |\n| Statistical shape | Similar cardinality, length distribution, null rate |\n| Type agreement | All three are single-valued strings |\n\n\n**3. Global schema proposal.** Each cluster becomes one global attribute with:\n\n- a canonical `attribute_name` including its scope prefix — `identity_attributes.email`, `traits.preferred_language`, `application_data.<app>.score`\n- `value_type` — the narrowest type that covers all members\n- `mutability` — defaults to `readWrite`; identifier-like attributes proposed as `writeOnce`\n- `merge_strategy` — `overwrite` for single-valued, `combine` for multi-valued\n- `display_name`, `multi_valued`, `canonical_values`, `sub_attributes` as inferred\n\n\n**4. Review and approval.**\n\nNothing activates without an admin approving it.\n\n| Band | Treatment |\n|---|---|\n| **High confidence** | Auto-accepted and collapsed. Visible and editable, but requires no action. Typical case: a cluster where names normalise identically *and* values match one format *and* value sets overlap. |\n| **Low confidence** | Requires explicit per-item approval. Typical case: a cluster justified by name similarity alone, or a type the model had to widen to fit disagreeing sources. |\n| **Unclustered** | Requires explicit per-item decision — accept into `application_data`, map onto an existing global attribute, or reject. |\n\n**7. Activation.** The approved proposal is written as a new schema version and the mappings are attached to their sources.\n\n---\n\n## 6. Worked example\n\nThree sources send a customer's email address:\n\n```jsonc\n// Source 1 — CRM\n{ \"email1\": \"Jane@ACME.com\", \"fName\": \"Jane\", \"mobile_no\": \"0771234567\" }\n\n// Source 2 — loyalty app\n{ \"mail\": \"jane@acme.com\", \"first_name\": \"Jane\", \"phone\": \"+94771234567\" }\n\n// Source 3 — support desk\n{ \"emailAddress\": \"jane@acme.com\", \"givenName\": \"Jane\", \"contactNumber\": \"94771234567\" }\n```\n\n**Inferred source schemas** keep each source's own names — `email1`, `mail`, `emailAddress` stay as-is in their respective source profiles.\n\n**Clustering** finds all three carry email-shaped values, overlapping value sets, and names that normalise to `email`. Same for the name fields and the phone fields.\n\n**Global schema:**\n\n| Attribute | Type | Multi-valued | Merge |\n|---|---|---|---|\n| `identity_attributes.email` | `string` | no | `overwrite` |\n| `identity_attributes.given_name` | `string` | no | `overwrite` |\n| `identity_attributes.phone_number` | `string` | no | `overwrite` |\n\n**Mappings:**\n\n| Source | Source field | Global attribute | Transformation |\n|---|---|---|---|\n| CRM | `email1` | `identity_attributes.email` | lowercase |\n| Loyalty | `mail` | `identity_attributes.email` | — |\n| Support | `emailAddress` | `identity_attributes.email` | — |\n| CRM | `mobile_no` | `identity_attributes.phone_number` | local → E.164 (`+94`) |\n| Loyalty | `phone` | `identity_attributes.phone_number` | — |\n| Support | `contactNumber` | `identity_attributes.phone_number` | prefix `+` |\n\n\n## 8. Lifecycle after activation (Maybe stuff)\n\nSources change. The synthesizer needs an answer for what happens on day 200, not just day 1.\n\n- **Drift detection.** When ingest sees a field that isn't in the source's schema, or a value that violates the inferred type/format, record it rather than silently dropping it.\n- **Re-synthesis.** An admin can re-run synthesis on a source against recent live traffic. The output is a *diff* against the active schema, reviewed the same way.\n- **Versioning.** Both the global schema and each source mapping are versioned, with the active version recorded per source. Rollback is a version pointer change.\n- **Additive-only by default.** New attributes and new mappings can be auto-proposed; anything that changes or removes an existing attribute requires explicit approval, because profiles already hold data under that definition.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/wso2/identity-customer-data-service/issues/296/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

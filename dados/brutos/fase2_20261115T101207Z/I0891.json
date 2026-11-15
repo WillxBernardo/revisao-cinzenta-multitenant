@@ -1,0 +1,166 @@
+{
+ "id_item": "I0891",
+ "url": "https://github.com/debezium/dbz/issues/1876",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:45.305437+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/1876",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/debezium/dbz/issues/1876",
+    "repository_url": "https://api.github.com/repos/debezium/dbz",
+    "labels_url": "https://api.github.com/repos/debezium/dbz/issues/1876/labels{/name}",
+    "comments_url": "https://api.github.com/repos/debezium/dbz/issues/1876/comments",
+    "events_url": "https://api.github.com/repos/debezium/dbz/issues/1876/events",
+    "html_url": "https://github.com/debezium/dbz/issues/1876",
+    "id": 4356808429,
+    "node_id": "I_kwDOQZg79s8AAAABA6-e7Q",
+    "number": 1876,
+    "title": "PostgreSQL connector: WARN spam from TypeRegistry in multi-schema deployments",
+    "user": {
+     "login": "mark-major",
+     "id": 32452238,
+     "node_id": "MDQ6VXNlcjMyNDUyMjM4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/32452238?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/mark-major",
+     "html_url": "https://github.com/mark-major",
+     "followers_url": "https://api.github.com/users/mark-major/followers",
+     "following_url": "https://api.github.com/users/mark-major/following{/other_user}",
+     "gists_url": "https://api.github.com/users/mark-major/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/mark-major/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/mark-major/subscriptions",
+     "organizations_url": "https://api.github.com/users/mark-major/orgs",
+     "repos_url": "https://api.github.com/users/mark-major/repos",
+     "events_url": "https://api.github.com/users/mark-major/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/mark-major/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 9733697432,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxvmA",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/postgresql-connector",
+      "name": "component/postgresql-connector",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733700131,
+      "node_id": "LA_kwDOQZg79s8AAAACRCx6Iw",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/type/bug",
+      "name": "type/bug",
+      "color": "fc2929",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-04-30T09:06:42Z",
+    "updated_at": "2026-04-30T11:03:24Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Bug report\n\n**What Debezium connector do you use and what version?**\n\n`io.debezium.connector.postgresql.PostgresConnector`, version `3.4.3.Final` (also reproduced on `3.5.0.Final`)\n\n---\n\n**What is the connector configuration?**\n\n```json\n{\n  \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n  \"plugin.name\": \"pgoutput\",\n  \"publication.autocreate.mode\": \"disabled\",\n  \"publication.name\": \"cdc\",\n  \"table.include.list\": \".+\\\\.(table_a|table_b|table_c|table_d|...)$\",\n  \"tasks.max\": \"1\",\n  \"snapshot.mode\": \"no_data\",\n  \"heartbeat.interval.ms\": \"5000\"\n}\n```\n\nNote: no `schema.include.list` — we capture from all tenant schemas by design.\n\n---\n\n**What is the captured database version and mode of deployment?**\n\nAmazon Aurora PostgreSQL, managed (AWS RDS), MSK Connect.\n\n---\n\n**What behavior do you expect?**\n\nThe \"Type is already mapped\" condition should not log at WARN level when the duplicate is simply a same-named type in a different schema. This is expected in any multi-tenant or multi-schema PostgreSQL deployment and is not indicative of a problem.\n\n---\n\n**What behavior do you see?**\n\n~17,000 WARN-level log lines per connector startup:\n\n```\nWARN  Type [oid:278431, name:accounts] is already mapped   [io.debezium.connector.postgresql.TypeRegistry]\nWARN  Type [oid:278432, name:users] is already mapped       [io.debezium.connector.postgresql.TypeRegistry]\nWARN  Type [oid:278433, name:enrollments] is already mapped [io.debezium.connector.postgresql.TypeRegistry]\n... (repeated for every type × every tenant schema)\n```\n\nOn MSK Connect, there is no per-class log level configuration, so we cannot suppress these via logging config. The volume drowns out genuine warnings from the connector.\n\n---\n\n**Do you see the same behaviour using the latest released Debezium version?**\n\nYes — the `addType()` method is unchanged in `3.5.0.Final`. Not verified against any Alpha/Beta/CR builds, but the code path has not changed on `main`.\n\n---\n\n**Do you have the connector logs, ideally from start till finish?**\n\nThe relevant logs are the WARN lines themselves — samples are shown above.\n\n---\n\n**How to reproduce the issue using our [[tutorial](https://github.com/debezium/debezium-examples/tree/main/tutorial)](https://github.com/debezium/debezium-examples/tree/main/tutorial) deployment?**\n\n1. Create a PostgreSQL database with multiple schemas sharing the same table definitions:\n\n```sql\nCREATE SCHEMA tenant_1;\nCREATE SCHEMA tenant_2;\nCREATE SCHEMA tenant_3;\n-- repeat for N schemas\n\nCREATE TABLE tenant_1.table_a (id bigint primary key, name text);\nCREATE TABLE tenant_2.table_a (id bigint primary key, name text);\nCREATE TABLE tenant_3.table_a (id bigint primary key, name text);\n-- repeat for each schema\n```\n\n2. Configure the connector with `table.include.list` matching all schemas (no `schema.include.list`):\n\n```json\n{\n  \"table.include.list\": \".+\\\\.table_a$\"\n}\n```\n\n3. Start the connector. Observe WARN lines for every `table_a` composite type after the first schema.\n\nThe number of warnings scales as `(num_schemas - 1) × num_types_per_schema`.\n\n---\n\n### Cause\n\nIn [`[TypeRegistry.addType()](https://github.com/debezium/debezium/blob/v3.5.0.Final/debezium-connector-postgres/src/main/java/io/debezium/connector/postgresql/TypeRegistry.java#L143-L147)`](https://github.com/debezium/debezium/blob/v3.5.0.Final/debezium-connector-postgres/src/main/java/io/debezium/connector/postgresql/TypeRegistry.java#L143-L147), the `nameToType` map is keyed solely by type name:\n\n```java\nif (!nameToType.containsKey(type.getName())) {\n    nameToType.put(type.getName(), type);\n}\nelse {\n    LOGGER.warn(\"Type [oid:{}, name:{}] is already mapped\", type.getOid(), type.getName());\n}\n```\n\nThe underlying `SQL_TYPES` query joins `pg_namespace` but the namespace is never propagated into the map key. When schema `tenant_1` and schema `tenant_2` both define a composite type `accounts`, the second one triggers a WARN.\n\nIn our environment (Canvas LMS — a multi-tenant PostgreSQL application), a single database has hundreds of schemas sharing identical table/type definitions. This produces **~17,000 WARN lines per connector startup**, repeated on every restart or rebalance.\n\n### Why existing fixes don't help\n\n- **PR #7150 (schema-filtered type loading)**: Filters `pg_type` to `schema.include.list` schemas. Our connector captures tables from _all_ schemas (`table.include.list: \".+\\\\.(table_names...)$\"`) — we have no `schema.include.list` because every tenant schema is needed. Even if we enumerated all schemas, the duplicates across them would still trigger warnings.\n- **DBZ-5182 (ascending OID order)**: Addressed type _collisions_ from extension schemas overriding built-in types, but did not change the log level or namespace handling.\n- **#1683 / #1800 (performance fixes)**: Reduced startup time from OID lookups and double initialization, but the WARN-level logging remains.\n\n### Relationship to [DBZ-8519](https://github.com/debezium/dbz/issues/1323)\n\n[DBZ-8519](https://github.com/debezium/dbz/issues/1323) reports the same symptom but from a different angle — the reporter has many schemas and expected `schema.include.list` to suppress the warnings. Our case is distinct: we intentionally capture all schemas, so schema filtering is not a viable workaround. The underlying code issue (name-only keying, WARN log level) is the same.\n\n### Suggested fix\n\nDowngrade the log level from `LOGGER.warn` to `LOGGER.debug` in `TypeRegistry.addType()`. The \"already mapped\" condition is a normal consequence of PostgreSQL's type system when multiple schemas define same-named types. It is not a correctness issue — the first-registered type wins, and `oidToType` still maps every OID correctly. The `nameToType` map is used for well-known type name lookups (e.g., `hstore`, `geometry`) that don't carry schema context, so the first-wins behavior is the right semantics here.",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/1876/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/debezium/dbz/issues/1876/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/1876/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/comments/4351895684",
+     "html_url": "https://github.com/debezium/dbz/issues/1876#issuecomment-4351895684",
+     "issue_url": "https://api.github.com/repos/debezium/dbz/issues/1876",
+     "id": 4351895684,
+     "node_id": "IC_kwDOQZg79s8AAAABA2SohA",
+     "user": {
+      "login": "jpechane",
+      "id": 650600,
+      "node_id": "MDQ6VXNlcjY1MDYwMA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/650600?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jpechane",
+      "html_url": "https://github.com/jpechane",
+      "followers_url": "https://api.github.com/users/jpechane/followers",
+      "following_url": "https://api.github.com/users/jpechane/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jpechane/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jpechane/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jpechane/subscriptions",
+      "organizations_url": "https://api.github.com/users/jpechane/orgs",
+      "repos_url": "https://api.github.com/users/jpechane/repos",
+      "events_url": "https://api.github.com/users/jpechane/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jpechane/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-04-30T11:02:50Z",
+     "updated_at": "2026-04-30T11:02:50Z",
+     "body": "OK, I prpose to reduce to level to `DEBUG` but still emit a single `WARN` message that this situation happened.",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/debezium/dbz/issues/comments/4351895684/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

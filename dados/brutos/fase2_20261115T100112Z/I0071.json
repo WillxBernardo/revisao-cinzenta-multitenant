@@ -1,0 +1,208 @@
+{
+ "id_item": "I0071",
+ "url": "https://github.com/AtlasDevHQ/atlas/issues/2329",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:29.962363+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329",
+    "repository_url": "https://api.github.com/repos/AtlasDevHQ/atlas",
+    "labels_url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/labels{/name}",
+    "comments_url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/comments",
+    "events_url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/events",
+    "html_url": "https://github.com/AtlasDevHQ/atlas/issues/2329",
+    "id": 4425666549,
+    "node_id": "I_kwDORfI46s8AAAABB8pP9Q",
+    "number": 2329,
+    "title": "explore: multi-environment semantic layer + connection-scoped content",
+    "user": {
+     "login": "msywulak",
+     "id": 51167140,
+     "node_id": "MDQ6VXNlcjUxMTY3MTQw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/51167140?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/msywulak",
+     "html_url": "https://github.com/msywulak",
+     "followers_url": "https://api.github.com/users/msywulak/followers",
+     "following_url": "https://api.github.com/users/msywulak/following{/other_user}",
+     "gists_url": "https://api.github.com/users/msywulak/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/msywulak/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/msywulak/subscriptions",
+     "organizations_url": "https://api.github.com/users/msywulak/orgs",
+     "repos_url": "https://api.github.com/users/msywulak/repos",
+     "events_url": "https://api.github.com/users/msywulak/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/msywulak/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 10351708068,
+      "node_id": "LA_kwDORfI46s8AAAACaQKHpA",
+      "url": "https://api.github.com/repos/AtlasDevHQ/atlas/labels/feature",
+      "name": "feature",
+      "color": "0E8A16",
+      "default": false,
+      "description": "New feature or capability",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 10370549940,
+      "node_id": "LA_kwDORfI46s8AAAACaiIItA",
+      "url": "https://api.github.com/repos/AtlasDevHQ/atlas/labels/area:%20api",
+      "name": "area: api",
+      "color": "D4C5F9",
+      "default": false,
+      "description": "Backend, agent, tools, SQL validation",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 10370549967,
+      "node_id": "LA_kwDORfI46s8AAAACaiIIzw",
+      "url": "https://api.github.com/repos/AtlasDevHQ/atlas/labels/area:%20web",
+      "name": "area: web",
+      "color": "D4C5F9",
+      "default": false,
+      "description": "Frontend, chat UI, components",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 10508584180,
+      "node_id": "LA_kwDORfI46s8AAAACclxE9A",
+      "url": "https://api.github.com/repos/AtlasDevHQ/atlas/labels/architecture",
+      "name": "architecture",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Module-deepening refactors from improve-codebase-architecture skill",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-05-12T02:14:05Z",
+    "updated_at": "2026-05-12T02:34:17Z",
+    "closed_at": "2026-05-12T02:34:17Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\n\nAn org with N connections pointing at the same logical schema (e.g. us-int + eu + apac Postgres copies) ends up with N copies of every connection-scoped row. Discovered while using my own Atlas workspace as the internal-tools analytics surface — 3 regional Postgres connections → 3 entries for every YAML entity / metric, 3 PII classifications, 3 dashboard cards.\n\nSame shape will hit any customer with multi-region prod, staging + prod, or per-tenant schema copies.\n\n## Surface (codebase audit)\n\nAt least 6 tables today carry a `connection_id` FK and duplicate per connection:\n\n| Table | Today's scope | Pain |\n|---|---|---|\n| `semanticEntities` | `(org_id, entity_type, name, COALESCE(connection_id, '__default__'))` | YAML entities + metrics + dimensions show 3× in `/admin/semantic` |\n| `dashboardCards` | `connectionId` per card | Same card in 3 dashboards |\n| `conversations` | `connectionId` per conversation | Tolerable (a chat picks one) |\n| `scheduledTasks` | `connectionId` per task | Same query duplicated per env |\n| `approvalQueue` | `connectionId` per pending approval | Approval rules don't compose across envs |\n| `piiColumnClassifications` | `(org_id, table_name, column_name, connection_id)` | 3× the classification work |\n\nMigration `0028_fix_semantic_entity_uniqueness` documents the prod boot-crash on us+apac caused by `connection_id` being part of the natural key. Today's design forces it; a different model could drop it.\n\nLikely also affected (verify in audit): `prompts`, `starter_prompts`, `learned_patterns`, `saved_queries`, `reports`.\n\n## Model options to evaluate\n\nThree shapes worth comparing in detail. Each option needs a section covering: schema delta, query-routing semantics, mode-system interaction, admin UX, migration cost, customer mental model fit.\n\n### A — Connection groups\nGroup N connections under one \"environment set\"; content rows are scoped to the group, not the connection. Conversation picks which group-member to execute against.\n\n- **Pros**: minimal schema change (rename `connection_id` → `connection_group_id` semantically, add `connection_groups` table, group members are connections).\n- **Cons**: doesn't model \"EU + APAC share schema, US is different\" — group is all-or-nothing.\n\n### B — Template + environments (dbt-targets / Terraform-workspaces model)\nEntity YAML is a template; each connection is an \"environment\" of the template. Mode system applies to templates; envs inherit.\n\n- **Pros**: cleanest mental model. Mirrors industry vocabulary (dbt has `target`, Terraform has `workspace`).\n- **Cons**: largest refactor — most consumer code reads entities-by-connection today.\n\n### C — Connection tags + tag-selector content\nEach connection has tags (`region=us`, `schema=novamart-v3`, `tier=prod`); content rows target tag selectors instead of connection IDs.\n\n- **Pros**: most flexible (handles partial overlaps).\n- **Cons**: most surface area, hardest to explain.\n\n## Mode-system interaction (call out explicitly)\n\nWhatever model we pick has to answer: when an admin drafts an entity change, does the draft promote to all envs at once, or per env? Today's atomic publish endpoint (`/api/v1/admin/publish`) is per-org — needs to extend cleanly. Don't pick a model that breaks the publish transaction.\n\n## Query routing semantics\n\nThe agent picks an entity by name. Which connection executes it?\n- **Per-conversation env default** (set at chat creation, override per turn?)\n- **Auto-detect** (entity has region affinity from query content?)\n- **Always-ask** (UX picker before query runs?)\n- **Federation** (run on all envs, return one result set?)\n\nAudit should sketch each option's UX cost.\n\n## Migration story\n\nFor each model option, document:\n1. Backfill strategy from existing `connection_id` rows.\n2. Wire-format compat (does `@useatlas/types` need a major bump? `Connection` vs `ConnectionGroup` vs `Environment` shape?).\n3. Two-DB architecture: internal-DB schema migration is straightforward; the data-DB side is unaffected.\n\n## Output\n\n`.claude/research/multi-env-semantic-layer.md` covering:\n\n- [ ] Full table audit (the 6 above + grep for stragglers in `prompts`, `starter_prompts`, `learned_patterns`, `saved_queries`, `reports`, `dashboards`).\n- [ ] Each model option (A/B/C) with: schema delta sketch, mode-system fit, query-routing UX, migration cost (S/M/L), customer mental-model fit.\n- [ ] Recommendation: which model to PRD, and which alternative to keep as a fallback.\n- [ ] Open questions list for the PRD interview.\n\n## Out of scope\n\n- Implementation. This is read-only audit + design sketch.\n- Picking final vocabulary (env / target / group / workspace) — PRD decides.\n- Cross-region query federation (separate problem; touches data residency).\n\n## Why exploration before PRD\n\n`/write-a-prd` will interview about the audit findings either way. Better to land the audit so the PRD interview is about *choosing* a model, not *discovering* the surface. Same pattern as #1719's design-pass tracker.\n\n## Spawned from\n\nIn-session dogfood pain — see msywulak's Atlas internal workspace pointed at us-int + eu + apac Postgres. Not a 1.4.2 / 1.4.3 / 1.5.0 milestone item; this PRDs into something later (1.6.x candidate?).",
+    "closed_by": {
+     "login": "msywulak",
+     "id": 51167140,
+     "node_id": "MDQ6VXNlcjUxMTY3MTQw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/51167140?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/msywulak",
+     "html_url": "https://github.com/msywulak",
+     "followers_url": "https://api.github.com/users/msywulak/followers",
+     "following_url": "https://api.github.com/users/msywulak/following{/other_user}",
+     "gists_url": "https://api.github.com/users/msywulak/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/msywulak/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/msywulak/subscriptions",
+     "organizations_url": "https://api.github.com/users/msywulak/orgs",
+     "repos_url": "https://api.github.com/users/msywulak/repos",
+     "events_url": "https://api.github.com/users/msywulak/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/msywulak/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/comments/4426871446",
+     "html_url": "https://github.com/AtlasDevHQ/atlas/issues/2329#issuecomment-4426871446",
+     "issue_url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/2329",
+     "id": 4426871446,
+     "node_id": "IC_kwDORfI46s8AAAABB9yylg",
+     "user": {
+      "login": "msywulak",
+      "id": 51167140,
+      "node_id": "MDQ6VXNlcjUxMTY3MTQw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51167140?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/msywulak",
+      "html_url": "https://github.com/msywulak",
+      "followers_url": "https://api.github.com/users/msywulak/followers",
+      "following_url": "https://api.github.com/users/msywulak/following{/other_user}",
+      "gists_url": "https://api.github.com/users/msywulak/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/msywulak/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/msywulak/subscriptions",
+      "organizations_url": "https://api.github.com/users/msywulak/orgs",
+      "repos_url": "https://api.github.com/users/msywulak/repos",
+      "events_url": "https://api.github.com/users/msywulak/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/msywulak/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-05-12T02:34:16Z",
+     "updated_at": "2026-05-12T02:34:16Z",
+     "body": "Audit landed. PRD'd as #2336.\n\nOutput: `.claude/research/multi-env-semantic-layer.md` — six-table surface map (`semantic_entities`, `dashboard_cards`, `conversations`, `scheduled_tasks`, `approval_queue`, `pii_column_classifications`), 0028 post-mortem, three model options (A/B/C) compared, recommendation (Option A — connection groups), 10 open questions for PRD interview.\n\nTwo findings worth flagging:\n- No stragglers — `prompts`, `starter_prompts`, `learned_patterns`, `saved_queries`, `reports`, `dashboards` do NOT carry `connection_id`. Smaller blast radius than the issue feared.\n- 0028's proximate bug was missing `entity_type` in the partial indexes, not `connection_id` directly — but `connection_id`-in-the-key amplified the blast radius.\n\nArchitecture-wins side finding: connection-scoping logic is duplicated across 5–6 modules with no shared helper. `withGroupScope(orgId, groupId)` extraction is pre-work for the PRD.",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/AtlasDevHQ/atlas/issues/comments/4426871446/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

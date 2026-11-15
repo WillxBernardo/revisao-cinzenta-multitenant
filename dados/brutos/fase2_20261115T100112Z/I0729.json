@@ -1,0 +1,96 @@
+{
+ "id_item": "I0729",
+ "url": "https://github.com/avniproject/avni-server/issues/1072",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:41.226046+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/avniproject/avni-server/issues/1072",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/avniproject/avni-server/issues/1072",
+    "repository_url": "https://api.github.com/repos/avniproject/avni-server",
+    "labels_url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/labels{/name}",
+    "comments_url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/comments",
+    "events_url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/events",
+    "html_url": "https://github.com/avniproject/avni-server/issues/1072",
+    "id": 5522646132,
+    "node_id": "I_kwDOA9mVds8AAAABSSzkdA",
+    "number": 1072,
+    "title": "Infra: move the ETL schemas (62 GB of 133 GB) off the primary, and size the primary to the remaining hot set",
+    "user": {
+     "login": "ombhardwajj",
+     "id": 115864495,
+     "node_id": "U_kgDOBufzrw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/115864495?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/ombhardwajj",
+     "html_url": "https://github.com/ombhardwajj",
+     "followers_url": "https://api.github.com/users/ombhardwajj/followers",
+     "following_url": "https://api.github.com/users/ombhardwajj/following{/other_user}",
+     "gists_url": "https://api.github.com/users/ombhardwajj/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/ombhardwajj/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/ombhardwajj/subscriptions",
+     "organizations_url": "https://api.github.com/users/ombhardwajj/orgs",
+     "repos_url": "https://api.github.com/users/ombhardwajj/repos",
+     "events_url": "https://api.github.com/users/ombhardwajj/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/ombhardwajj/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-09-21T04:12:43Z",
+    "updated_at": "2026-09-21T07:27:44Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "parent_issue_url": "https://api.github.com/repos/avniproject/avni-product/issues/1904",
+    "issue_dependencies_summary": {
+     "blocked_by": 3,
+     "total_blocked_by": 3,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Context\n\nMeasured on production (11–19 Sep 2026): the primary is a burstable **db.t4g.large** (2 vCPU, 8 GB, $122/month) sitting at **0 CPU credit balance all week**, with 15 h/week above 70% CPU, and the slow requests come in **incidents**, not spread evenly — a tiny org (Udgam, ~1.1 k subjects) suffered 520–700 s requests as collateral damage while another org ran 22 concurrent assignment searches. The database was saturated; whose query it was mattered less than that it was running.\n\nThe code fixes (#1067, #1068, #1069, avniproject/avni-client#2096, avniproject/avni-client#2099, #1057) remove an estimated **40–50% of primary database time**, rising to ~55% with #1057. Two infrastructure items remain, and they should be decided **after** those land, because the required size depends on the hot set that is left.\n\n## 1. Move the ETL schemas off the primary\n\nThe primary holds **133 GB, of which the ETL schemas are 62 GB**. They compete with the transactional hot set for the same shared buffers and the same IOPS. Metabase reads the ETL schemas, not the tables the code fixes touch — measured: replica-vs-primary for the same reporting query is within 25% (contention is not the constraint) while cold-vs-warm is **20–60×** (cache residency is). Moving the ETL schemas to their own instance frees cache for the transactional workload and is the main lever for reporting latency.\n\n## 2. Size the instance to the hot set\n\nThe saving from the code fixes is **not** a smaller instance — it is **avoiding the upgrade** the current trajectory demands. Options priced (ap-south-1, on-demand): db.t4g.xlarge **$244/mo**, db.m7g.large **$175/mo**, db.r7g.large **$199/mo**, against today's **$122/mo**. Staying on db.t4g.large avoids **$53–122/month**. A non-burstable class also removes the credit-exhaustion cliff, which is the mechanism behind the incident pattern.\n\n## To decide\n\n- [ ] Whether the ETL schemas move to a separate instance, and when.\n- [ ] Whether the primary moves to a non-burstable class now or after the code fixes are measured in production.\n- [ ] Re-measure CPU credits, ReadIOPS and DiskQueueDepth after each code fix reaches production, so the sizing decision uses post-fix numbers.\n\n**Dropped after measurement:** a dedicated database for outlier orgs (apfodisha) — partitioning plus the index plus the client change handles it inside the shared database (1,005 s in the best 4-user run, with three other orgs syncing). Also dropped: per-tenant read replicas (operationally heavy, read-only benefit) and ETL tables for search (staleness).\n\nEvidence: `finalreco.md` §\"Cost\" and recommendations 9–10.\n\n---\nEvidence and full write-up: [finalreco.md](https://github.com/avniproject/avni-product-ops/blob/main/analysis/sync-db-performance-sept-2026/finalreco.md) (conclusions) and [reco.md](https://github.com/avniproject/avni-product-ops/blob/main/analysis/sync-db-performance-sept-2026/reco.md) (raw work log) in avni-product-ops. Code: branch [`performancefixes`](https://github.com/avniproject/avni-server/tree/performancefixes). Epic: avniproject/avni-product#1904.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/avniproject/avni-server/issues/1072/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

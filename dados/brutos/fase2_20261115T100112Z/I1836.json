@@ -1,0 +1,151 @@
+{
+ "id_item": "I1836",
+ "url": "https://github.com/spiculedata/saiku/issues/2332",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:50.755963+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/spiculedata/saiku/issues/2332",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/spiculedata/saiku/issues/2332",
+    "repository_url": "https://api.github.com/repos/spiculedata/saiku",
+    "labels_url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/labels{/name}",
+    "comments_url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/comments",
+    "events_url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/events",
+    "html_url": "https://github.com/spiculedata/saiku/issues/2332",
+    "id": 6310059554,
+    "node_id": "I_kwDOACZ7Bc8AAAABeBveIg",
+    "number": 2332,
+    "title": "[security] Any authenticated user can flush and rebuild every datasource connection and the Mondrian schema cache via GET /discover/refresh (no role check, {username} ignored)",
+    "user": {
+     "login": "buggtb",
+     "id": 103544,
+     "node_id": "MDQ6VXNlcjEwMzU0NA==",
+     "avatar_url": "https://avatars.githubusercontent.com/u/103544?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/buggtb",
+     "html_url": "https://github.com/buggtb",
+     "followers_url": "https://api.github.com/users/buggtb/followers",
+     "following_url": "https://api.github.com/users/buggtb/following{/other_user}",
+     "gists_url": "https://api.github.com/users/buggtb/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/buggtb/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/buggtb/subscriptions",
+     "organizations_url": "https://api.github.com/users/buggtb/orgs",
+     "repos_url": "https://api.github.com/users/buggtb/repos",
+     "events_url": "https://api.github.com/users/buggtb/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/buggtb/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 715973604,
+      "node_id": "MDU6TGFiZWw3MTU5NzM2MDQ=",
+      "url": "https://api.github.com/repos/spiculedata/saiku/labels/Type:%20Bug",
+      "name": "Type: Bug",
+      "color": "e99695",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 715974252,
+      "node_id": "MDU6TGFiZWw3MTU5NzQyNTI=",
+      "url": "https://api.github.com/repos/spiculedata/saiku/labels/Priority:%20Low",
+      "name": "Priority: Low",
+      "color": "c2e0c6",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 715980619,
+      "node_id": "MDU6TGFiZWw3MTU5ODA2MTk=",
+      "url": "https://api.github.com/repos/spiculedata/saiku/labels/Component:%20Saiku%20Core",
+      "name": "Component: Saiku Core",
+      "color": "0e8a16",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 12517967159,
+      "node_id": "LA_kwDOACZ7Bc8AAAAC6iEFNw",
+      "url": "https://api.github.com/repos/spiculedata/saiku/labels/area/web",
+      "name": "area/web",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 12534085107,
+      "node_id": "LA_kwDOACZ7Bc8AAAAC6xb18w",
+      "url": "https://api.github.com/repos/spiculedata/saiku/labels/security",
+      "name": "security",
+      "color": "8250df",
+      "default": false,
+      "description": "Created by Hive for agent-filed issue provenance",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-11-10T15:31:08Z",
+    "updated_at": "2026-11-10T15:45:14Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "**Saiku version:** `development` @ `39c00634f` (origin/development, 2026-11-10)\n**How are you running Saiku?** Built from source — applies to the launcher JAR, the Docker image (`ghcr.io/spiculedata/saiku`) and WAR deployments; see *Impact* for per-mode notes.\n**Environment:** any JDK 21+/22; any browser; database behind the datasource.\n\n## Severity\n\n**LOW** — any authenticated user (ROLE_USER) can call `GET /rest/saiku/{username}/discover/refresh` to reload **all** datasources and `GET /rest/saiku/{username}/discover/{connection}/refresh` to reload a named one. The refresh evicts the cached connection, calls `clearCache()` which `flushSchemaCache()` on the Mondrian `RolapConnection`, and rebuilds. The `{username}` path segment is **not** compared to the caller's principal, so any user can trigger a global cache flush. This is an availability / resource-abuse vector: a flush discards Mondrian's warmed schema and segment caches for every tenant, so all subsequent queries pay a cold-cache rebuild (seconds to tens of seconds on large cubes / cold warehouses), and a user can hold the server in a permanently cold state by looping the call. The endpoint is *intentionally* un-gated (saiku#1903) so the SPA's cube picker can poll it; this finding is that \"re-load descriptors\" was treated as harmless while the side effect is a full cache flush of shared state. LOW because it does not disclose or corrupt data and needs an authenticated account, but it is a cheap denial-of-service lever available to the lowest-privileged user. CWE-770 (Allocation of Resources Without Limits or Throttling), CWE-284 (Improper Access Control).\n\n## Affected files\n\n- `saiku-core/saiku-web/src/main/java/org/saiku/web/rest/resources/OlapDiscoverResource.java:42` — class `@Path(\"/saiku/{username}/discover\")`; `{username}` is never read or compared to the principal\n- `saiku-core/saiku-web/src/main/java/org/saiku/web/rest/resources/OlapDiscoverResource.java:144-167` — `GET /refresh` → `refreshAllConnections()` + `getAllConnections()`; javadoc \"Deliberately NOT admin-gated (saiku#1903)\"\n- `saiku-core/saiku-web/src/main/java/org/saiku/web/rest/resources/OlapDiscoverResource.java:169-186` — `GET /{connection}/refresh` → `refreshConnection(name)`\n- `saiku-core/saiku-service/src/main/java/org/saiku/service/olap/OlapDiscoverService.java:83-98` — `refreshAllConnections()` / `refreshConnection(name)` delegate to the connection manager\n- `saiku-core/saiku-service/src/main/java/org/saiku/datasources/connection/AbstractConnectionManager.java:144-178` — `refreshAllConnections()` loops datasources and `refreshConnection()` each; `refreshConnection()` also `CubeMetadataVersions.bump(name)`\n- `saiku-core/saiku-web/src/main/java/org/saiku/web/core/SecurityAwareConnectionManager.java:167-181` — `refreshInternalConnection()`: `connections.remove(newName)` + `con.clearCache()` + rebuild\n- `saiku-core/saiku-service/src/main/java/org/saiku/datasources/connection/SaikuOlapConnection.java:232-238` — `clearCache()` → `rcon.getCacheControl(null).flushSchemaCache()` (process-wide Mondrian schema cache)\n- `saiku-webapp/src/main/webapp/WEB-INF/applicationContext-saiku.xml:363` — this route falls under `/rest/**` → `isFullyAuthenticated()` (no role gate)\n\n## Description\n\n`OlapDiscoverResource` is mounted at `/saiku/{username}/discover`. The `{username}` segment is decorative — it appears in the class `@Path` but no method reads it, and nothing compares it to `SecurityContextHolder`'s principal. So a user may call the refresh endpoints with any `{username}` (their own, another user's, anything), and the only access control is the generic `/rest/** → isFullyAuthenticated()` rule.\n\n`GET /refresh` calls `olapDiscoverService.refreshAllConnections()`, which iterates the current user's visible datasources and calls `refreshConnection(name)` on each. `refreshConnection` → `SecurityAwareConnectionManager.refreshInternalConnection`, which removes the cached `ISaikuConnection` and calls `con.clearCache()` before rebuilding. For an OLAP connection `clearCache()` unwraps the `RolapConnection` and calls `getCacheControl(null).flushSchemaCache()` — this flushes Mondrian's **schema cache**, which is process-global shared state, not per-user. `refreshConnection` additionally calls `CubeMetadataVersions.bump(name)`, invalidating the cellset cache for that connection. `GET /{connection}/refresh` does the same for one named connection.\n\nsaiku#1903 deliberately left these un-gated so the workbench cube picker can poll `/discover/refresh` to pick up late-arriving cubes (the saiku-cloud warming model — `saiku-ui/src/lib/stores/datasources.svelte.ts:73` polls every 3s). The stated justification (`OlapDiscoverResource.java:146-151`) is that a refresh \"can only re-load descriptors an administrator was able to write\" and every descriptor is validated by `JdbcUrlPolicy`. That reasoning covers *what gets loaded*; it does not cover the *side effect* — flushing the shared Mondrian schema/segment cache and the cellset cache on demand, which is an availability cost borne by all users, and `{username}` offers no scoping at all. A user can loop `GET /rest/saiku/anything/discover/refresh` and keep every cube's cache cold.\n\n## Code walkthrough (entry point → sink)\n\n1. `saiku-core/saiku-web/src/main/java/org/saiku/web/rest/resources/OlapDiscoverResource.java:42` — the `{username}` is in the path but unused for authorization:\n   ```java\n   @Path(\"/saiku/{username}/discover\")\n   public class OlapDiscoverResource implements Serializable {\n   ```\n2. `OlapDiscoverResource.java:155-167` — `GET /refresh`, no role check, no principal comparison:\n   ```java\n   @GET\n   @Produces({\"application/json\"})\n   @Path(\"/refresh\")\n   public List<SaikuConnection> refreshConnections() {\n       try {\n           olapDiscoverService.refreshAllConnections();\n           return olapDiscoverService.getAllConnections();\n       } catch (Exception e) {\n           ...\n   ```\n3. `saiku-core/saiku-service/src/main/java/org/saiku/datasources/connection/AbstractConnectionManager.java:144-167` — refresh loops all visible datasources and bumps the cellset-cache epoch per connection:\n   ```java\n   public void refreshAllConnections() {\n       ds.load();\n       ...\n       for (String name : ds.getDatasources(roles).keySet()) {\n           try {\n               refreshConnection(name);\n   ...\n   public void refreshConnection(String name) {\n       ...\n       ISaikuConnection con = refreshInternalConnection(name, datasource);\n       ...\n       org.saiku.service.cache.CubeMetadataVersions.bump(name);\n   }\n   ```\n4. `saiku-core/saiku-web/src/main/java/org/saiku/web/core/SecurityAwareConnectionManager.java:167-180` — evicts the cached connection and clears its cache:\n   ```java\n   protected ISaikuConnection refreshInternalConnection(String name, SaikuDatasource datasource) {\n       try {\n           String newName = resolveConnectionKey(name, datasource);\n           ISaikuConnection con = connections.remove(newName);\n           if (con != null) {\n               con.clearCache();\n           }\n           return getInternalConnection(name, datasource);\n   ```\n5. `saiku-core/saiku-service/src/main/java/org/saiku/datasources/connection/SaikuOlapConnection.java:232-238` — the shared Mondrian schema cache is flushed:\n   ```java\n   public boolean clearCache() throws Exception {\n       if (olapConnection.isWrapperFor(RolapConnection.class)) {\n           log.info(\"Clearing cache\");\n           RolapConnection rcon = olapConnection.unwrap(RolapConnection.class);\n           rcon.getCacheControl(null).flushSchemaCache();\n       }\n       return true;\n   }\n   ```\n\n## Steps to reproduce\n\n**Preconditions:** launcher JAR with the FoodMart datasource warmed (run a query so Mondrian's schema/segment caches are populated). Any authenticated user. GET needs no CSRF token.\n\n1. As any user, flush everything:\n   ```bash\n   curl -s -o /dev/null -w '%{http_code}\\n' -u 'viewer:admin' \\\n     'http://localhost:8080/rest/saiku/not-my-username/discover/refresh'\n   ```\n   Returns `200` — note `{username}` is a value that is not the caller and is accepted. The server log shows \"Clearing cache\" per connection.\n2. Immediately re-run a previously fast query; observe the first post-flush execution is markedly slower (cold Mondrian schema/segment cache rebuild), and any in-flight query on that connection is affected by the eviction.\n3. Loop the call (`while true; do curl ... /discover/refresh; done`) and observe every cube stays cold — queries never benefit from Mondrian caching while the loop runs.\n4. Single connection variant:\n   ```bash\n   curl -s -o /dev/null -w '%{http_code}\\n' -u 'viewer:admin' \\\n     'http://localhost:8080/rest/saiku/x/discover/foodmart/refresh'\n   ```\n\n## Expected behaviour\n\nA full/per-connection cache flush is restricted (ROLE_ADMIN), or at minimum scoped to the caller's own connection set and rate-limited, so a low-privileged user cannot repeatedly flush shared Mondrian/cellset caches and hold the server cold. The SPA's benign \"pick up new cubes\" poll is served without a destructive schema flush, or by a separate, cheap, non-flushing discovery call.\n\n## Actual behaviour\n\nAny authenticated user, with any `{username}`, can flush and rebuild all (or a named) datasource connections and the shared Mondrian schema cache, unthrottled.\n\n## Impact\n\nWho: every deployment; the attacker is any authenticated user (ROLE_USER), the victims are all other users and tenants sharing the JVM. What: on each call, every visible datasource's cached connection is evicted and rebuilt, Mondrian's shared schema cache is flushed (`flushSchemaCache()`), and the cellset cache epoch is bumped — so all warm state is lost. In-flight queries on evicted connections are affected, the next query per cube pays a full cold schema load and segment re-fetch (seconds to tens of seconds on large cubes or cold cloud warehouses), and a tight loop keeps the server permanently cold (effective denial of service plus warehouse cost from repeated re-scans). No data disclosure or modification; the datasource descriptors loaded are still the admin-written, `JdbcUrlPolicy`-validated ones.\n\n- **Launcher JAR** (`java -jar saiku-<version>.jar serve`): affected; a single user loop degrades the whole instance.\n- **Docker image**: affected identically.\n- **WAR in own servlet container**: affected identically.\n- **Embedded in saiku-cloud**: affected and most serious — one tenant's low-privileged user can flush the shared Mondrian schema cache and rebuild connections for every tenant on the node, and repeated cold loads against pay-per-query warehouses (Snowflake/BigQuery) convert the availability hit into direct cost for other tenants.\n\n## Suggested fix\n\n1. **Separate \"discover new cubes\" from \"flush caches.\"** The SPA poll needs the former; make `refreshConnections()`/`refreshConnection()` perform a *non-destructive* reconcile (reload descriptors, add newly-appeared connections) without calling `clearCache()`/`flushSchemaCache()` on existing warm connections. Give the destructive flush its own endpoint.\n2. **Gate the destructive flush with ROLE_ADMIN.** The new flush endpoint carries `@RolesAllowed(\"ROLE_ADMIN\")` and a matching URL gate (move it under `/rest/saiku/admin/**`, which already has `hasRole('ADMIN')`), mirroring `AdminResource`.\n3. **If the poll must stay open, scope and throttle it.** Compare `{username}` to the principal (or drop it from the path), restrict `refreshAllConnections` to the caller's own visible connection set, and add a short per-principal rate limit (the codebase already has rate limiters, e.g. `aiOssieAskRateLimiter`) so a loop cannot keep caches cold.\n4. Update the `OlapDiscoverResource.java:146-151` javadoc to reflect that the open endpoint no longer flushes shared caches (or is admin-gated).\n\n## Acceptance criteria\n\n- [ ] A ROLE_USER-only caller cannot trigger a Mondrian `flushSchemaCache()` / full connection rebuild; the destructive flush returns 403 for non-admins.\n- [ ] The SPA cube-picker poll still discovers newly-added cubes without flushing warm caches.\n- [ ] `{username}` is either compared to the principal or removed from the authorization-relevant path; a non-matching `{username}` cannot widen access.\n- [ ] A rapid loop of the remaining open discovery endpoint does not keep caches cold (non-destructive and/or rate-limited).\n- [ ] regression test(s) listed under *Acceptance tests* are added and green\n\n## Acceptance tests\n\n- `OlapDiscoverResourceRefreshAuthTest.flush_nonAdmin_returns403` (unit, saiku-web): with a ROLE_USER `SecurityContext`, call the (new) flush endpoint; assert 403 and that `olapDiscoverService.refreshAllConnections()` was not invoked. Fails today (200, flush runs).\n- `OlapDiscoverResourceRefreshAuthTest.discover_nonAdmin_reconcilesWithoutClearingCache` (unit): call the open discovery endpoint; assert connection `clearCache()` is not invoked on already-warm connections.\n- `AbstractConnectionManagerTest.reconcile_doesNotFlushSchemaCache` (unit, saiku-service): assert the non-destructive reconcile path never calls `clearCache()`/`flushSchemaCache()`.\n- `UrlGateHardeningIT.discoverFlush_nonAdmin_403` (launcher integration, extend `UrlGateHardeningIT`): `harness.getAuth(\"viewer\",\"admin\",\"/rest/saiku/x/discover/refresh\")` (or the new flush path) → 403 for the destructive variant; the benign discovery variant → 200. Fails today.\n- `OlapDiscoverIT.refreshLoop_doesNotKeepCubesCold` (launcher integration): warm a query, loop the open discovery endpoint, assert query latency stays warm (no repeated schema flush).\n\n## Related\n\n- #1903 — \"any authenticated user could register/load a datasource → RCE\" (closed); that fix left `/discover/refresh` deliberately open, which is the decision this finding revisits for the cache-flush side effect\n- #2326 — `/discover/refresh` rebuilds Mondrian connections but does not invalidate the AI schema cache, so it cannot be used to recover from the H4 poisoning either; the refresh/invalidation story should be unified\n\n## Found by\n\nInternal security review, 2026-11-10.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/spiculedata/saiku/issues/2332/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

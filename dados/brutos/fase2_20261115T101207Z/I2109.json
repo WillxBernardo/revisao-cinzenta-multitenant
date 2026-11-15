@@ -1,0 +1,171 @@
+{
+ "id_item": "I2109",
+ "url": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+ "fonte": "stackoverflow",
+ "coletado_em": "2026-11-15T10:16:10.553398+00:00",
+ "question": {
+  "caminho": "/questions/70794987",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "tags": [
+      "sql-server",
+      "postgresql",
+      "azure-data-factory",
+      "parameterization"
+     ],
+     "owner": {
+      "account_id": 24004280,
+      "reputation": 1,
+      "user_id": 17988684,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/e95047e0aa93d1ac0e9d9cd3f07489c5?s=256&d=identicon&r=PG",
+      "display_name": "BobL",
+      "link": "https://stackoverflow.com/users/17988684/bobl"
+     },
+     "is_answered": false,
+     "view_count": 362,
+     "answer_count": 1,
+     "score": 0,
+     "last_activity_date": 1649334164,
+     "creation_date": 1642724618,
+     "last_edit_date": 1642778837,
+     "question_id": 70794987,
+     "content_license": "CC BY-SA 4.0",
+     "link": "https://stackoverflow.com/questions/70794987/80-postgres-databases-in-azure-data-factory-to-copy-into",
+     "title": "80 Postgres databases in Azure Data Factory to copy into",
+     "body": "<p>I'm using Azure Data factory,\nI'm using SQLServer as source and Postgres as target. Goal is to copy 30 tables from SQLServer, with transformation, to 30 tables in Postgres. Hard part is I have 80 databases from and to, all with the exact same layout but different data. Its one database per customer so 80 customers each with their own databases.</p>\n<p>Linked Services doesn't allow parameters for Postgres.\nI have one dataset per source and target using parameters for schema and table names.\nI have one pipeline per table with SQLServer source and Postgres target.\nI can parameterize the SQLServer source in linked service but not Postgres\nProblem is how can I copy 80 source databases to 80 target databases without adding 80 target linked services and 80 target datasets? Plus I'd have to repeat all 30 pipelines per target database.</p>\n<p>BTW I'm only familiar with the UI, however anything else that does the job is acceptable.\nAny help would be appreciated.</p>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9814
+  }
+ },
+ "question_comments": {
+  "caminho": "/questions/70794987/comments",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 24004280,
+      "reputation": 1,
+      "user_id": 17988684,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/e95047e0aa93d1ac0e9d9cd3f07489c5?s=256&d=identicon&r=PG",
+      "display_name": "BobL",
+      "link": "https://stackoverflow.com/users/17988684/bobl"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1642889784,
+     "post_id": 70794987,
+     "comment_id": 125194492,
+     "content_license": "CC BY-SA 4.0",
+     "body": "This is not a DB question. Its an Azure Data Factory question about how to parameterize for multiple DBs."
+    },
+    {
+     "owner": {
+      "account_id": 24004280,
+      "reputation": 1,
+      "user_id": 17988684,
+      "user_type": "registered",
+      "profile_image": "https://www.gravatar.com/avatar/e95047e0aa93d1ac0e9d9cd3f07489c5?s=256&d=identicon&r=PG",
+      "display_name": "BobL",
+      "link": "https://stackoverflow.com/users/17988684/bobl"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1642889654,
+     "post_id": 70794987,
+     "comment_id": 125194466,
+     "content_license": "CC BY-SA 4.0",
+     "body": "Yes there is a sink destination for postgres (single server) but not for postgres flexi server"
+    },
+    {
+     "owner": {
+      "account_id": 13982730,
+      "reputation": 73,
+      "user_id": 10098532,
+      "user_type": "registered",
+      "profile_image": "https://lh4.googleusercontent.com/-CUmESbPrKeM/AAAAAAAAAAI/AAAAAAAABeQ/c5fyBzxWznk/s256-rj/photo.jpg",
+      "display_name": "Oki Kuswanda",
+      "link": "https://stackoverflow.com/users/10098532/oki-kuswanda"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1642873839,
+     "post_id": 70794987,
+     "comment_id": 125190759,
+     "content_license": "CC BY-SA 4.0",
+     "body": "Yes, there is not sink/table destination for postgres"
+    },
+    {
+     "owner": {
+      "account_id": 24564,
+      "reputation": 126339,
+      "user_id": 62576,
+      "user_type": "registered",
+      "accept_rate": 100,
+      "profile_image": "https://www.gravatar.com/avatar/15264f7bf48e10ce32dfa4865a13763c?s=256&d=identicon&r=PG",
+      "display_name": "Ken White",
+      "link": "https://stackoverflow.com/users/62576/ken-white"
+     },
+     "edited": false,
+     "score": 0,
+     "creation_date": 1642725830,
+     "post_id": 70794987,
+     "comment_id": 125155196,
+     "content_license": "CC BY-SA 4.0",
+     "body": "This question looks to be more  suitable for <a href=\"https://dba.stackexchange.com\">Database Administrators</a> instead. This site is for questions related to programming (code, including SQL) or use of a programmer&#39;s tool. You can find more information about this site in the <a href=\"https://stackoverflow.com/help\">help center</a>."
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9813
+  }
+ },
+ "answers": {
+  "caminho": "/questions/70794987/answers",
+  "status": 200,
+  "json": {
+   "items": [
+    {
+     "owner": {
+      "account_id": 137474,
+      "reputation": 1806,
+      "user_id": 341677,
+      "user_type": "registered",
+      "accept_rate": 82,
+      "profile_image": "https://www.gravatar.com/avatar/01ff7358e865790ac22fdb5312dd473d?s=256&d=identicon&r=PG",
+      "display_name": "Cninroh",
+      "link": "https://stackoverflow.com/users/341677/cninroh"
+     },
+     "is_accepted": false,
+     "score": 0,
+     "last_activity_date": 1649334164,
+     "creation_date": 1649334164,
+     "answer_id": 71782127,
+     "question_id": 70794987,
+     "content_license": "CC BY-SA 4.0",
+     "body": "<p>There is simple way to implement this. Essentially you need to have a single Linked Service, which reads the connection string out of KeyVault. You can then parameterize source and target as keyvault secret names, and easily switch between data sources by just changing the secret name. This relies on all connection related information being enclosed within a single connection string.</p>\n<p>I will provide a simple overview for Postgresql, but the same logic applies to MSSQL servers as source.</p>\n<ol>\n<li>Implement a <code>Linked Service</code> for <code>Azure Key Vault</code>.</li>\n<li>Add a <code>Linked Service</code> for <code>Azure Postgresql</code> that uses Key Vault to store access url in format: <code>Server=your_server_name.postgres.database.azure.com;Database=your_database_name;Port=5432;UID=your_user_name;Password=your_password;SSL Mode=Require;Keepalive=600;</code> (advise to use server name as secret name)</li>\n<li>Pass this parameter, which is essentially correct secret name, in the Pipeline (you can also implement a loop that would accept immediately array of x elements, and parse n elements at a time into separate pipeline)</li>\n</ol>\n<p>Linked Service Definition for KeyVault:</p>\n<pre><code>{\n    &quot;name&quot;: &quot;your_keyvault_name&quot;,\n    &quot;properties&quot;: {\n        &quot;description&quot;: &quot;KeyVault&quot;,\n        &quot;annotations&quot;: [],\n        &quot;type&quot;: &quot;AzureKeyVault&quot;,\n        &quot;typeProperties&quot;: {\n            &quot;baseUrl&quot;: &quot;https://your_keyvault_name.vault.azure.net/&quot;\n        }\n    }\n}\n</code></pre>\n<p>Linked Service Definition for Postgresql:</p>\n<pre><code>{   &quot;name&quot;: &quot;generic_postgres_service&quot;.\n    &quot;properties&quot;: {\n        &quot;type&quot;: &quot;AzurePostgreSql&quot;,\n        &quot;parameters&quot;: {\n            &quot;pg_database&quot;: {\n                &quot;type&quot;: &quot;string&quot;,\n                &quot;defaultValue&quot;: &quot;your_database_name&quot;\n            }\n        },\n        &quot;annotations&quot;: [],\n        &quot;typeProperties&quot;: {\n            &quot;connectionString&quot;: {\n                &quot;type&quot;: &quot;AzureKeyVaultSecret&quot;,\n                &quot;store&quot;: {\n                    &quot;referenceName&quot;: &quot;KeyVaultName&quot;,\n                    &quot;type&quot;: &quot;LinkedServiceReference&quot;\n                },\n                &quot;secretName&quot;: &quot;@linkedService().secret_name_for_server&quot;\n            }\n        },\n        &quot;connectVia&quot;: {\n            &quot;referenceName&quot;: &quot;AutoResolveIntegrationRuntime&quot;,\n            &quot;type&quot;: &quot;IntegrationRuntimeReference&quot;\n        }\n    }\n}\n</code></pre>\n<p>Dataset Definition for Postgresql:</p>\n<pre><code>{\n    &quot;name&quot;: &quot;your_postgresql_dataset&quot;,\n    &quot;properties&quot;: {\n        &quot;linkedServiceName&quot;: {\n            &quot;referenceName&quot;: &quot;generic_postgres_service&quot;,\n            &quot;type&quot;: &quot;LinkedServiceReference&quot;,\n            &quot;parameters&quot;: {\n                &quot;secret_name_for_server&quot;: {\n                    &quot;value&quot;: &quot;@dataset().secret_name_for_server&quot;,\n                    &quot;type&quot;: &quot;Expression&quot;\n                }\n            }\n        },\n        &quot;parameters&quot;: {\n            &quot;secret_name_for_server&quot;: {\n                &quot;type&quot;: &quot;string&quot;\n            }\n        },\n        &quot;annotations&quot;: [],\n        &quot;type&quot;: &quot;AzurePostgreSqlTable&quot;,\n        &quot;schema&quot;: [],\n        &quot;typeProperties&quot;: {\n            &quot;schema&quot;: {\n                &quot;value&quot;: &quot;@dataset().schema_name&quot;,\n                &quot;type&quot;: &quot;Expression&quot;\n            },\n            &quot;table&quot;: {\n                &quot;value&quot;: &quot;@dataset().table_name&quot;,\n                &quot;type&quot;: &quot;Expression&quot;\n            }\n        }\n    }\n}\n</code></pre>\n<p>Pipeline Definition for Postgresql:</p>\n<pre><code>{\n    &quot;name&quot;: &quot;your_postgres_pipeline&quot;,\n    &quot;properties&quot;: {\n        &quot;activities&quot;: [\n            {\n                &quot;name&quot;: &quot;Copy_Activity_1&quot;,\n                &quot;type&quot;: &quot;Copy&quot;,\n                &quot;dependsOn&quot;: [],\n                &quot;policy&quot;: {\n                    &quot;timeout&quot;: &quot;7.00:00:00&quot;,\n                    &quot;retry&quot;: 0,\n                    &quot;retryIntervalInSeconds&quot;: 30,\n                    &quot;secureOutput&quot;: false,\n                    &quot;secureInput&quot;: false\n                },\n                ...\n                ... i skipped definition\n                ...\n                &quot;inputs&quot;: [\n                    {\n                        &quot;referenceName&quot;: &quot;your_postgresql_dataset&quot;,\n                        &quot;type&quot;: &quot;DatasetReference&quot;,\n                        &quot;parameters&quot;: {\n                            &quot;secret_name_for_server&quot;: &quot;secret_name&quot;\n                        }\n                    }\n                ]\n            }\n        ],\n        &quot;annotations&quot;: []\n    }\n}\n</code></pre>\n"
+    }
+   ],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9812
+  }
+ },
+ "answer_comments": {
+  "caminho": "/answers/71782127/comments",
+  "status": 200,
+  "json": {
+   "items": [],
+   "has_more": false,
+   "quota_max": 10000,
+   "quota_remaining": 9811
+  }
+ }
+}

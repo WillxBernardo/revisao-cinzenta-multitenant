@@ -1,0 +1,138 @@
+{
+ "id_item": "I2023",
+ "url": "https://github.com/venturecrane/ss-console/issues/1660",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:53.440016+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660",
+    "repository_url": "https://api.github.com/repos/venturecrane/ss-console",
+    "labels_url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/labels{/name}",
+    "comments_url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/comments",
+    "events_url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/events",
+    "html_url": "https://github.com/venturecrane/ss-console/issues/1660",
+    "id": 4802386642,
+    "node_id": "I_kwDORvxi8s8AAAABHj6a0g",
+    "number": 1660,
+    "title": "Cost telemetry pipeline is dark end-to-end: no per-customer D1s, no usage-API access, org-level attribution",
+    "user": {
+     "login": "SMDurgan",
+     "id": 250578257,
+     "node_id": "U_kgDODu-FUQ",
+     "avatar_url": "https://avatars.githubusercontent.com/u/250578257?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/SMDurgan",
+     "html_url": "https://github.com/SMDurgan",
+     "followers_url": "https://api.github.com/users/SMDurgan/followers",
+     "following_url": "https://api.github.com/users/SMDurgan/following{/other_user}",
+     "gists_url": "https://api.github.com/users/SMDurgan/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/SMDurgan/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/SMDurgan/subscriptions",
+     "organizations_url": "https://api.github.com/users/SMDurgan/orgs",
+     "repos_url": "https://api.github.com/users/SMDurgan/repos",
+     "events_url": "https://api.github.com/users/SMDurgan/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/SMDurgan/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 10511758926,
+      "node_id": "LA_kwDORvxi8s8AAAACcoy2Tg",
+      "url": "https://api.github.com/repos/venturecrane/ss-console/labels/bug",
+      "name": "bug",
+      "color": "d73a4a",
+      "default": true,
+      "description": "Something isn't working",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 10511759179,
+      "node_id": "LA_kwDORvxi8s8AAAACcoy3Sw",
+      "url": "https://api.github.com/repos/venturecrane/ss-console/labels/prio:P1",
+      "name": "prio:P1",
+      "color": "ff6b6b",
+      "default": false,
+      "description": "High priority - address this week",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-07-03T09:45:06Z",
+    "updated_at": "2026-07-03T16:36:56Z",
+    "closed_at": "2026-07-03T16:36:56Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "Found by the Review 5 unit-economics stress test (2026-07-03). The cost pipeline (ADR 0023 / cost-telemetry + cost-anomaly workers) is not producing data at any link of the chain:\n\n1. **No per-customer D1 databases exist.** \\`wrangler d1 list\\` shows none, and \\`customer_configs.connectors_json.per_customer_d1_database_id\\` is NULL for both live seats — so the daily ingest cron skips 100% of customers by design (\\`workers/cost-telemetry/src/index.ts:44-72\\`). \\`cost_telemetry\\` and \\`captain_time_events\\` (the only labor instrumentation) have nowhere to write. \\`cost_anomaly_alerts\\` is empty.\n2. **The Anthropic usage API rejects our key.** \\`/v1/organizations/usage_report/messages\\` requires an Admin API key; the \\`/ss\\` vault has only the runtime \\`ANTHROPIC_API_KEY\\` (verified: \\`authentication_error\\`). Even with D1s provisioned, ingest 401s. Needs an \\`ANTHROPIC_ADMIN_KEY\\` provisioned and the worker secret set.\n3. **Attribution is org-level.** \\`fetchDailyUsage()\\` calls the usage API with one org key and writes the same org-wide totals into *each* customer's DB — per-seat COGS cannot be isolated. Fix direction: per-customer Anthropic workspaces (workspace_id grouping on the usage API) or per-seat keys.\n4. 15 of the 17 spec'd drivers (Fly, D1, R2, Vectorize, AgentMail, ...) are phase-2 stubs — known/accepted, listed for completeness.\n\n**Decision needed before build:** provision per-customer D1s + admin key + workspace attribution as designed, or re-point v1 at a single central table (simpler, still ADR 0009-compliant since it holds SMD-side billing metadata, not customer data). Related: the COGS/MRR kill gate (>40% two consecutive months) is unarmed both because of this and because no Operator price is authored (#1659).\n\nThe opus-4-8 zero-costing bug found in the same review was fixed in #1658.",
+    "closed_by": {
+     "login": "SMDurgan",
+     "id": 250578257,
+     "node_id": "U_kgDODu-FUQ",
+     "avatar_url": "https://avatars.githubusercontent.com/u/250578257?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/SMDurgan",
+     "html_url": "https://github.com/SMDurgan",
+     "followers_url": "https://api.github.com/users/SMDurgan/followers",
+     "following_url": "https://api.github.com/users/SMDurgan/following{/other_user}",
+     "gists_url": "https://api.github.com/users/SMDurgan/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/SMDurgan/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/SMDurgan/subscriptions",
+     "organizations_url": "https://api.github.com/users/SMDurgan/orgs",
+     "repos_url": "https://api.github.com/users/SMDurgan/repos",
+     "events_url": "https://api.github.com/users/SMDurgan/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/SMDurgan/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/venturecrane/ss-console/issues/1660/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

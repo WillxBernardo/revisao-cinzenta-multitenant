@@ -1,0 +1,127 @@
+{
+ "id_item": "I0272",
+ "url": "https://github.com/IterationLabz/C-thru/issues/45",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:01:35.823077+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45",
+    "repository_url": "https://api.github.com/repos/IterationLabz/C-thru",
+    "labels_url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/labels{/name}",
+    "comments_url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/comments",
+    "events_url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/events",
+    "html_url": "https://github.com/IterationLabz/C-thru/issues/45",
+    "id": 4800691365,
+    "node_id": "I_kwDOTCfKLM8AAAABHiS8pQ",
+    "number": 45,
+    "title": "E2: Per-tenant event ingestion quota (100k/day, durable Postgres counter)",
+    "user": {
+     "login": "bhavishyaone",
+     "id": 181509924,
+     "node_id": "U_kgDOCtGfJA",
+     "avatar_url": "https://avatars.githubusercontent.com/u/181509924?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/bhavishyaone",
+     "html_url": "https://github.com/bhavishyaone",
+     "followers_url": "https://api.github.com/users/bhavishyaone/followers",
+     "following_url": "https://api.github.com/users/bhavishyaone/following{/other_user}",
+     "gists_url": "https://api.github.com/users/bhavishyaone/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/bhavishyaone/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/bhavishyaone/subscriptions",
+     "organizations_url": "https://api.github.com/users/bhavishyaone/orgs",
+     "repos_url": "https://api.github.com/users/bhavishyaone/repos",
+     "events_url": "https://api.github.com/users/bhavishyaone/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/bhavishyaone/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 11400770734,
+      "node_id": "LA_kwDOTCfKLM8AAAACp4n0rg",
+      "url": "https://api.github.com/repos/IterationLabz/C-thru/labels/ready-for-agent",
+      "name": "ready-for-agent",
+      "color": "0E8A16",
+      "default": false,
+      "description": "Fully specified, ready for an AFK agent",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-07-03T05:42:47Z",
+    "updated_at": "2026-07-03T11:02:34Z",
+    "closed_at": "2026-07-03T11:02:34Z",
+    "assignee": null,
+    "author_association": "COLLABORATOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Agent Brief\n\n**Category:** enhancement\n**Summary:** Enforce a per-tenant daily event ingestion cap using a durable Postgres counter, replacing the in-memory rate limiter for the hosted deployment path only.\n\n**Depends on:** #44 (E1 — needs `tenant_id`/`withTenant` plumbing in place).\n\n**Current behavior:**\nThe existing rate limiter (`isRateLimited()`) uses an in-memory `Map`. This works for self-hosted (single, long-running process) but is not a real limit in a serverless deployment — a cold-start invocation has fresh memory, so the counter does not actually accumulate state across invocations. There is no per-tenant event volume cap anywhere in the codebase, and no cost-recovery mechanism exists (v1.0 has no billing), so nothing currently stops one tenant from consuming unbounded shared infrastructure.\n\n**Desired behavior:**\nA `tenant_quotas` table (`tenant_id`, `events_today INTEGER DEFAULT 0`, `quota_date DATE DEFAULT CURRENT_DATE`, `events_daily_cap INTEGER DEFAULT 100000`) tracks each tenant's daily event count. Inside the event-ingestion path, in the same transaction as the event insert (via `withTenant`):\n1. If `quota_date < CURRENT_DATE`: reset `events_today = 0`, `quota_date = CURRENT_DATE`, atomically.\n2. If `events_today >= events_daily_cap`: reject with HTTP 429 and a `Retry-After` header (seconds remaining until UTC midnight) — before the event is written.\n3. Otherwise: insert the event and increment `events_today` atomically, in the same transaction.\n\nThe self-hosted deployment path keeps the existing in-memory limiter unchanged (it works correctly there — single process, memory persists between requests). The hosted deployment path uses this Postgres-counter implementation instead, behind the same `isRateLimited()`-shaped interface, selected by environment — this should read as a drop-in alternate implementation, not a rewrite of the self-hosted behavior.\n\nThe cap (`events_daily_cap`) is visible to the founder in Settings/Dashboard as \"X / 100,000 events today\" — never a silent wall.\n\nA separate, lower-frequency mechanism (not part of the hot ingestion path) sums `events_today` across all tenants and compares it to a known fraction of the hosted Postgres provider's plan-level compute capacity, logging/emailing an alert if crossed. This is a monitoring signal for a human decision (pause signups, upgrade plan), not an automatic per-request action.\n\n**Key interfaces:**\n- `tenant_quotas` table schema as above\n- The event-ingestion function's tenant + quota-aware extension (the existing `processEvent()`-shaped seam)\n- `events_daily_cap` must be adjustable per-tenant without a code deploy (it's a plain column, not a compiled constant)\n- The aggregate monitor — a scheduled job, reusing whatever scheduling mechanism the deployment already has for keep-alive pings (see #42/H1)\n\n**Acceptance criteria:**\n- [ ] An event under quota is accepted and `events_today` increments by exactly one\n- [ ] An event at exactly `events_daily_cap` is accepted; the next one for that tenant is rejected\n- [ ] A rejected event returns HTTP 429 with a `Retry-After` header equal to seconds remaining until UTC midnight\n- [ ] The quota resets correctly across a UTC-day boundary\n- [ ] Two tenants with different `events_daily_cap` values are limited independently and correctly\n- [ ] Self-hosted deployment continues to use the existing in-memory limiter, unmodified in behavior\n- [ ] The founder-visible quota indicator reflects the real counter value\n- [ ] The aggregate monitor alert fires when total ingestion crosses the configured threshold (test with a mocked/lowered threshold)\n\n**Out of scope:**\n- Any billing or paid-tier logic\n- Redis, Upstash, or any external rate-limiting service — this stays entirely in Postgres\n- Session replay's separate storage quota (see E4)",
+    "closed_by": {
+     "login": "bhavishyaone",
+     "id": 181509924,
+     "node_id": "U_kgDOCtGfJA",
+     "avatar_url": "https://avatars.githubusercontent.com/u/181509924?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/bhavishyaone",
+     "html_url": "https://github.com/bhavishyaone",
+     "followers_url": "https://api.github.com/users/bhavishyaone/followers",
+     "following_url": "https://api.github.com/users/bhavishyaone/following{/other_user}",
+     "gists_url": "https://api.github.com/users/bhavishyaone/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/bhavishyaone/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/bhavishyaone/subscriptions",
+     "organizations_url": "https://api.github.com/users/bhavishyaone/orgs",
+     "repos_url": "https://api.github.com/users/bhavishyaone/repos",
+     "events_url": "https://api.github.com/users/bhavishyaone/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/bhavishyaone/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/IterationLabz/C-thru/issues/45/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

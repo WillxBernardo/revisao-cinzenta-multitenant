@@ -1,0 +1,208 @@
+{
+ "id_item": "I0594",
+ "url": "https://github.com/abaanshujat212-beep/amz-command-center/issues/30",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:00.213480+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30",
+    "repository_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center",
+    "labels_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/labels{/name}",
+    "comments_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/comments",
+    "events_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/events",
+    "html_url": "https://github.com/abaanshujat212-beep/amz-command-center/issues/30",
+    "id": 5221429468,
+    "node_id": "I_kwDOT-fQLc8AAAABNziw3A",
+    "number": 30,
+    "title": "M2-30 — Two staging models have no dbt tests (the two that caused the broken DAG)",
+    "user": {
+     "login": "abaanshujat212-beep",
+     "id": 237698724,
+     "node_id": "U_kgDODir-pA",
+     "avatar_url": "https://avatars.githubusercontent.com/u/237698724?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/abaanshujat212-beep",
+     "html_url": "https://github.com/abaanshujat212-beep",
+     "followers_url": "https://api.github.com/users/abaanshujat212-beep/followers",
+     "following_url": "https://api.github.com/users/abaanshujat212-beep/following{/other_user}",
+     "gists_url": "https://api.github.com/users/abaanshujat212-beep/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/abaanshujat212-beep/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/abaanshujat212-beep/subscriptions",
+     "organizations_url": "https://api.github.com/users/abaanshujat212-beep/orgs",
+     "repos_url": "https://api.github.com/users/abaanshujat212-beep/repos",
+     "events_url": "https://api.github.com/users/abaanshujat212-beep/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/abaanshujat212-beep/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 11897111722,
+      "node_id": "LA_kwDOT-fQLc8AAAACxR-Eqg",
+      "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/labels/owner:abaan",
+      "name": "owner:abaan",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11897699737,
+      "node_id": "LA_kwDOT-fQLc8AAAACxSh9mQ",
+      "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/labels/phase:2",
+      "name": "phase:2",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11897699742,
+      "node_id": "LA_kwDOT-fQLc8AAAACxSh9ng",
+      "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/labels/area:dbt",
+      "name": "area:dbt",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 11897730947,
+      "node_id": "LA_kwDOT-fQLc8AAAACxSj3gw",
+      "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/labels/P2",
+      "name": "P2",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-08-22T10:16:40Z",
+    "updated_at": "2026-09-02T11:08:11Z",
+    "closed_at": "2026-09-02T11:08:11Z",
+    "assignee": null,
+    "author_association": "OWNER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "Audit of 22 Aug 2026.\n\n`stg_ads_sp_keyword_daily` and `stg_sales_traffic_asin_daily` were added in `58a5558` to repair a DAG that could not compile — three marts referenced them and neither existed. They were written under time pressure and, unlike the four earlier staging models, they have **no entry in `packages/dbt/models/staging/schema.yml`**, so `dbt build` runs zero tests against them.\n\nThat is exactly backwards: the two least reviewed models in the project are the two with no tests.\n\n### Tests to add\n\nFor both models:\n\n- `unique` on the surrogate grain, and `not_null` on `tenant_id` + `report_date`\n- a singular test asserting the dedupe worked: zero rows when grouping by the natural key with `having count(*) > 1`. Both models dedupe with `row_number() over (partition by ... order by loaded_at desc)`, and a wrong partition list is silent — it does not error, it just double-counts spend\n\nModel-specific:\n\n- `stg_ads_sp_keyword_daily`: `bid` must be `null` when absent and **never** `0` (a `0` bid would make `cpc` comparisons and the `raise_bid_profitable` factor arithmetic wrong). Test `accepted_range` on `top_of_search_impression_share` between 0 and 1 — it is divided by 100 in the model, and a source change back to a fraction would silently produce 0.003% values.\n- `stg_sales_traffic_asin_daily`: same `accepted_range` 0–1 for `buy_box_pct` and `unit_session_pct`. `avg_price_gross` is computed as `ordered_product_sales / units_ordered` — test that it is `null` and not infinite/zero when `units_ordered = 0`.\n\n### Wider check while in here\n\n`mart_sku_economics` and the three PPC marts have a `schema.yml`, but no test asserts the KPI divide-by-zero rule that the whole project depends on: **every ratio must be `null`, never `0`, when its denominator is 0.** A `0` ACOS reads as \"perfectly efficient\" and would make a zero-sales keyword look like the best performer in the account. Add one singular test per mart for that.\n\n### Done when\n\n- [ ] Both new models have `schema.yml` entries with the tests above\n- [ ] One singular test per mart asserts no ratio column is ever `0` while its denominator is `0`\n- [ ] `dbt build` passes with zero warnings\n\n**Backlog ref:** #12, #13",
+    "closed_by": {
+     "login": "abaanshujat212-beep",
+     "id": 237698724,
+     "node_id": "U_kgDODir-pA",
+     "avatar_url": "https://avatars.githubusercontent.com/u/237698724?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/abaanshujat212-beep",
+     "html_url": "https://github.com/abaanshujat212-beep",
+     "followers_url": "https://api.github.com/users/abaanshujat212-beep/followers",
+     "following_url": "https://api.github.com/users/abaanshujat212-beep/following{/other_user}",
+     "gists_url": "https://api.github.com/users/abaanshujat212-beep/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/abaanshujat212-beep/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/abaanshujat212-beep/subscriptions",
+     "organizations_url": "https://api.github.com/users/abaanshujat212-beep/orgs",
+     "repos_url": "https://api.github.com/users/abaanshujat212-beep/repos",
+     "events_url": "https://api.github.com/users/abaanshujat212-beep/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/abaanshujat212-beep/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/comments/5508589980",
+     "html_url": "https://github.com/abaanshujat212-beep/amz-command-center/issues/30#issuecomment-5508589980",
+     "issue_url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/30",
+     "id": 5508589980,
+     "node_id": "IC_kwDOT-fQLc8AAAABSFZpnA",
+     "user": {
+      "login": "abaanshujat212-beep",
+      "id": 237698724,
+      "node_id": "U_kgDODir-pA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/237698724?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/abaanshujat212-beep",
+      "html_url": "https://github.com/abaanshujat212-beep",
+      "followers_url": "https://api.github.com/users/abaanshujat212-beep/followers",
+      "following_url": "https://api.github.com/users/abaanshujat212-beep/following{/other_user}",
+      "gists_url": "https://api.github.com/users/abaanshujat212-beep/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/abaanshujat212-beep/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/abaanshujat212-beep/subscriptions",
+      "organizations_url": "https://api.github.com/users/abaanshujat212-beep/orgs",
+      "repos_url": "https://api.github.com/users/abaanshujat212-beep/repos",
+      "events_url": "https://api.github.com/users/abaanshujat212-beep/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/abaanshujat212-beep/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-09-02T11:08:10Z",
+     "updated_at": "2026-09-02T11:08:10Z",
+     "body": "Completed and verified: both staging models are declared and tested in packages/dbt/models/staging/schema.yml. Fresh dbt build passed 75/75.",
+     "author_association": "OWNER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/abaanshujat212-beep/amz-command-center/issues/comments/5508589980/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,107 @@
+{
+ "id_item": "I0888",
+ "url": "https://github.com/dbt-labs/dbt/issues/16652",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:39.681360+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652",
+    "repository_url": "https://api.github.com/repos/dbt-labs/dbt",
+    "labels_url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/labels{/name}",
+    "comments_url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/comments",
+    "events_url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/events",
+    "html_url": "https://github.com/dbt-labs/dbt/issues/16652",
+    "id": 5751710581,
+    "node_id": "I_kwDOAzEXQ88AAAABVtQjdQ",
+    "number": 16652,
+    "title": "[v2 Bug] Spark snapshots leak numbered helper columns for list unique keys",
+    "user": {
+     "login": "giacus",
+     "id": 131275075,
+     "node_id": "U_kgDOB9MZQw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/131275075?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/giacus",
+     "html_url": "https://github.com/giacus",
+     "followers_url": "https://api.github.com/users/giacus/followers",
+     "following_url": "https://api.github.com/users/giacus/following{/other_user}",
+     "gists_url": "https://api.github.com/users/giacus/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/giacus/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/giacus/subscriptions",
+     "organizations_url": "https://api.github.com/users/giacus/orgs",
+     "repos_url": "https://api.github.com/users/giacus/repos",
+     "events_url": "https://api.github.com/users/giacus/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/giacus/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 11396910927,
+      "node_id": "LA_kwDOAzEXQ88AAAACp08PTw",
+      "url": "https://api.github.com/repos/dbt-labs/dbt/labels/triage",
+      "name": "triage",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-07T20:52:37Z",
+    "updated_at": "2026-10-07T20:52:51Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Current Behavior\n\nThe dbt v2 Spark snapshot materialization retains numbered `dbt_unique_key_N` staging helpers in both `missing_columns` and `source_columns` when `unique_key` is a list, including a one-item list such as `[id]`.\n\nConfirmed in the source at `43edeffa8bcab72506ce79477762f886ad8be515` and with isolated execution of its Jinja helper-generation and column-filter expressions. Spark excludes `dbt_unique_key`/`DBT_UNIQUE_KEY` but not numbered variants. The shared and Databricks materializations already exclude numbered helpers.\n\nThis allows internal helpers into `create_columns` on the second snapshot run. Once present in the target, the staging query's `select *, ... as dbt_unique_key_1` can produce duplicate helper columns on a subsequent run. This is the same source-level defect as dbt-labs/dbt-adapters#2101, with a separate bundled implementation in dbt v2.\n\n### Expected Behavior\n\nInternal snapshot key helpers should remain staging-only. Scalar, one-item-list and composite keys should all exclude their helpers from target schema evolution and merge column lists while retaining ordinary source columns.\n\n### Steps To Reproduce\n\nMinimal live reproduction to validate on Spark/Delta (not executed against a live warehouse for this report):\n\n1. Use a Spark target and create a source table with `id`, `status`, and `updated_at` columns and one unique row.\n2. Configure a snapshot with `file_format: delta`, `unique_key: [id]`, `strategy: check`, and `check_cols: [status]`, selecting these source columns explicitly.\n3. Run `dbt snapshot` once to create the target.\n4. Change `status` for the row and run `dbt snapshot` again. Inspect the target schema for an unexpected `dbt_unique_key_1` column.\n5. Change the row again and run a third time. Check for duplicate/ambiguous numbered helper columns in the staging query.\n\nThe timestamp strategy and multi-column keys use the same affected column-filter path.\n\n### Relevant log output / verified evidence\n\nNo live Spark error log is claimed. Isolated execution of the existing expressions gives:\n\n| Key | Helpers surviving Spark's missing/source filters |\n| --- | --- |\n| `id` | none |\n| `[id]` | `dbt_unique_key_1` |\n| `[id, tenant_id]` | `dbt_unique_key_1`, `dbt_unique_key_2` |\n\n### Environment\n\n- Reviewed dbt v2 `main` source at `43edeffa8bcab72506ce79477762f886ad8be515`.\n- Source inspection and isolated Jinja checks on macOS ARM.\n- No installed dbt v2 release or live Spark/Delta execution is asserted by this report.\n- Adapter: Spark (`type: spark`), not the separate Databricks materialization.\n\n### Additional Context\n\nThis is an inherited adapter defect, not a claimed regression exclusive to v2. Searches of existing issues/PRs for Spark snapshots, numbered helpers and unique keys, plus inspection of the open PR list, found no matching fix. #16462 concerns Spark driver/type handling; #16084 concerns Iceberg configuration and does not fix this filtering path.\n\n- Affected code: https://github.com/dbt-labs/dbt/blob/43edeffa8bcab72506ce79477762f886ad8be515/crates/dbt-loader/src/dbt_macro_assets/dbt-spark/macros/materializations/snapshot.sql#L153-L167\n- Helper generation: https://github.com/dbt-labs/dbt/blob/43edeffa8bcab72506ce79477762f886ad8be515/crates/dbt-loader/src/dbt_macro_assets/dbt-adapters/macros/materializations/snapshots/helpers.sql#L319-L328\n- Separate dbt 1.x adapter fix: https://github.com/dbt-labs/dbt-adapters/pull/2208\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/dbt-labs/dbt/issues/16652/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

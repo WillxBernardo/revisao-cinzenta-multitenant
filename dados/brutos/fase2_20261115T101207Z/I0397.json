@@ -1,0 +1,155 @@
+{
+ "id_item": "I0397",
+ "url": "https://github.com/Mes-Open/OpenMes/issues/373",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:12:49.219587+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373",
+    "repository_url": "https://api.github.com/repos/Mes-Open/OpenMes",
+    "labels_url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/labels{/name}",
+    "comments_url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/comments",
+    "events_url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/events",
+    "html_url": "https://github.com/Mes-Open/OpenMes/issues/373",
+    "id": 5982502314,
+    "node_id": "I_kwDORR2dmc8AAAABZJW9qg",
+    "number": 373,
+    "title": "[feat]External SQL Server / PostgreSQL data-exchange connector",
+    "user": {
+     "login": "buzzy84",
+     "id": 37883754,
+     "node_id": "MDQ6VXNlcjM3ODgzNzU0",
+     "avatar_url": "https://avatars.githubusercontent.com/u/37883754?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/buzzy84",
+     "html_url": "https://github.com/buzzy84",
+     "followers_url": "https://api.github.com/users/buzzy84/followers",
+     "following_url": "https://api.github.com/users/buzzy84/following{/other_user}",
+     "gists_url": "https://api.github.com/users/buzzy84/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/buzzy84/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/buzzy84/subscriptions",
+     "organizations_url": "https://api.github.com/users/buzzy84/orgs",
+     "repos_url": "https://api.github.com/users/buzzy84/repos",
+     "events_url": "https://api.github.com/users/buzzy84/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/buzzy84/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 10223812198,
+      "node_id": "LA_kwDORR2dmc8AAAACYWL-Zg",
+      "url": "https://api.github.com/repos/Mes-Open/OpenMes/labels/enhancement",
+      "name": "enhancement",
+      "color": "a2eeef",
+      "default": true,
+      "description": "New feature or request",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-10-22T15:37:31Z",
+    "updated_at": "2026-10-24T15:03:22Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "<html>\n<body>\n<!--StartFragment--></h1><h2>Problem / verified gap</h2><p>OpenMES already provides ERP-facing REST APIs, reusable import services, production/quality/stock export endpoints, webhooks, scheduled jobs, optional modules, tenant isolation and encrypted integration configuration. Its Laravel database configuration declares PostgreSQL (<code dir=\"ltr\">pgsql</code>) and SQL Server (<code dir=\"ltr\">sqlsrv</code>) drivers. However, <strong>application database support is not an external data-exchange connector</strong>: the current integration configuration does not provide independent connections to third-party databases, table/column mappings or managed inbound/outbound SQL synchronization. The standard Docker image includes <code dir=\"ltr\">pdo_pgsql</code>, but not the SQL Server client runtime.</p><p>Many manufacturing and enterprise applications exchange data through <strong>dedicated SQL staging/import/export tables</strong> rather than REST APIs. An optional reusable connector for Microsoft SQL Server and PostgreSQL would cover this established integration pattern without introducing vendor-specific logic into OpenMES core.</p><p><strong>Competitive context:</strong> Ignition/SQL Bridge demonstrates configurable, bidirectional database integration in industrial software. Other MES vendors commonly offer ERP integration, but their public documentation does not necessarily demonstrate a generic SQL mapping designer. The requested feature is deliberately narrower than a general-purpose ETL platform.</p><h2>Requested delta only</h2><h3>1. External database connections</h3><ul><li>Add an <strong>optional external SQL exchange module</strong> supporting independently configured <strong>Microsoft SQL Server</strong> and <strong>PostgreSQL</strong> connections, separate from the OpenMES application database and allowing multiple named connections per tenant.</li><li>Reuse Laravel's database abstraction and existing integration/module conventions. Add the missing SQL Server driver and required runtime dependencies for supported server/container builds; reuse the existing PostgreSQL driver. Fail gracefully if a driver is unavailable.</li><li>Extend configuration only as necessary: connection name, host, port, database, optional schema, credentials, TLS settings, enabled state and <strong>Test connection</strong>. Store secrets encrypted and never return or log them.</li><li>Restrict each configured flow to explicitly approved tables/views and columns; use parameterized, bounded statements and least-privilege accounts. Do not offer arbitrary SQL execution or direct writes to OpenMES core tables.</li></ul><h3>2. Bidirectional exchange via existing OpenMES services</h3><ul><li><strong>Inbound (external SQL → OpenMES):</strong> read configured exchange tables/views, map their rows to existing canonical import/domain contracts and reuse current services for supported entities such as work orders, products and materials. Any supported execution feedback must use existing validated production-domain services rather than directly mutating statuses or counters.</li><li><strong>Outbound (OpenMES → external SQL):</strong> send configured data such as work-order details, execution status, produced/rejected quantities and completion information to designated exchange tables using controlled <code dir=\"ltr\">INSERT</code>/<code dir=\"ltr\">UPDATE</code> operations. Reuse existing domain events, exports and models.</li><li>Introduce a <strong>minimal, versionable mapping profile per connection/flow</strong> covering source/target table, permitted columns, entity, direction, key mapping, field conversions and any source-defined acknowledgement fields. Do not introduce a generic visual ETL designer or a second ERP/MES domain model.</li><li>Support external identifiers and a configurable mapping between source records and OpenMES entities; reject ambiguous matches rather than guessing.</li></ul><h3>3. Reliable incremental synchronization</h3><ul><li>Reuse the existing scheduler/queue to poll inbound tables periodically. Use available domain events for outbound delivery where appropriate, with periodic reconciliation to recover missed events. Database CDC is <strong>not</strong> required.</li><li>Persist synchronization progress per tenant, connection, flow and direction. Detect both newly inserted <strong>and modified</strong> external rows. Support a source-provided modification timestamp/version/processed marker, or a bounded keyed comparison when no reliable cursor exists.</li><li>Make retries and replays <strong>idempotent</strong>, including failures after a remote write but before a local checkpoint is committed. Do not advance progress past unsuccessful validation/persistence; isolate and report erroneous rows without blocking unrelated valid records.</li><li>Make acknowledgement semantics <strong>configurable per exchange profile</strong>, because a source may own its processed flag while a destination may require an explicit acknowledgement. Never assume that similarly named flags have the same ownership or meaning.</li><li>Distinguish <strong>absolute versus incremental quantities</strong>, <strong>cumulative versus per-cycle time</strong> and known time units. Never double-count confirmations, and do not silently interpret unspecified units.</li><li>Reuse existing logs/admin UI patterns to expose <strong>Test connection</strong>, <strong>Run now</strong>, last run/success, processed/updated/skipped/failed counts and actionable per-row errors. No separate monitoring platform is required.</li></ul><h2>Generic integration example (illustrative, not a vendor contract)</h2><div><div><div>\nDirection | External exchange dataset | Expected behavior\n-- | -- | --\nExternal SQL → OpenMES | WorkOrders_Exchange | Import/update identified work orders and quantities through existing validation services\nExternal SQL → OpenMES | Items_Exchange | Import/update products or materials through the existing master-data services\nOpenMES → external SQL | ProductionResults_Exchange | Write production completions, good/scrap quantities and timestamps without duplicate postings\nOpenMES → external SQL | WorkOrderStatus_Exchange | Publish current status and relevant external identifiers incrementally\n\n</div></div></div><p><em>Table names are examples only.</em> Each deployment defines its actual tables, columns, keys and field meanings in its mapping profile. The connector must <strong>not</strong> assume that a sheet, machine cycle, operation or batch always corresponds to exactly one work order; only map execution quantities or time where the source identifies the corresponding OpenMES entity unambiguously.</p><h2>Acceptance criteria</h2><ul><li><input type=\"checkbox\" disabled=\"\">Both PostgreSQL and SQL Server external connections work from supported OpenMES deployments; missing drivers, invalid credentials and TLS errors are handled safely.</li><li><input type=\"checkbox\" disabled=\"\">An authorized administrator can configure, test, enable/disable and manually run a tenant-isolated connection without exposing secrets.</li><li><input type=\"checkbox\" disabled=\"\">A configured external table imports or updates a supported work order or master-data entity <strong>through an existing OpenMES service</strong>, preserving its validation and audit rules.</li><li><input type=\"checkbox\" disabled=\"\">A configured destination table receives production or work-order data without duplicate records after retry, replay or restart.</li><li><input type=\"checkbox\" disabled=\"\">Changes to an existing external row are detected, not only newly inserted keys; checkpoints and acknowledgements advance only after successful processing.</li><li><input type=\"checkbox\" disabled=\"\">Field mapping supports stable external identifiers and explicitly configured numeric/time semantics; ambiguous identifiers or unknown time units result in a validation error, not a guessed posting.</li><li><input type=\"checkbox\" disabled=\"\">Failed rows remain diagnosable/retryable; logs show run status and useful counts without credentials or sensitive SQL payloads.</li><li><input type=\"checkbox\" disabled=\"\">Cross-tenant reads, writes and configuration access are denied.</li><li><input type=\"checkbox\" disabled=\"\">Automated tests cover <strong>both database engines</strong>, restart/retry/idempotency, updated-row detection, acknowledgement ownership, cumulative metrics and tenant isolation; existing ERP API, production, stock and machine-connector regression tests remain green.</li></ul><h2>Explicitly out of scope</h2><ul><li>Replacing the existing ERP REST API or reimplementing its domain rules.</li><li>Building packaged connectors for specific ERP, nesting or machine-software vendors.</li><li>Introducing a general-purpose ETL platform, drag-and-drop SQL designer, arbitrary SQL scripting endpoint or mandatory ODBC/JDBC abstraction.</li><li>Implementing database CDC, distributed transactions across the two databases or guaranteed exactly-once transport. Achieve <strong>effectively-once business effects</strong> through idempotent application logic.</li><li>Inventing stock/accounting postings, shared-batch allocation rules or execution measurements not provided unambiguously by the source contract.</li></ul><h2>Relevant baseline and benchmark references</h2><ul><li>OpenMES release baseline: <a href=\"https://github.com/Mes-Open/OpenMes/releases/tag/v0.27.0\"><span><span>https://github.com/Mes-Open/OpenMes/releases/tag/v0.27.0</span></span></a></li><li>Existing ERP interface: <a href=\"https://github.com/Mes-Open/OpenMes/issues/21\"><span><span>https://github.com/Mes-Open/OpenMes/issues/21</span></span></a></li><li>Existing ERP and warehouse integration: <a href=\"https://github.com/Mes-Open/OpenMes/blob/v0.27.0/docs/warehouse-erp-rollout.md\"><span><span>https://github.com/Mes-Open/OpenMes/blob/v0.27.0/docs/warehouse-erp-rollout.md</span></span></a></li><li>Current driver configuration: <a href=\"https://github.com/Mes-Open/OpenMes/blob/v0.27.0/backend/config/database.php\"><span><span>https://github.com/Mes-Open/OpenMes/blob/v0.27.0/backend/config/database.php</span></span></a></li><li>Current Docker extensions: <a href=\"https://github.com/Mes-Open/OpenMes/blob/v0.27.0/backend/Dockerfile\"><span><span>https://github.com/Mes-Open/OpenMes/blob/v0.27.0/backend/Dockerfile</span></span></a></li><li>Ignition external database connections: <a href=\"https://docs.inductiveautomation.com/docs/8.3/platform/database-connections\"><span><span>https://docs.inductiveautomation.com/docs/8.3/platform/database-connections</span></span></a></li><li>Ignition SQL Bridge: <a href=\"https://docs.inductiveautomation.com/docs/8.3/ignition-modules/sql-bridge-transaction-groups\"><span><span>https://docs.inductiveautomation.com/docs/8.3/ignition-modules/sql-bridge-transaction-groups</span></span></a></li></ul><!--EndFragment-->\n</body>\n</html>",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/comments/6385758288",
+     "html_url": "https://github.com/Mes-Open/OpenMes/issues/373#issuecomment-6385758288",
+     "issue_url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/373",
+     "id": 6385758288,
+     "node_id": "IC_kwDORR2dmc8AAAABfJ7wUA",
+     "user": {
+      "login": "jakub-przepiora",
+      "id": 42652452,
+      "node_id": "MDQ6VXNlcjQyNjUyNDUy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42652452?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jakub-przepiora",
+      "html_url": "https://github.com/jakub-przepiora",
+      "followers_url": "https://api.github.com/users/jakub-przepiora/followers",
+      "following_url": "https://api.github.com/users/jakub-przepiora/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jakub-przepiora/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jakub-przepiora/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jakub-przepiora/subscriptions",
+      "organizations_url": "https://api.github.com/users/jakub-przepiora/orgs",
+      "repos_url": "https://api.github.com/users/jakub-przepiora/repos",
+      "events_url": "https://api.github.com/users/jakub-przepiora/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jakub-przepiora/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-10-24T15:03:21Z",
+     "updated_at": "2026-10-24T15:03:21Z",
+     "body": "@buzzy84 thanks for your activity, we are working on full refine features currently implemented, if you want help us DM to me on discord  295690522146897920\n",
+     "author_association": "CONTRIBUTOR",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/Mes-Open/OpenMes/issues/comments/6385758288/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

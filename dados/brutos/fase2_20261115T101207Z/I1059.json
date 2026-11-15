@@ -1,0 +1,115 @@
+{
+ "id_item": "I1059",
+ "url": "https://github.com/formosa-ventures/arneb/issues/111",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:16.025698+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111",
+    "repository_url": "https://api.github.com/repos/formosa-ventures/arneb",
+    "labels_url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/labels{/name}",
+    "comments_url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/comments",
+    "events_url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/events",
+    "html_url": "https://github.com/formosa-ventures/arneb/issues/111",
+    "id": 5777526762,
+    "node_id": "I_kwDORbnAsc8AAAABWF4P6g",
+    "number": 111,
+    "title": "Hive connector caches table locations by bare table name: same-named tables in different schemas read the wrong files",
+    "user": {
+     "login": "jackypan1989",
+     "id": 1138803,
+     "node_id": "MDQ6VXNlcjExMzg4MDM=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1138803?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jackypan1989",
+     "html_url": "https://github.com/jackypan1989",
+     "followers_url": "https://api.github.com/users/jackypan1989/followers",
+     "following_url": "https://api.github.com/users/jackypan1989/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jackypan1989/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jackypan1989/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jackypan1989/subscriptions",
+     "organizations_url": "https://api.github.com/users/jackypan1989/orgs",
+     "repos_url": "https://api.github.com/users/jackypan1989/repos",
+     "events_url": "https://api.github.com/users/jackypan1989/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jackypan1989/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "closed",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-09T11:43:17Z",
+    "updated_at": "2026-10-10T12:15:53Z",
+    "closed_at": "2026-10-10T12:15:53Z",
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "Found during the #108 review (Tier 2). Pre-existing on `main`.\n\n### Problem\n`HiveConnectorFactory::locations` (`crates/hive/src/datasource.rs`) caches table storage locations keyed by **table name only**, not `catalog.schema.table`. Within one Arneb process, whichever of two same-named tables in different schemas is read first wins, and queries against the other one **silently read the first table's files**.\n\n### Repro\nWith both `hive.tpch.orders` (DOUBLE) and `hive.tpch_decimal.orders` (DECIMAL) seeded (`docker compose run --rm tpch-seed` and `TPCH_DECIMAL=1 docker compose run --rm tpch-seed`):\n1. In one Arneb process, query `tpch.orders` (e.g. `SELECT avg(o_totalprice) FROM datalake.tpch.orders`).\n2. Then query `datalake.tpch_decimal.orders` with the same aggregate.\n3. The second result comes from the first table's files (wrong types/values); in a fresh process the order flips which one is wrong. It first looked like a \"flaky\" DECIMAL AVG.\n\n### Impact\nSilent wrong results whenever two schemas (or catalogs) contain tables with the same name — common in real data lakes (`staging.orders` / `prod.orders`, per-tenant schemas). Also affects Iceberg tables redirected through the Hive catalog if they share a name with a Hive table elsewhere.\n\n### Fix direction\nKey the cache by the fully qualified `(catalog, schema, table)` (and consider invalidation when HMS metadata changes). Add a test with two same-named tables in different schemas read in one process.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+    "closed_by": {
+     "login": "jackypan1989",
+     "id": 1138803,
+     "node_id": "MDQ6VXNlcjExMzg4MDM=",
+     "avatar_url": "https://avatars.githubusercontent.com/u/1138803?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jackypan1989",
+     "html_url": "https://github.com/jackypan1989",
+     "followers_url": "https://api.github.com/users/jackypan1989/followers",
+     "following_url": "https://api.github.com/users/jackypan1989/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jackypan1989/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jackypan1989/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jackypan1989/subscriptions",
+     "organizations_url": "https://api.github.com/users/jackypan1989/orgs",
+     "repos_url": "https://api.github.com/users/jackypan1989/repos",
+     "events_url": "https://api.github.com/users/jackypan1989/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jackypan1989/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "reactions": {
+     "url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/timeline",
+    "performed_via_github_app": null,
+    "state_reason": "completed",
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/formosa-ventures/arneb/issues/111/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

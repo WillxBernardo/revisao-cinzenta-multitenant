@@ -1,0 +1,95 @@
+{
+ "id_item": "I1720",
+ "url": "https://github.com/redpanda-data/connect/issues/4341",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:45.520607+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/redpanda-data/connect/issues/4341",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/redpanda-data/connect/issues/4341",
+    "repository_url": "https://api.github.com/repos/redpanda-data/connect",
+    "labels_url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/labels{/name}",
+    "comments_url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/comments",
+    "events_url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/events",
+    "html_url": "https://github.com/redpanda-data/connect/issues/4341",
+    "id": 4318785686,
+    "node_id": "I_kwDOAz6dHs8AAAABAWtwlg",
+    "number": 4341,
+    "title": "mysql_cdc: single-table snapshots are not parallelised, making very large tables the bottleneck",
+    "user": {
+     "login": "binlogreader",
+     "id": 11173911,
+     "node_id": "MDQ6VXNlcjExMTczOTEx",
+     "avatar_url": "https://avatars.githubusercontent.com/u/11173911?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/binlogreader",
+     "html_url": "https://github.com/binlogreader",
+     "followers_url": "https://api.github.com/users/binlogreader/followers",
+     "following_url": "https://api.github.com/users/binlogreader/following{/other_user}",
+     "gists_url": "https://api.github.com/users/binlogreader/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/binlogreader/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/binlogreader/subscriptions",
+     "organizations_url": "https://api.github.com/users/binlogreader/orgs",
+     "repos_url": "https://api.github.com/users/binlogreader/repos",
+     "events_url": "https://api.github.com/users/binlogreader/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/binlogreader/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-04-23T20:48:42Z",
+    "updated_at": "2026-04-23T20:48:42Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\n\n`mysql_cdc` reads each table's initial snapshot through a single goroutine iterating rows with keyset pagination. Even after #4320 adds inter-table parallelism, the snapshot of any *individual* table is still strictly sequential, so pipelines dominated by a single very large table see essentially no speedup.\n\nConcretely, on a representative message-style table:\n\n- 80M rows observed throughput: ~30M rows/hour\n- Extrapolated 400M row production table: ~12 hours\n- AWS DMS completes the same 400M rows in ~45 minutes\n\nThe ~16x gap vs DMS is almost entirely intra-table. DMS and Debezium's incremental snapshot both split the primary-key range of a single table across multiple workers.\n\n## Root cause\n\n`readSnapshotTable` does one keyset-paginated SELECT per batch:\n\n```\nSELECT * FROM t ORDER BY pk LIMIT N\nSELECT * FROM t WHERE (pk) > (last) ORDER BY pk LIMIT N\n...\n```\n\nOnly one goroutine ever drives that loop per table. With #4320 a different table can run on a different worker, but inside any one table the reads are strictly serial.\n\nFor workloads where 90%+ of snapshot time is one table, the effective parallelism is 1 regardless of how `snapshot_max_parallel_tables` is set.\n\n## Desired behaviour\n\nOperators should be able to partition a single table's primary-key space into N chunks and have the existing worker pool consume chunks in parallel. The consistency guarantee (every worker reads under one `FLUSH TABLES WITH READ LOCK` window at the same binlog position) must be preserved.\n\nTarget throughput: match AWS DMS on the 400M row reference workload — ~45 minutes, with 1 hour as an acceptable ceiling. That requires meaningful concurrency (~16 workers x reasonable chunk count) on a single table.\n\n## Proposed solution\n\nA new advanced field `snapshot_chunks_per_table` that, when set above 1:\n\n1. Under the existing consistent-snapshot window, probes `MIN(pk)` and `MAX(pk)` on the first primary-key column.\n2. Splits `[MIN, MAX]` into N half-open chunks.\n3. Emits one work unit per chunk and fans them out across the worker pool controlled by `snapshot_max_parallel_tables`.\n\nScope of the first cut:\n\n- **Single-column integer PKs**: fully supported.\n- **Composite PKs**: chunk on the leading PK column; per-chunk keyset pagination continues to respect the full PK ordering. This is the common shape for `(tenant_id, id)` / `(shard, ts)` composites.\n- **Non-numeric first PK columns** (VARCHAR, UUID, binary, etc.): fall back to a single whole-table read with an informational log line. Supporting these cleanly requires boundary discovery via sampling or `OFFSET`-based probing and is deliberately out of scope here.\n\nSkewed leading-column distributions (e.g. 90% of rows under one `tenant_id`) will produce uneven chunks; operators hitting that can simply leave `snapshot_chunks_per_table` at 1 and rely on table-level parallelism alone. No correctness impact.\n\nPR implementing this: will be linked below.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/redpanda-data/connect/issues/4341/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

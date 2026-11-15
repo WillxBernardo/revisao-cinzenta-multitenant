@@ -1,0 +1,155 @@
+{
+ "id_item": "I0148",
+ "url": "https://github.com/DTStack/chunjun/issues/1457",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:12:33.495597+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/DTStack/chunjun/issues/1457",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/DTStack/chunjun/issues/1457",
+    "repository_url": "https://api.github.com/repos/DTStack/chunjun",
+    "labels_url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/labels{/name}",
+    "comments_url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/comments",
+    "events_url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/events",
+    "html_url": "https://github.com/DTStack/chunjun/issues/1457",
+    "id": 1517131435,
+    "node_id": "I_kwDOB5-0Q85abZar",
+    "number": 1457,
+    "title": "[Question][restore] recovery from checkpoint failed",
+    "user": {
+     "login": "kinoxyz1",
+     "id": 56473938,
+     "node_id": "MDQ6VXNlcjU2NDczOTM4",
+     "avatar_url": "https://avatars.githubusercontent.com/u/56473938?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/kinoxyz1",
+     "html_url": "https://github.com/kinoxyz1",
+     "followers_url": "https://api.github.com/users/kinoxyz1/followers",
+     "following_url": "https://api.github.com/users/kinoxyz1/following{/other_user}",
+     "gists_url": "https://api.github.com/users/kinoxyz1/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/kinoxyz1/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/kinoxyz1/subscriptions",
+     "organizations_url": "https://api.github.com/users/kinoxyz1/orgs",
+     "repos_url": "https://api.github.com/users/kinoxyz1/repos",
+     "events_url": "https://api.github.com/users/kinoxyz1/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/kinoxyz1/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 888666923,
+      "node_id": "MDU6TGFiZWw4ODg2NjY5MjM=",
+      "url": "https://api.github.com/repos/DTStack/chunjun/labels/question",
+      "name": "question",
+      "color": "d876e3",
+      "default": true,
+      "description": "Further information is requested",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2023-01-03T09:30:45Z",
+    "updated_at": "2023-01-10T05:42:09Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "### Search before asking\r\n\r\n- [X] I had searched in the [issues](https://github.com/DTStack/chunjun/issues) and found no similar question.\r\n\r\n- [X] I had googled my question but i didn't get any help.\r\n\r\n- [X] I had read the documentation: [ChunJun doc](https://dtstack.github.io/chunjun) but it didn't help me.\r\n\r\n\r\n### Description\r\n\r\nI try to restore the flink task from checkpoint, but the where condition is always 1=1, unable to get the id in checkpoint.\r\n\r\nsample case\r\n```bash\r\n{\r\n  \"job\": {\r\n    \"content\": [\r\n      {\r\n        \"reader\": {\r\n          \"table\": {\r\n            \"tableName\": \"dwd_dim_store_item\"\r\n          },\r\n          \"name\": \"mysqlreader\",\r\n          \"parameter\": {\r\n            \"column\": [\"*\"],\r\n            \"username\": \"root\",\r\n            \"password\": \"123456\",\r\n            \"connection\": [\r\n              {\r\n                \"jdbcUrl\": [\r\n                  \"jdbc:mysql://localhost:12360/flink?useSSL=false\"\r\n                ],\r\n                \"table\": [\r\n                  \"dwd_dim_store_item\"\r\n                ]\r\n              }\r\n            ]\r\n          }\r\n        },\r\n        \"writer\": {\r\n          \"table\": {\r\n            \"tableName\": \"dwd_dim_store_item_1\"\r\n          },\r\n          \"name\": \"mysqlwriter\",\r\n          \"parameter\": {\r\n            \"username\": \"root\",\r\n            \"password\": \"123456\",\r\n            \"connection\": [\r\n              {\r\n                \"jdbcUrl\": \"jdbc:mysql://localhost:12360/flink?useSSL=false\",\r\n                \"table\": [\r\n                  \"dwd_dim_store_item_1\"\r\n                ]\r\n              }\r\n            ],\r\n            \"writeMode\": \"insert\",\r\n            \"column\": [\"*\"]\r\n          }\r\n        }\r\n      }\r\n    ],\r\n    \"setting\": {\r\n      \"restore\": {\r\n        \"isRestore\": true,\r\n        \"restoreColumnName\": \"id\",\r\n        \"restoreColumnIndex\": 0\r\n      },\r\n      \"speed\": {\r\n        \"channel\": 1,\r\n        \"bytes\": 0\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\n\r\nLocalTest.java \r\n```java\r\n             argsList.add(\"-flinkConfDir\");\r\n             argsList.add(\"/Users/kino/app/flink/flink-1.12.7/conf/\");\r\n             argsList.add(\"-confProp\");\r\n             // 从 savepoint 恢复\r\n            StringBuilder stringBuilder = new StringBuilder();\r\n            stringBuilder\r\n                    .append(\"{\")\r\n                    .append(\"\\\"state.backend\\\":\\\"filesystem\\\"\")\r\n                    .append(\", \")\r\n                    .append(\"\\\"state.checkpoints.dir\\\":\\\"file:///Users/kino/app/flink/flink-1.12.7/ck\\\"\")\r\n                    .append(\", \")\r\n                    .append(\"\\\"state.checkpoints.num-retained\\\":\\\"10\\\"\")\r\n                    .append(\", \")\r\n                    .append(\"\\\"state.savepoints.dir\\\":\\\"file:///Users/kino/app/flink/flink-1.12.7/ck/f43f182f3a812edeab6363d2ad32f888/chk-5\\\"\")\r\n                    .append(\", \")\r\n                    .append(\"\\\"execution.savepoint.path\\\":\\\"file:///Users/kino/app/flink/flink-1.12.7/sp/savepoint-44fa76-88842a51f017\\\"\")\r\n                    .append(\", \")\r\n                    .append(\"}\");\r\n```\r\n\r\nlog \r\n```text\r\n2023-01-03 17:29:48,187 INFO  DtInputFormatSourceFunction - Start initialize input format state, is restored:false\r\n2023-01-03 17:29:48,205 INFO  DtInputFormatSourceFunction - End initialize input format state\r\n2023-01-03 17:29:52,036 INFO  CheckpointCoordinator - Triggering checkpoint 2 (type=CHECKPOINT) @ 1672738192031 for job bdf8dda40064ffdc2a5f286f1edc93dc.\r\n2023-01-03 17:29:52,105 INFO  TaskSlotTableImpl - Free slot TaskSlot(index:0, state:RELEASING, resource profile: ResourceProfile{taskHeapMemory=51.200gb (54975581388 bytes), taskOffHeapMemory=51.200gb (54975581388 bytes), managedMemory=25.600mb (26843545 bytes), networkMemory=3.200mb (3355443 bytes)}, allocationId: 75e4a4900b930a8ef83542fdacbe4974, jobId: bdf8dda40064ffdc2a5f286f1edc93dc).\r\n2023-01-03 17:29:52,127 INFO  JdbcOutputFormat - format state:null\r\n2023-01-03 17:29:52,128 INFO  DtOutputFormatSinkFunction - OutputFormat format state:FormatState{numOfSubTask=0, state=null, metric={numWrite=LongCounter 0, conversionErrors=LongCounter 0, writeDuration=LongCounter 0, duplicateErrors=LongCounter 0, count=LongCounter 0, collectFailedCount=LongCounter 0, byteWrite=LongCounter 0, snapshotWrite=LongCounter 0, nullErrors=LongCounter 0, nErrors=LongCounter 0, otherErrors=LongCounter 0}, numberRead=0, numberWrite=0, jobId='null', fileIndex=-1}\r\n2023-01-03 17:29:54,517 INFO  DtInputFormatSourceFunction - InputFormat format state:FormatState{numOfSubTask=0, state=null, metric={byteRead=LongCounter 0, numRead=LongCounter 0, count=LongCounter 0, collectFailedCount=LongCounter 0, readDuration=LongCounter 0}, numberRead=0, numberWrite=0, jobId='null', fileIndex=-1}\r\n2023-01-03 17:29:54,684 INFO  CheckpointCoordinator - Completed checkpoint 2 for job bdf8dda40064ffdc2a5f286f1edc93dc (6001 bytes in 2648 ms).\r\n2023-01-03 17:29:55,672 INFO  JdbcInputFormat - Executing sql is: 'SELECT `id`, `tenant_id`, `store_id`, `shop_id`, `item_id`, `item_code`, `item_name`, `item_class`, `category_id_level1`, `category_id_level2`, `category_id_level3`, `normal_price`, `price`, `logistics`, `flag`, `pool_goods_type`, `promotion_type`, `out_date`, `good_date`, `stock_type`, `sales_flag`, `dc_shop_id`, `modify_time`, `etl_time` FROM `dwd_dim_store_item` WHERE  1=1 '\r\n2023-01-03 17:29:57,013 INFO  JdbcInputFormat - [JdbcInputFormat] open successfully, \r\ninputSplit = JdbcInputSplit{mod=0, endLocation='null', startLocation='null', startLocationOfSplit='null', endLocationOfSplit='null', isPolling=false, splitStrategy='mod', rangeEndLocationOperator=' < '}GenericSplit (0/1), \r\n[JdbcConf]: \r\n{\r\n  \"semantic\" : \"at-least-once\",\r\n  \"errorRecord\" : 0,\r\n  \"checkFormat\" : true,\r\n  \"parallelism\" : 1,\r\n  \"executeDdlAble\" : false,\r\n  \"pollingInterval\" : 5000,\r\n  \"increment\" : false,\r\n  \"orderBy\" : true,\r\n  \"flushIntervalMills\" : 10000,\r\n  \"polling\" : false,\r\n  \"querySql\" : \"SELECT `id`, `tenant_id`, `store_id`, `shop_id`, `item_id`, `item_code`, `item_name`, `item_class`, `category_id_level1`, `category_id_level2`, `category_id_level3`, `normal_price`, `price`, `logistics`, `flag`, `pool_goods_type`, `promotion_type`, `out_date`, `good_date`, `stock_type`, `sales_flag`, `dc_shop_id`, `modify_time`, `etl_time` FROM `dwd_dim_store_item` WHERE  1=1 \",\r\n  \"mode\" : \"INSERT\",\r\n  \"password\" : \"******\",\r\n  \"metricPluginRoot\" : \"null/metrics\",\r\n  \"restoreColumn\" : \"id\",\r\n  \"restoreColumnIndex\" : 0,\r\n  \"connection\" : [ {\r\n    \"table\" : [ \"dwd_dim_store_item\" ],\r\n    \"jdbcUrl\" : [ \"jdbc:mysql://localhost:12360/flink?useSSL=false\" ]\r\n  } ],\r\n  \"table\" : \"dwd_dim_store_item\",\r\n  \"queryTimeOut\" : 300,\r\n  \"restoreColumnType\" : \"INT\",\r\n  \"fetchSize\" : -2147483648,\r\n  \"useMaxFunc\" : false,\r\n  \"pollingFromMax\" : false,\r\n  \"column\" : [ {\r\n    \"name\" : \"id\",\r\n    \"type\" : \"INT\",\r\n    \"index\" : 0,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"tenant_id\",\r\n    \"type\" : \"BIGINT\",\r\n    \"index\" : 1,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"store_id\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 2,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"shop_id\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 3,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"item_id\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 4,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"item_code\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 5,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"item_name\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 6,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"item_class\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 7,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"category_id_level1\",\r\n    \"type\" : \"BIGINT\",\r\n    \"index\" : 8,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"category_id_level2\",\r\n    \"type\" : \"BIGINT\",\r\n    \"index\" : 9,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"category_id_level3\",\r\n    \"type\" : \"BIGINT\",\r\n    \"index\" : 10,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"normal_price\",\r\n    \"type\" : \"DOUBLE\",\r\n    \"index\" : 11,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"price\",\r\n    \"type\" : \"DOUBLE\",\r\n    \"index\" : 12,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"logistics\",\r\n    \"type\" : \"DOUBLE\",\r\n    \"index\" : 13,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"flag\",\r\n    \"type\" : \"DOUBLE\",\r\n    \"index\" : 14,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"pool_goods_type\",\r\n    \"type\" : \"INT\",\r\n    \"index\" : 15,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"promotion_type\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 16,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"out_date\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 17,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"good_date\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 18,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"stock_type\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 19,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"sales_flag\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 20,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"dc_shop_id\",\r\n    \"type\" : \"VARCHAR\",\r\n    \"index\" : 21,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"modify_time\",\r\n    \"type\" : \"DATETIME\",\r\n    \"index\" : 22,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  }, {\r\n    \"name\" : \"etl_time\",\r\n    \"type\" : \"DATETIME\",\r\n    \"index\" : 23,\r\n    \"notNull\" : false,\r\n    \"part\" : false\r\n  } ],\r\n  \"errorPercentage\" : -1,\r\n  \"fieldNameList\" : [ ],\r\n  \"withNoLock\" : false,\r\n  \"increColumnIndex\" : -1,\r\n  \"allReplace\" : false,\r\n  \"splitStrategy\" : \"range\",\r\n  \"initReporter\" : true,\r\n  \"jdbcUrl\" : \"jdbc:mysql://localhost:12360/flink?useSSL=false\",\r\n  \"connectTimeOut\" : 600,\r\n  \"batchSize\" : 1,\r\n  \"speedBytes\" : 0,\r\n  \"rowSizeCalculatorType\" : \"objectSizeCalculator\",\r\n  \"metricPluginName\" : \"prometheus\",\r\n  \"properties\" : {\r\n    \"password\" : \"******\",\r\n    \"user\" : \"root\",\r\n    \"useCursorFetch\" : \"true\",\r\n    \"rewriteBatchedStatements\" : \"true\"\r\n  },\r\n  \"username\" : \"root\"\r\n} \r\n```\r\n\r\nask: \r\nRecovery from checkpoint fails in standalone mode，but in local mode, it can succeed \r\n\r\n### Code of Conduct\r\n\r\n- [X] I agree to follow this project's [Code of Conduct](https://www.apache.org/foundation/policies/conduct)\r\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/DTStack/chunjun/issues/1457/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/DTStack/chunjun/issues/comments/1369787627",
+     "html_url": "https://github.com/DTStack/chunjun/issues/1457#issuecomment-1369787627",
+     "issue_url": "https://api.github.com/repos/DTStack/chunjun/issues/1457",
+     "id": 1369787627,
+     "node_id": "IC_kwDOB5-0Q85RpUzr",
+     "user": {
+      "login": "kinoxyz1",
+      "id": 56473938,
+      "node_id": "MDQ6VXNlcjU2NDczOTM4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56473938?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kinoxyz1",
+      "html_url": "https://github.com/kinoxyz1",
+      "followers_url": "https://api.github.com/users/kinoxyz1/followers",
+      "following_url": "https://api.github.com/users/kinoxyz1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kinoxyz1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kinoxyz1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kinoxyz1/subscriptions",
+      "organizations_url": "https://api.github.com/users/kinoxyz1/orgs",
+      "repos_url": "https://api.github.com/users/kinoxyz1/repos",
+      "events_url": "https://api.github.com/users/kinoxyz1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kinoxyz1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2023-01-03T13:45:43Z",
+     "updated_at": "2023-01-03T13:45:43Z",
+     "body": "It seems that it is not possible to specify the execution.savepoint.path parameter to run\r\n```bash\r\n./bin/chunjun-standalone.sh -job /Users/kino/works/opensource/chunjun/conf/mysql_mysql_batch_transform.json -confProp \"{\\\"state.checkpoints.dir\\\":\\\"file:///Users/kino/app/flink/flink-1.12.7/ck\\\",\\\"flink.checkpoint.interval\\\":\\\"30000\\\",\\\"state.backend\\\":\\\"filesystem\\\",\\\"state.backend.incremental\\\":\\\"true\\\",\\\"execution.savepoint.path\\\":\\\"file:///Users/kino/app/flink/flink-1.12.7/sp/savepoint-44fa76-88842a51f017\\\"}\"\r\n```",
+     "author_association": "MEMBER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/DTStack/chunjun/issues/comments/1369787627/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

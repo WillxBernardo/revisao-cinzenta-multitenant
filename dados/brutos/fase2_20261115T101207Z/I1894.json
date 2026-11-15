@@ -1,0 +1,137 @@
+{
+ "id_item": "I1894",
+ "url": "https://github.com/tazama-lf/biar/issues/216",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:15:25.431439+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/tazama-lf/biar/issues/216",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/tazama-lf/biar/issues/216",
+    "repository_url": "https://api.github.com/repos/tazama-lf/biar",
+    "labels_url": "https://api.github.com/repos/tazama-lf/biar/issues/216/labels{/name}",
+    "comments_url": "https://api.github.com/repos/tazama-lf/biar/issues/216/comments",
+    "events_url": "https://api.github.com/repos/tazama-lf/biar/issues/216/events",
+    "html_url": "https://github.com/tazama-lf/biar/issues/216",
+    "id": 5833620261,
+    "node_id": "I_kwDORDKswM8AAAABW7X7JQ",
+    "number": 216,
+    "title": "DLH-API: temp-view registration tied to request lifecycle, not Spark session lifecycle which causes intermittent `TABLE_OR_VIEW_NOT_FOUND` 500s after Spark session recreation",
+    "user": {
+     "login": "ahmad-paysys",
+     "id": 252544562,
+     "node_id": "U_kgDODw2GMg",
+     "avatar_url": "https://avatars.githubusercontent.com/u/252544562?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/ahmad-paysys",
+     "html_url": "https://github.com/ahmad-paysys",
+     "followers_url": "https://api.github.com/users/ahmad-paysys/followers",
+     "following_url": "https://api.github.com/users/ahmad-paysys/following{/other_user}",
+     "gists_url": "https://api.github.com/users/ahmad-paysys/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/ahmad-paysys/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/ahmad-paysys/subscriptions",
+     "organizations_url": "https://api.github.com/users/ahmad-paysys/orgs",
+     "repos_url": "https://api.github.com/users/ahmad-paysys/repos",
+     "events_url": "https://api.github.com/users/ahmad-paysys/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/ahmad-paysys/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [
+     {
+      "login": "MK-Paysyslabs",
+      "id": 250946095,
+      "node_id": "U_kgDODvUiLw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/250946095?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/MK-Paysyslabs",
+      "html_url": "https://github.com/MK-Paysyslabs",
+      "followers_url": "https://api.github.com/users/MK-Paysyslabs/followers",
+      "following_url": "https://api.github.com/users/MK-Paysyslabs/following{/other_user}",
+      "gists_url": "https://api.github.com/users/MK-Paysyslabs/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/MK-Paysyslabs/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/MK-Paysyslabs/subscriptions",
+      "organizations_url": "https://api.github.com/users/MK-Paysyslabs/orgs",
+      "repos_url": "https://api.github.com/users/MK-Paysyslabs/repos",
+      "events_url": "https://api.github.com/users/MK-Paysyslabs/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/MK-Paysyslabs/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     }
+    ],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-10-13T16:04:41Z",
+    "updated_at": "2026-10-14T07:22:22Z",
+    "closed_at": null,
+    "assignee": {
+     "login": "MK-Paysyslabs",
+     "id": 250946095,
+     "node_id": "U_kgDODvUiLw",
+     "avatar_url": "https://avatars.githubusercontent.com/u/250946095?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/MK-Paysyslabs",
+     "html_url": "https://github.com/MK-Paysyslabs",
+     "followers_url": "https://api.github.com/users/MK-Paysyslabs/followers",
+     "following_url": "https://api.github.com/users/MK-Paysyslabs/following{/other_user}",
+     "gists_url": "https://api.github.com/users/MK-Paysyslabs/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/MK-Paysyslabs/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/MK-Paysyslabs/subscriptions",
+     "organizations_url": "https://api.github.com/users/MK-Paysyslabs/orgs",
+     "repos_url": "https://api.github.com/users/MK-Paysyslabs/repos",
+     "events_url": "https://api.github.com/users/MK-Paysyslabs/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/MK-Paysyslabs/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "author_association": "MEMBER",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\n\n`datalakehouse-api/lakehouse_query_api.py::_execute_sql_sync` registers Hudi tables as Spark TempViews **inside each request** by iterating `GOLD_PATHS` and calling `createOrReplaceTempView` per table. The invariant \"every table in `GOLD_PATHS` is addressable in the Spark catalog\" is maintained by request handlers, not by the Spark session itself. When `get_spark()` recreates the session mid-stream (triggered when `_spark._sc._jvm is None` — Spark worker OOM, long-idle session reaping, Py4J connection drop), the new session starts with an empty catalog. Subsequent requests fail with `[TABLE_OR_VIEW_NOT_FOUND]` because `createOrReplaceTempView` can silently miss on sparse-commit Hudi tables when a writer lands a commit between `os.path.isdir(path)` and `spark.read.format(\"hudi\").load(path)`.\n\nObserved in UAT (air-gapped Tazama deployment, 2026-10-13, deployed image `eee16a0`, byte-identical to `origin/dev` HEAD `1613e03` at this file):\n\n- `biar-datalakehouse-api` logged `WARNING:pipeline:Spark session missing or dead — recreating.` followed by sustained `AnalysisException: [TABLE_OR_VIEW_NOT_FOUND] The table or view 'conditions' cannot be found` 500s on `POST /execute_sql`, even though `/opt/Tazama_Warehouse/gold/condition` existed, `os.path.isdir(path)` returned `True` from inside the container, and direct `curl -X POST /execute_sql` from the host returned 200 OK on the same table.\n- The 500s propagated to CMS backend as `HttpException: Failed to run SQL query on Gold Lakehouse: Request failed with status code 500` on `/api/v1/lakehouse/alert-navigator/*`, `/api/v1/lakehouse/transaction-detail/*`, and the entity-accounts-with-condition-counts sub-query. 32 failures captured across ~2h of frontend traffic. CMS frontend tabs rendered partially or not at all.\n- Workaround confirmed: `docker restart biar-datalakehouse-api` — forces a clean session with clean registration. All 500s stopped. End-to-end: `AlertNavigator/46` → 200 OK in 16.6s cold, 0.5s warm; zero new \"Failed to run SQL\" in CMS backend logs since the restart.\n- On tazama-c (beta env, 11 commits on `gold/condition` vs UAT's 1), the race never surfaces. Denser commit history makes the registration path atomic enough. The bug is latent on beta; UAT exposed it via sparse condition data.\n\nVerified against `tazama-lf/biar` @ `1613e03` (`origin/dev` HEAD on 2026-10-13).\n\n## Details\n\n### Current `_execute_sql_sync` (origin/dev)\n\n[`datalakehouse-api/lakehouse_query_api.py` L387-412](https://github.com/tazama-lf/biar/blob/dev/datalakehouse-api/lakehouse_query_api.py#L387-L412):\n\n```python\ndef _execute_sql_sync(sql_query: str, tenant_id: str, limit: int = None):\n    spark = get_spark()\n    with _sql_lock:\n        for tname, path in GOLD_PATHS.items():\n            if os.path.isdir(path):\n                tdf = spark.read.format(\"hudi\").load(path)\n                if TENANT_ID_COLUMN in tdf.columns:\n                    tdf = tdf.filter(F.col(TENANT_ID_COLUMN) == tenant_id)\n                tdf.createOrReplaceTempView(tname)\n            else:\n                logger.warning(f\"Path for table '{tname}' not found: {path}\")\n\n        df = spark.sql(sql_query)\n        if limit:\n            df = df.limit(limit)\n        return [row.asDict(recursive=True) for row in df.collect()]\n```\n\n`get_spark()` at L70-85 constructs a session but does not register any Hudi path. Catalog population is left entirely to request handlers.\n\n### Why per-request registration is wrong\n\n- **Tenant TempView name collision.** `createOrReplaceTempView(tname)` uses the same name regardless of tenant. Under concurrent multi-tenant load, request A (tenant=`DEFAULT`) can see B's (tenant=`PAYSYS`) filter applied — latent cross-tenant data leak, masked today by single-tenant deployments.\n- **Repeated Hudi reads.** `spark.read.format(\"hudi\").load(path)` scans `.hoodie/` metadata, reads commit timeline, resolves active files. 29 tables in `GOLD_PATHS`; a two-table query re-reads 29 metadata trees instead of 2.\n- **Log spam.** The \"Path for table X not found\" warning fires per request per missing path. UAT snapshot: `typologies` emitted 294 warnings in one hour (genuinely missing on disk due to a separate ETL bug); `conditions` emitted 223 during the race window.\n- **The race.** After session recreation the new catalog is empty. On the next request, between `os.path.isdir(path)` and `spark.read.format(\"hudi\").load(path)` for a sparse-commit table, a Hudi writer landing a new commit can cause `.load()` to silently succeed with a stale file list; the subsequent `createOrReplaceTempView` registers a view Spark later cannot resolve. The next `spark.sql(...)` throws `TABLE_OR_VIEW_NOT_FOUND`.\n\n### Related work\n\nNot fixed in any open or recently-merged PR as of `origin/dev` @ `1613e03`. Searched: `lakehouse_query_api`, `_execute_sql_sync`, `createOrReplaceTempView`, `Spark session missing`, `TABLE_OR_VIEW_NOT_FOUND`, `tempview`. PR #172 and issue #170 are adjacent but orchestrator-side (view scheduling), not DLH-API query-side registration. No existing issue tracks the symptom.\n\n## Solution\n\n**Register tenant-agnostic Hudi tables once per Spark session; move tenant filtering to query-rewrite time.** The invariant \"a Spark session always has `GOLD_PATHS` registered\" becomes an explicit property of the session lifecycle.\n\n### Design\n\n1. **Per-session registration helper** `_register_all_hudi_tables(spark)` registers each existing-on-disk `GOLD_PATHS` entry as a tenant-agnostic TempView.\n2. **Per-session guard.** Module-level `_registered_session_id: Optional[int]` compares `id(spark)` on each `_execute_sql_sync` entry. Mismatch → re-register against the new session. Match → skip.\n3. **Tenant filtering at query time.** `_execute_sql_sync` creates per-tenant filtered views (`__tenant_<name>`) on each registered base view, then rewrites the caller's SQL via word-boundary regex substitution so references resolve to the filtered views. Caller's query shape preserved.\n4. The missing-path warning fires once per session, not per request.\n\n### Implementation\n\n[`datalakehouse-api/lakehouse_query_api.py`](https://github.com/tazama-lf/biar/blob/dev/datalakehouse-api/lakehouse_query_api.py):\n\n```diff\n+_registered_session_id: Optional[int] = None\n+_registration_lock = threading.Lock()\n+\n+\n+def _register_all_hudi_tables(spark: SparkSession) -> None:\n+    \"\"\"Register every GOLD_PATHS entry as a tenant-agnostic TempView.\n+    Idempotent per session. Tenant filtering happens in _execute_sql_sync.\"\"\"\n+    for tname, path in GOLD_PATHS.items():\n+        if os.path.isdir(path):\n+            try:\n+                spark.read.format(\"hudi\").load(path).createOrReplaceTempView(tname)\n+            except Exception as exc:\n+                logger.error(f\"Failed to register '{tname}' at '{path}': {exc}\")\n+        else:\n+            logger.warning(f\"Path for table '{tname}' not found: {path}\")\n+\n+\n def _execute_sql_sync(sql_query: str, tenant_id: str, limit: int = None):\n-    spark = get_spark()\n-    with _sql_lock:\n-        for tname, path in GOLD_PATHS.items():\n-            if os.path.isdir(path):\n-                tdf = spark.read.format(\"hudi\").load(path)\n-                if TENANT_ID_COLUMN in tdf.columns:\n-                    tdf = tdf.filter(F.col(TENANT_ID_COLUMN) == tenant_id)\n-                tdf.createOrReplaceTempView(tname)\n-            else:\n-                logger.warning(f\"Path for table '{tname}' not found: {path}\")\n-\n-        df = spark.sql(sql_query)\n-        if limit:\n-            df = df.limit(limit)\n-        return [row.asDict(recursive=True) for row in df.collect()]\n+    global _registered_session_id\n+    spark = get_spark()\n+\n+    with _registration_lock:\n+        if _registered_session_id != id(spark):\n+            _register_all_hudi_tables(spark)\n+            _registered_session_id = id(spark)\n+\n+    with _sql_lock:\n+        for tname in GOLD_PATHS.keys():\n+            if not spark.catalog.tableExists(tname):\n+                continue\n+            base = spark.table(tname)\n+            if TENANT_ID_COLUMN in base.columns:\n+                base.filter(F.col(TENANT_ID_COLUMN) == tenant_id) \\\n+                    .createOrReplaceTempView(f\"__tenant_{tname}\")\n+            else:\n+                base.createOrReplaceTempView(f\"__tenant_{tname}\")\n+\n+        rewritten = sql_query\n+        for tname in GOLD_PATHS.keys():\n+            rewritten = re.sub(rf\"\\b{re.escape(tname)}\\b\",\n+                               f\"__tenant_{tname}\",\n+                               rewritten)\n+\n+        df = spark.sql(rewritten)\n+        if limit:\n+            df = df.limit(limit)\n+        return [row.asDict(recursive=True) for row in df.collect()]\n```\n\nRequires `import re` at module top (verify at PR time).\n\n### Tests / validation\n\nNo existing unit test harness for this file. Minimum:\n\n- **Unit:** mock `SparkSession`, assert `_register_all_hudi_tables` called exactly once per unique `id(spark)` across 100 interleaved `_execute_sql_sync` calls. Verify query-rewrite output for plain `SELECT`, aliased join, nested subquery, CTE.\n- **Integration:** against a test warehouse with one Hudi commit on `gold/condition` (reproduces UAT condition), run 500 concurrent `_execute_sql_sync` calls, forcibly `spark.stop()` mid-stream from a sibling thread. Expect zero `TABLE_OR_VIEW_NOT_FOUND`; one \"session missing or dead — recreating\" warning; registration log line once per session.\n- **Multi-tenant regression:** `conditions` populated with rows for two tenants. 10 threads interleave queries per tenant. Each thread's result contains only its tenant's rows.\n\n## Impact\n\n- **Correctness.** Eliminates the `TABLE_OR_VIEW_NOT_FOUND` 500 class caused by session recreation. Removes latent cross-tenant leak.\n- **Performance.** Hudi `.load()` calls per request drop from `|GOLD_PATHS|` (29) to 0 on the hot path. Registration cost paid once per session lifetime.\n- **Log hygiene.** Missing-path warning fires once per session per path, not per request (294 → 1 for `typologies` in the UAT snapshot).\n- **Backwards compatible.** `GOLD_PATHS` shape, `/execute_sql` schema, all public endpoints unchanged. Callers see identical responses for identical queries.\n- **Blast radius.** One file, one function body replaced, one helper added. Reversible with a one-commit revert.\n\n## Acceptance criteria\n\n- [ ] `_execute_sql_sync` no longer iterates `GOLD_PATHS` to call `createOrReplaceTempView` on every request.\n- [ ] New `_register_all_hudi_tables(spark)` helper called at most once per Spark session instance.\n- [ ] 500 sequential `_execute_sql_sync` calls with a mid-run session kill produce zero `TABLE_OR_VIEW_NOT_FOUND` exceptions and one \"session missing or dead\" warning.\n- [ ] Concurrent calls for two tenants against the same base table return correctly tenant-partitioned results (no cross-tenant leakage).\n- [ ] \"Path for table '<name>' not found\" fires at most once per missing path per Spark session.\n- [ ] CMS backend `GoldLakehouseService` and Jupyter notebooks see identical response bodies for identical queries.\n- [ ] Grep across `datalakehouse-api/` at review time finds no remaining per-request `createOrReplaceTempView` loop over `GOLD_PATHS`.\n\n## Test scenarios\n\n1. **Baseline.** 100 sequential calls for `SELECT COUNT(*) FROM alerts`. All 200; registration log line once; no `TABLE_OR_VIEW_NOT_FOUND`.\n2. **Session recreated mid-stream (UAT bug).** 100 calls, inject `spark.stop()` after call 50. Call 51 triggers re-registration; calls 52-100 hit the cache. Zero `TABLE_OR_VIEW_NOT_FOUND`.\n3. **Sparse-commit Hudi race.** `gold/condition` has one commit; thread B lands a second commit as thread A's registration begins. A reads either snapshot cleanly; `spark.sql` succeeds. No `TABLE_OR_VIEW_NOT_FOUND`.\n4. **Multi-tenant.** 50 rows per tenant × 2 tenants; 10 threads interleave. Each thread's `SELECT COUNT(*) FROM conditions` returns 50, not 100.\n5. **Absent table (`gold/typologies` in UAT).** 100 calls to `SELECT COUNT(*) FROM typologies`. Warning fires once at session creation; all requests fail with `TABLE_OR_VIEW_NOT_FOUND` — correct behaviour, surfacing as 404/structured 400 instead of raw 500 is a follow-up candidate.\n6. **Query-rewrite correctness.** `SELECT * FROM conditions WHERE account_id = 'X'` → `SELECT * FROM __tenant_conditions WHERE account_id = 'X'`. Aliased joins and CTE-wrapped queries rewrite correctly in all body positions.\n\n## Paired work\n\nNone required — fix is self-contained in `datalakehouse-api/lakehouse_query_api.py`.\n\nSeparate pre-existing bug observed alongside: `TypologiesETL.silver()` crashes at `TypologiesETL.py:63` on `getField(\"typology_name\")` for configurations that don't emit that field. Current `typologies` warnings are a legitimate \"data not written\" condition caused by that ETL bug, not addressed here. File separately.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/tazama-lf/biar/issues/216/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/tazama-lf/biar/issues/216/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/tazama-lf/biar/issues/216/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

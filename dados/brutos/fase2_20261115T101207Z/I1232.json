@@ -1,0 +1,143 @@
+{
+ "id_item": "I1232",
+ "url": "https://github.com/jaymalve/syncrabbit/issues/21",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:21.544020+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21",
+    "repository_url": "https://api.github.com/repos/jaymalve/syncrabbit",
+    "labels_url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/labels{/name}",
+    "comments_url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/comments",
+    "events_url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/events",
+    "html_url": "https://github.com/jaymalve/syncrabbit/issues/21",
+    "id": 4857514840,
+    "node_id": "I_kwDORUZx3c8AAAABIYfLWA",
+    "number": 21,
+    "title": "[P1] First-class multi-database orchestration in self-host mode",
+    "user": {
+     "login": "jayburnt",
+     "id": 281487871,
+     "node_id": "U_kgDOEMcp_w",
+     "avatar_url": "https://avatars.githubusercontent.com/u/281487871?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jayburnt",
+     "html_url": "https://github.com/jayburnt",
+     "followers_url": "https://api.github.com/users/jayburnt/followers",
+     "following_url": "https://api.github.com/users/jayburnt/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jayburnt/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jayburnt/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jayburnt/subscriptions",
+     "organizations_url": "https://api.github.com/users/jayburnt/orgs",
+     "repos_url": "https://api.github.com/users/jayburnt/repos",
+     "events_url": "https://api.github.com/users/jayburnt/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jayburnt/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 1,
+    "created_at": "2026-07-10T18:06:38Z",
+    "updated_at": "2026-07-12T02:58:34Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "## Problem\n\nThe cloud orchestrator manages a pipeline per project (`pipeline_manager.rs`), but self-host entry points are single-database: `ensureEngine({ databaseUrl })` in `@syncrabbit/node`, one `DATABASE_URL` in the Next.js integration. A database-per-tenant customer (real evaluation case: ~100 tenant databases on one RDS instance) has no supported way to run N pipelines from one self-hosted engine.\n\n## Fix\n\n- Node SDK: `ensureEngine({ databases: [{ id, databaseUrl }] })` + register/deregister at runtime (tenant onboarding).\n- One WS endpoint with per-database scoping (pairs with connection auth: token claims bind a connection to a database id).\n- Document slot + connection budgets at N databases on one Postgres instance (each pipeline = 1 replication slot + 1 replication connection).\n\n## Acceptance\n\n- 100 registered databases on one instance: bounded connections, per-database slot metrics, runtime add/remove without engine restart.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21/comments?per_page=100",
+   "status": 200,
+   "json": [
+    {
+     "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/comments/4949661287",
+     "html_url": "https://github.com/jaymalve/syncrabbit/issues/21#issuecomment-4949661287",
+     "issue_url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/21",
+     "id": 4949661287,
+     "node_id": "IC_kwDORUZx3c8AAAABJwXWZw",
+     "user": {
+      "login": "jaymalve",
+      "id": 73488443,
+      "node_id": "MDQ6VXNlcjczNDg4NDQz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/73488443?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jaymalve",
+      "html_url": "https://github.com/jaymalve",
+      "followers_url": "https://api.github.com/users/jaymalve/followers",
+      "following_url": "https://api.github.com/users/jaymalve/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jaymalve/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jaymalve/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jaymalve/subscriptions",
+      "organizations_url": "https://api.github.com/users/jaymalve/orgs",
+      "repos_url": "https://api.github.com/users/jaymalve/repos",
+      "events_url": "https://api.github.com/users/jaymalve/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jaymalve/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+     },
+     "created_at": "2026-07-12T02:37:45Z",
+     "updated_at": "2026-07-12T02:58:34Z",
+     "body": "## Design proposal: expose the orchestration that already exists\n\nFrom a database-per-tenant evaluation (NestJS + Next.js monorepo, ~100 tenant databases on one RDS instance). Pairs with the auth design in #14.\n\n### Most of this is already built\n\n`PipelineManager` (`infra/crates/orchestrator/src/pipeline_manager.rs`) already does what this issue asks for. It holds a `DashMap<String, ProjectConfig>` where each config carries its own `database_url`, `slot_name`, and `publication_name`; it starts pipelines on demand; and `register_project` / `unregister_project` (`pipeline_manager.rs:67,72`) are exactly the runtime add/remove that tenant onboarding needs. They're already exposed over an admin-authenticated HTTP API at `POST /admin/pipelines/{id}/start` and `/stop` (`infra/crates/orchestrator/src/admin.rs:104,125`).\n\nThe gap is purely reachability. The self-host binary is a different crate — `syncrabbit-server` — and its `Serve` command takes a single `--database-url` (`infra/crates/server/src/config.rs:16-27`), builds one `PostgresAdapter`, and never touches `PipelineManager`. `ensureEngine` (`packages/node-sdk/src/singleton.ts:24`) and the Next.js SDK (`packages/nextjs-sdk/src/server.ts:35`) inherit that single-database shape.\n\nSo the work is: **lift `PipelineManager` out of the orchestrator crate into `syncrabbit-engine` (or its own `syncrabbit-pipeline` crate), and have `syncrabbit-server` drive it instead of a bare adapter.** Both entry points then share one multi-database implementation, and the cloud/self-host divergence in this area disappears rather than being duplicated.\n\n### Node SDK surface\n\n```ts\nexport interface DatabaseConfig {\n  id: string;                  // stable, non-secret id. carried as the `sr_db` token claim (#14)\n  databaseUrl: string;\n  slotName?: string;           // default: \"syncrabbit_slot\"\n  publicationName?: string;    // default: \"syncrabbit_pub\"\n}\n\nexport interface EngineOptions {\n  databases?: DatabaseConfig[];\n  databaseUrl?: string;        // sugar for [{ id: \"default\", databaseUrl }]. keeps every existing caller working.\n  // ...existing fields\n}\n```\n\nplus runtime registration on the returned manager, for tenant onboarding without an engine restart:\n\n```ts\nconst engine = getOrCreateEngine({ databases: [...] });\nawait engine.registerDatabase({ id: \"tenant_42\", databaseUrl });\nawait engine.unregisterDatabase(\"tenant_42\");\n```\n\nThese call the local admin API with the admin secret the SDK already generates when it spawns the engine process — no new control plane, just a client for the one in `admin.rs`.\n\nOn slot naming: Postgres logical replication slots are **per-database**, so `syncrabbit_slot` in each tenant database does not collide, and the existing default is safe. What is *not* per-database is `max_replication_slots` and `max_wal_senders` — those are instance-wide. At 100 tenant databases on one instance you need both ≥ 100, and the RDS defaults (often 10) will stop you long before then. That's a parameter-group change plus a reboot, so it belongs in preflight (`infra/crates/adapters/postgres/src/preflight.rs`) as a hard check against the number of registered databases, not just a doc note.\n\n### The tension with #18 that needs resolving before either lands\n\n#18 correctly wants to replace stop-on-idle with **consume-and-discard**, so an idle project's slot keeps advancing `confirmed_flush_lsn` and stops pinning WAL. But \"keep consuming\" means \"keep a walsender connection open,\" and at 100 registered tenant databases that is 100 permanent replication connections — which is precisely the budget this issue says must stay bounded. Taken naively, #18's fix breaks #21's acceptance criterion.\n\nSuggested resolution: **periodic drain instead of continuous drain.** An idle pipeline (zero subscribers) is not held open; instead a scheduler wakes it every `T` seconds, connects, consumes and discards to advance `confirmed_flush_lsn`, and disconnects. WAL retention is then bounded by `T × write_rate` rather than by \"forever,\" and the steady-state connection cost for idle tenants is zero. Active tenants keep a live pipeline as today. `T` on the order of minutes bounds WAL to something small on any realistic write rate, and the drain sweep can be concurrency-limited (say 8 at a time) so a hundred idle tenants don't stampede the instance.\n\nThat also replaces, rather than tunes, the current `STOP_GRACE_PERIOD` (`pipeline_manager.rs:15`) — the grace period exists to avoid pipeline thrash on brief disconnects, and a drain scheduler makes idleness cheap enough that the grace period stops carrying that weight alone.\n\n### Interaction with auth (#14)\n\nThe token claim `sr_db` **is** the database selector: a connection authenticated for `tenant_42` gets `get_or_create_ws_state(\"tenant_42\")` and therefore that tenant's `SubscriptionManager` and `Sieve`. Cross-tenant fanout becomes structurally impossible rather than filter-enforced. That's why these two issues want to land together — shipping multi-database registration while the id still arrives from an untrusted subdomain (`infra/crates/orchestrator/src/ws.rs:60-75`) would let a client pick which tenant's database it listens to.\n\n`sr_db` is optional and defaults to `\"default\"`, so single-database adopters — the majority — never encounter the concept at all. Multi-database registration is opt-in surface area, not a tax on the simple case.\n",
+     "author_association": "OWNER",
+     "pin": null,
+     "reactions": {
+      "url": "https://api.github.com/repos/jaymalve/syncrabbit/issues/comments/4949661287/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+     },
+     "performed_via_github_app": null,
+     "minimized": null
+    }
+   ]
+  }
+ ]
+}

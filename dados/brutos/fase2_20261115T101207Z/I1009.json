@@ -1,0 +1,118 @@
+{
+ "id_item": "I1009",
+ "url": "https://github.com/engineerA314/superset/issues/11",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:14:07.758041+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/engineerA314/superset/issues/11",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/engineerA314/superset/issues/11",
+    "repository_url": "https://api.github.com/repos/engineerA314/superset",
+    "labels_url": "https://api.github.com/repos/engineerA314/superset/issues/11/labels{/name}",
+    "comments_url": "https://api.github.com/repos/engineerA314/superset/issues/11/comments",
+    "events_url": "https://api.github.com/repos/engineerA314/superset/issues/11/events",
+    "html_url": "https://github.com/engineerA314/superset/issues/11",
+    "id": 5517951973,
+    "node_id": "I_kwDOUh9d988AAAABSOVD5Q",
+    "number": 11,
+    "title": "Percent-metrics totals query bypasses the data cache on every chart-data request (INC-6736371C)",
+    "user": {
+     "login": "devin-ai-integration[bot]",
+     "id": 158243242,
+     "node_id": "BOT_kgDOCW6Zqg",
+     "avatar_url": "https://avatars.githubusercontent.com/in/811515?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D",
+     "html_url": "https://github.com/apps/devin-ai-integration",
+     "followers_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/followers",
+     "following_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/following{/other_user}",
+     "gists_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/subscriptions",
+     "organizations_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/orgs",
+     "repos_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/repos",
+     "events_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/devin-ai-integration%5Bbot%5D/received_events",
+     "type": "Bot",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 12271282425,
+      "node_id": "LA_kwDOUh9d988AAAAC22zo-Q",
+      "url": "https://api.github.com/repos/engineerA314/superset/labels/incident-autopilot",
+      "name": "incident-autopilot",
+      "color": "D93F0B",
+      "default": false,
+      "description": "Created by the incident triage automation",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 12272871997,
+      "node_id": "LA_kwDOUh9d988AAAAC24UqPQ",
+      "url": "https://api.github.com/repos/engineerA314/superset/labels/autopilot-managed",
+      "name": "autopilot-managed",
+      "color": "0E8A16",
+      "default": false,
+      "description": "Admit this issue to the Devin remediation control plane",
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-09-20T12:57:44Z",
+    "updated_at": "2026-09-20T12:57:44Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "<!-- devin-autopilot-run:INC-6736371C -->\n\n## Summary\n\n`QueryContextProcessor.ensure_totals_available()` executes the percent-metrics / contribution **totals query directly against the datasource** on every `/api/v1/chart/data` request, bypassing `QueryCacheManager` entirely. For table charts with `percent_metrics` + `percent_metric_calculation=all_records`, this means an unbounded `SELECT SUM(metric) FROM <table> WHERE ...` (row_limit forced to `None`) hits the warehouse on every render, even when all of the request's queries are already cache-warm.\n\nIncident: `INC-6736371C` (Datadog `datadog:incident:87b13d39-4caf-4d33-a3e6-16aafb5221d6`, SEV-3, service `luma-embedded-analytics`, 2026-09-20T12:51Z).\n\n## Customer impact\n\n- Embedded `table` charts using percent metrics intermittently exceed the host app's 5s render budget and show as timed out (gateway 499/504).\n- Chart timeout rate 18.7% (threshold 5%), p95 chart latency 6320ms, 14 tenants affected.\n- 36/112 `table_v2` views timed out (p95 6810ms); `big_number_total` and `echarts_timeseries_line` had 0 timeouts (p95 740/910ms) - the impact is isolated to charts issuing the totals query.\n\n## Observed behavior\n\n- APM: slow traces (6.4-7.3s) show `superset_status=200`, `cache_metadata=loaded` - the request was cache-served yet still took >6s.\n- Warehouse digest: fingerprint `q-7f2a` (`SELECT SUM(revenue) FROM orders WHERE tenant_id=? AND order_ts...`, no GROUP BY, ~100k rows scanned, p95 2140ms) ran 164 times vs 21 baseline in the 15-minute window, matching the 164 completed chart-data requests 1:1. Warehouse queue depth rose 5 -> 34.\n- All affected charts: `viz_type=table`, `percent_metrics=[SUM(revenue)]`, `percent_metric_calculation=all_records`, `server_pagination=true`. A chart with `percent_metric_calculation=row_limit` (no totals query) is not affected.\n- No deploy in the incident window (superset-api at `4511c13`, 5 days old); trigger is load/tenant growth on a latent defect.\n\n## Expected behavior\n\nWhen every query in the query context is served from cache (`QueryCacheManager.get(...).is_loaded == True`), no query should be executed against the datasource. The totals query should be resolved through the same cache-aware path (`get_df_payload_result`) as every other query, or its cached result from the same request should be reused.\n\n## Reproduction (executed, deterministic)\n\nUnit-level repro on `engineerA314/superset` master `4511c13` using the existing test harness (`tests/unit_tests/common/`). It builds a `QueryContextProcessor` with the table-plugin query shape (main query with `contribution` post-processing + a `columns=[]` percent-metrics totals query), patches `QueryCacheManager.get` to return a loaded cache for every query, wires `QueryContext.get_query_result` to the real `processor.get_query_result`, counts `datasource.get_query_result` executions, and calls `get_payload()` 3 times.\n\n```\n$ source .venv/bin/activate && pytest tests/unit_tests/common/test_inc6736371c_repro.py -q\nAssertionError: DATASOURCE EXECUTIONS WITH WARM CACHE: 3 [([], None), ([], None), ([], None)]\nassert [([], None), ([], None), ([], None)] == []\n1 failed in 0.83s\n```\n\nExpected 0 datasource executions; observed 3 (one per request), each with `columns=[]` and `row_limit=None` - i.e. the unbounded totals query. The temporary test file was not committed.\n\n<details><summary>Repro test source</summary>\n\n```python\nfrom unittest.mock import MagicMock, patch\nimport pandas as pd\nfrom superset.common.query_context_processor import QueryContextProcessor\nfrom superset.common.query_object import QueryObject\nfrom tests.unit_tests.common.test_query_context_processor import (\n    _query_timing, _wire_contribution_totals, QueryDataResult,\n)\n\ndef test_totals_query_bypasses_cache_on_every_request():\n    ds = MagicMock()\n    ds.uid = \"ds\"; ds.database.db_engine_spec.engine = \"postgresql\"\n    ds.cache_timeout = None; ds.changed_on = None\n    executed = []\n    def fake_get_query_result(qobj):\n        executed.append((list(qobj.columns), qobj.row_limit))\n        r = MagicMock(); r.df = pd.DataFrame({\"SUM(revenue)\": [1000.0]}); return r\n    ds.get_query_result.side_effect = fake_get_query_result\n\n    main_query = QueryObject(datasource=ds, columns=[\"product\"], metrics=[\"SUM(revenue)\"],\n        row_limit=1000, post_processing=[{\"operation\": \"contribution\", \"options\": {}}])\n    totals_query = QueryObject(datasource=ds, columns=[], metrics=[\"SUM(revenue)\"], row_limit=1000)\n\n    qc = MagicMock(); qc.force = False; qc.datasource = ds\n    qc.queries = [main_query, totals_query]; qc.result_type = \"full\"; qc.is_async_execution = False\n    qc.cache_values = {\"datasource\": {\"type\": \"table\", \"id\": 1},\n        \"queries\": [q.to_dict() for q in qc.queries], \"result_type\": \"full\", \"result_format\": \"json\"}\n    _wire_contribution_totals(qc)\n    processor = QueryContextProcessor(qc)\n    qc.get_query_result.side_effect = processor.get_query_result  # production routing\n\n    warm = MagicMock(); warm.is_loaded = True\n    warm.df = pd.DataFrame({\"product\": [\"a\"], \"SUM(revenue)\": [100.0]})\n    warm.status = \"success\"; warm.error_message = None; warm.applied_filter_columns = []\n\n    with (patch(\"superset.common.query_context_processor.QueryCacheManager\") as cache_mgr,\n          patch(\"superset.common.query_context_processor.get_query_results_with_timing\",\n                return_value=QueryDataResult(payload={\"data\": []}, timing=_query_timing()))):\n        cache_mgr.get.return_value = warm\n        for _ in range(3):\n            processor.get_payload(cache_query_context=False)\n\n    assert executed == [], f\"DATASOURCE EXECUTIONS WITH WARM CACHE: {len(executed)} {executed}\"\n```\n</details>\n\n## Likely code area\n\n- `superset/common/query_context_processor.py`\n  - `ensure_totals_available()` (~l.605-630): `result = self._query_context.get_query_result(totals_query)` -> `QueryContextProcessor.get_query_result` -> `self._qc_datasource.get_query_result(query_object)`. No `QueryCacheManager` / `get_df_payload_result` involvement.\n  - `get_payload_result()` (~l.646-674): calls `ensure_totals_available()` unconditionally whenever `force_cached` is False, before the cache lookups for the actual queries.\n  - `normalize_contribution_totals()` (~l.77-114): sets the totals query `row_limit = None`, so the bypassing query is also unbounded.\n- `superset/common/query_context.py`: `get_query_result()` delegation.\n- `superset-frontend/plugins/plugin-chart-table/src/buildQuery.ts`: emits the `columns=[]`, `metrics=percentMetrics`, `post_processing=[]` totals query for `percent_metric_calculation=all_records` (context; the frontend shape is what makes the backend path fire).\n- Existing tests: `tests/unit_tests/common/test_query_context_processor.py` (75 tests pass on master; none assert the totals query is cached).\n\nFix direction: resolve the totals query through `get_df_payload_result` (cache-aware) or reuse the totals query's cached dataframe from the same request instead of re-executing it; add a regression test asserting zero datasource executions on a fully warm cache.\n\n## Acceptance criteria\n\n- [ ] With every query cache-loaded, a `get_payload()` call performs **zero** `datasource.get_query_result` executions (the repro test above passes).\n- [ ] The totals query result is cached under the same cache key/TTL semantics as other queries and honors `force` / `force_cached`.\n- [ ] `contribution_totals` values in the payload are unchanged for cold-cache requests (existing `tests/unit_tests/common/test_query_context_processor.py` tests, including the decimal-totals and cache-values-sync tests, continue to pass).\n- [ ] Regression test added in `tests/unit_tests/common/test_query_context_processor.py`.\n- [ ] Post-fix: warehouse fingerprint `q-7f2a` call volume returns to baseline for cache-served chart-data requests.\n\n## Attribution confidence\n\n**0.82** (disposition: `code_change_required`).\n\nSupporting: exact 1:1 match between `q-7f2a` executions and status-200 chart-data requests; `cache_metadata=loaded` slow traces; affected set exactly equals charts with `all_records` percent metrics; deterministic repro of the cache bypass; `engineerA314/superset` master is byte-identical to `apache/superset` master, so this is upstream behavior rather than a fork regression.\n\nCounter-evidence / caveats: no deploy in the window (latent defect surfaced by load/tenant growth - 14 tenants); the 5000ms render budget is a host-app (luma-web) policy that determines which requests flip to \"timeout\"; the reproduction is unit-level with mocked datasource/cache and does not measure the 6s latency against a real warehouse; the extra query may be by design upstream, but executing it uncached on cache-served requests contradicts the cache semantics and `server_pagination` intent.\n\n## Related components (context only, not fix owners)\n\n- `embedded-analytics-product` (`engineerA314/devin-demo`, luma-web / edge-gateway): owns the 5s embedded render budget and returns 499/504; no chart-data or query logic; no change since 2026-09-18. Observed latency is entirely inside `POST /api/v1/chart/data`.\n- `analytics-warehouse` (`data-platform/warehouse-config`): queue depth 34 vs baseline 5 purely from `q-7f2a` volume; 100% availability, no errors, CPU 63%. Victim of the extra query volume, not the cause.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/engineerA314/superset/issues/11/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/engineerA314/superset/issues/11/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/engineerA314/superset/issues/11/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

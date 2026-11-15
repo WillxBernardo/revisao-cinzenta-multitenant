@@ -1,0 +1,129 @@
+{
+ "id_item": "I0894",
+ "url": "https://github.com/debezium/dbz/issues/592",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:53.671199+00:00",
+ "issue": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/592",
+   "status": 200,
+   "json": {
+    "url": "https://api.github.com/repos/debezium/dbz/issues/592",
+    "repository_url": "https://api.github.com/repos/debezium/dbz",
+    "labels_url": "https://api.github.com/repos/debezium/dbz/issues/592/labels{/name}",
+    "comments_url": "https://api.github.com/repos/debezium/dbz/issues/592/comments",
+    "events_url": "https://api.github.com/repos/debezium/dbz/issues/592/events",
+    "html_url": "https://github.com/debezium/dbz/issues/592",
+    "id": 3718417011,
+    "node_id": "I_kwDOQZg79s7doopz",
+    "number": 592,
+    "title": "Postgresql connector start is slow on multitenancy cases [DBZ-4840]",
+    "user": {
+     "login": "jpechane",
+     "id": 650600,
+     "node_id": "MDQ6VXNlcjY1MDYwMA==",
+     "avatar_url": "https://avatars.githubusercontent.com/u/650600?v=4",
+     "gravatar_id": "",
+     "url": "https://api.github.com/users/jpechane",
+     "html_url": "https://github.com/jpechane",
+     "followers_url": "https://api.github.com/users/jpechane/followers",
+     "following_url": "https://api.github.com/users/jpechane/following{/other_user}",
+     "gists_url": "https://api.github.com/users/jpechane/gists{/gist_id}",
+     "starred_url": "https://api.github.com/users/jpechane/starred{/owner}{/repo}",
+     "subscriptions_url": "https://api.github.com/users/jpechane/subscriptions",
+     "organizations_url": "https://api.github.com/users/jpechane/orgs",
+     "repos_url": "https://api.github.com/users/jpechane/repos",
+     "events_url": "https://api.github.com/users/jpechane/events{/privacy}",
+     "received_events_url": "https://api.github.com/users/jpechane/received_events",
+     "type": "User",
+     "user_view_type": "public",
+     "site_admin": false
+    },
+    "labels": [
+     {
+      "id": 9733697432,
+      "node_id": "LA_kwDOQZg79s8AAAACRCxvmA",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/component/postgresql-connector",
+      "name": "component/postgresql-connector",
+      "color": "FCD721",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9733700233,
+      "node_id": "LA_kwDOQZg79s8AAAACRCx6iQ",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/type/enhancement",
+      "name": "type/enhancement",
+      "color": "0e8a16",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+     },
+     {
+      "id": 9809765083,
+      "node_id": "LA_kwDOQZg79s8AAAACSLUi2w",
+      "url": "https://api.github.com/repos/debezium/dbz/labels/migrated-from-jira",
+      "name": "migrated-from-jira",
+      "color": "ededed",
+      "default": false,
+      "description": null,
+      "archived_at": null,
+      "archived_by": null
+     }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2025-12-11T08:52:28Z",
+    "updated_at": "2025-12-11T08:52:28Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "CONTRIBUTOR",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+     "total": 0,
+     "completed": 0,
+     "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+     "blocked_by": 0,
+     "total_blocked_by": 0,
+     "blocking": 0,
+     "total_blocking": 0
+    },
+    "body": "Migrated from [DBZ-4840](https://issues.redhat.com/browse/DBZ-4840)\n\nThe postgresql connector is really slow to start up on my infrastructure (takes 17h).\r\nFor context, I'm using a postgresql DB with multitenancy (1 tenant = 1 schema), 4000 schemas and ~15 tables per schemas monitored.\r\n\r\nDigging up, I found out it passed the most of that time [on this instruction|https://github.com/debezium/debezium/blob/6e581599c9e4261e446670332567dc1e6cd922c6/debezium-core/src/main/java/io/debezium/jdbc/JdbcConnection.java#L1201], a loop on every table to be snapshotted. On my connector, it was going at a speed of ~2 tables / seconds.\r\n\r\nThis behavior was introduced with DBZ-2575 (which does not improve performance when the number of tables to query is high), and can be set back to precedent using the parameter `database.internal.snapshot.scan.all.columns.force: true` (I spent way too long to find the needed prefix for this parameter). With this parameter set, this step now takes 5m on my infra (vs 17h).\r\n\r\nSince this is an \"internal\" switch, I understand it isn't documented / might be changed at any moment. I'd suggest making this switch official and documented (e.g. on https://debezium.io/documentation/faq/, where there's already some good tips on handling large table numbers), and maybe send a log \"info\" if the number of tables to query is big (>600) with this parameter disabled as it can then takes a long time.\n",
+    "closed_by": null,
+    "reactions": {
+     "url": "https://api.github.com/repos/debezium/dbz/issues/592/reactions",
+     "total_count": 0,
+     "+1": 0,
+     "-1": 0,
+     "laugh": 0,
+     "hooray": 0,
+     "confused": 0,
+     "heart": 0,
+     "rocket": 0,
+     "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/debezium/dbz/issues/592/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+   }
+  }
+ ],
+ "comments": [
+  {
+   "url": "https://api.github.com/repos/debezium/dbz/issues/592/comments?per_page=100",
+   "status": 200,
+   "json": []
+  }
+ ]
+}

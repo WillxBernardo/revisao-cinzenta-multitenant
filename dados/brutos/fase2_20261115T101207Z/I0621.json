@@ -1,0 +1,47 @@
+{
+ "id_item": "I0621",
+ "url": "https://github.com/airbytehq/airbyte/discussions/77722",
+ "fonte": "github",
+ "coletado_em": "2026-11-15T10:13:03.010040+00:00",
+ "discussion": [
+  {
+   "status": 200,
+   "json": {
+    "data": {
+     "repository": {
+      "discussion": {
+       "title": "`stream_partition` in `AddFields` resolves to same value across all partitions",
+       "url": "https://github.com/airbytehq/airbyte/discussions/77722",
+       "createdAt": "2026-05-03T19:37:42Z",
+       "author": {
+        "login": "askielboe"
+       },
+       "body": "I have a declarative connector (Connector Builder, CDK 7.17.1) with three streams:\r\n\r\n1. auth — fetches per-tenant credentials from an external secrets API, outputs records each containing a pre-computed Basic Auth header\r\n2. parent — uses `SubstreamPartitionRouter` with auth as `parent. partition_field: auth_header` + request_option injects the Authorization header per tenant. Works correctly — each tenant's data is fetched with the right credentials.\r\n3. child — substream of parent. Needs each parent record's auth_header to authenticate detail requests for the correct tenant.\r\n\r\nTo pass `auth_header` from parent to child, I use `AddFields` on the parent stream to stamp each record:\r\n\r\n```yaml\r\n  - type: AddedFieldDefinition\r\n    path:\r\n      - auth_header\r\n    value: \"{{ stream_partition.extra_fields['auth_header'] }}\"\r\n```\r\n\r\nThe child then reads it via parent_key: `auth_header`.\r\n\r\n**Problem**: The AddFields Jinja expression resolves to the same partition's value for every record across all partitions. All parent records end up with one tenant's auth header, so the child sends all requests with wrong credentials.\r\n\r\nI've tried `stream_partition.<partition_field>`, `stream_partition.extra_fields['...']`, renaming fields to avoid collisions, and `concurrency_level: 1` — all produce the same result. Meanwhile, `request_option` and URL templates correctly resolve per-partition.\r\n\r\nIs there a known issue with `stream_partition` inside `AddFields` in the concurrent code path? Or a different way to propagate partition data onto output records?",
+       "category": {
+        "name": "Connector Builder"
+       },
+       "comments": {
+        "pageInfo": {
+         "hasNextPage": false,
+         "endCursor": "Y3Vyc29yOnYyOpK0MjAyNi0wNS0wM1QxOTo0MjoyNlrOAQBRRA=="
+        },
+        "nodes": [
+         {
+          "author": {
+           "login": "airbyte-support-bot"
+          },
+          "createdAt": "2026-05-03T19:42:26Z",
+          "body": "Hi @askielboe, thanks for the very detailed write-up — the reproduction matrix (`partition_field` vs. `extra_fields`, renamed fields, `concurrency_level: 1`) and the contrast you drew between `request_option`/URL templates working per-partition while `AddFields` does not is exactly the kind of detail that helps us look into this quickly.\n\nWe're not able to confirm a root cause from the description alone, so we've escalated this to our team for investigation: airbytehq/oncall#12159. They'll follow up with any findings or follow-up questions there or back here.\n\nA few things that may be useful while the team takes a look:\n\n<details><summary>Possible workaround to unblock yourself</summary>\n\nSince `request_option` and the URL templater do appear to resolve `stream_partition` per partition correctly on your `parent` stream, you can sometimes sidestep `AddFields` entirely by routing the value through the response itself — for example, by using a `ResponseToRecord` / `record_selector` extractor field that pulls the parent's auth context out of the request, or by using a `parent_key` on the `child` stream that points directly at a field already present in the parent record (rather than one synthesized via `AddFields`).\n\nIf your `auth_header` is deterministic from a parent-record field that already exists in the response (e.g. a tenant ID), you can compute the header in the child's authenticator using `{{ stream_partition['tenant_id'] | ... }}` and skip the `AddFields` propagation step altogether.\n\nThese are workarounds while we investigate, not a confirmation that the behavior you saw is incorrect.\n\n</details>\n\n<details><summary>Information that would help us investigate</summary>\n\nIf you're able to share, the following would speed up the investigation on the linked oncall issue:\n\n- The relevant slice of your manifest YAML — specifically the `auth`, `parent`, and `child` stream definitions, the `SubstreamPartitionRouter` configuration, and the `AddFields` block. Please **mask or remove any tokens, API keys, passwords, or other secrets** before sharing.\n- A minimal manifest that reproduces the same behavior with two fake \"tenants\" (no real credentials) would be ideal if you have time.\n- Connector Builder logs from a run where the issue happens (with secrets masked).\n\n</details>\n\n---\n**Need more help?** Join the [Airbyte Community Slack](https://slack.airbyte.com) for peer support, or if you're a Cloud customer, [open a support ticket](https://support.airbyte.com) referencing this discussion.\n\n---\n[Devin session](https://app.devin.ai/sessions/8db7d0c5e1ab4d309d98431564998fad)\n\n<!--\nAirbyte uses AI to help us provide support to our community members.\n\nAI Tracking Link (Internal): https://app.devin.ai/sessions/8db7d0c5e1ab4d309d98431564998fad\n-->",
+          "replies": {
+           "nodes": []
+          }
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}
