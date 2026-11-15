@@ -1,0 +1,86 @@
+{
+  "id_busca": "dba_20261115T053901Z_A6B6",
+  "id_execucao": "dba_20261115T053901Z",
+  "fonte": "dba",
+  "script": "scripts/coleta_dba.py",
+  "commit_head": "f5afc1c6af3b65ef9a414beae169ee6f84bfa4f9",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:40:56+00:00",
+  "estrategia": "esquema_por_tenant",
+  "termo_a": "\"schema per customer\"",
+  "termo_b": "\"data warehouse\"",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"schema per customer\" \"data warehouse\"&site=dba&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "dba",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://dba.stackexchange.com/questions/41325/schema-information-within-trigger"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22schema+per+customer%22+%22data+warehouse%22&site=dba&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:40:56+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:40:56 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "postgresql",
+              "trigger",
+              "schema"
+            ],
+            "owner": {
+              "account_id": 174981,
+              "reputation": 15,
+              "user_id": 23258,
+              "user_type": "registered",
+              "profile_image": "https://www.gravatar.com/avatar/bea14f3d5be1ba0522a047f8d46837f3?s=256&d=identicon&r=PG",
+              "display_name": "mjpeters_",
+              "link": "https://dba.stackexchange.com/users/23258/mjpeters"
+            },
+            "is_answered": true,
+            "view_count": 1107,
+            "accepted_answer_id": 41331,
+            "answer_count": 1,
+            "score": 0,
+            "last_activity_date": 1516326583,
+            "creation_date": 1367427474,
+            "last_edit_date": 1516326583,
+            "question_id": 41325,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://dba.stackexchange.com/questions/41325/schema-information-within-trigger",
+            "title": "Schema information within Trigger?",
+            "body": "<p>Background : (Multi-tenant design;separate schema per customer, all table structures identical;Data-warehouse / non-OLTP system here; Postgres 9.2.x).</p>\n\n<p>Reviewing patterns for the following problem:  I have a matview that needs to be updated if an underlying condition is altered (in this case, an inclusion BOOLEAN).</p>\n\n<p>Was considering implementing a TRIGGER, on update, which would then either execute the matview creation UDF or possibly call 'NOTIFY' to be handled by some listening event, perhaps at a later point in time as the immediate matview update isn't necessarily required.</p>\n\n<p>Workflow :</p>\n\n<ul>\n<li><p>UPDATE made to some underlying table.</p></li>\n<li><p>TRIGGER is executed.</p></li>\n<li><p>(Obtain schema information here).  </p></li>\n<li><p>Either,</p>\n\n<ul>\n<li>EXECUTE matview creation </li>\n<li>NOTIFY command for queue / processing at a later time.</li>\n</ul></li>\n</ul>\n\n<p>First question, am I on the right track here or are there other, more efficient / effective patterns I should review?</p>\n\n<p>Given the nature of my multi-tenant design, is it possible to obtain the current schema from the underlying table from which the trigger event was called as I'll need that information to pass into my matview creation UDF.</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9863,
+        "total": 1
+      }
+    }
+  ]
+}

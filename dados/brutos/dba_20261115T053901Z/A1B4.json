@@ -1,0 +1,87 @@
+{
+  "id_busca": "dba_20261115T053901Z_A1B4",
+  "id_execucao": "dba_20261115T053901Z",
+  "fonte": "dba",
+  "script": "scripts/coleta_dba.py",
+  "commit_head": "f5afc1c6af3b65ef9a414beae169ee6f84bfa4f9",
+  "tag_protocolo": "v0-protocolo",
+  "commit_tag": "8f6d12807211c3fc5aafefa1b914172f797030b8",
+  "protocolo_alterado_desde_tag": false,
+  "data_hora": "2026-11-15T05:39:09+00:00",
+  "estrategia": "banco_por_tenant",
+  "termo_a": "\"database per tenant\"",
+  "termo_b": "ETL",
+  "string_enviada": "https://api.stackexchange.com/2.3/search/advanced?q=\"database per tenant\" ETL&site=dba&sort=relevance&order=desc&pagesize=100&page=1&filter=!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i&key=***",
+  "parametros": {
+    "url_busca": "https://api.stackexchange.com/2.3/search/advanced",
+    "site": "dba",
+    "limite_coleta": 100,
+    "intervalo_s": 2.0,
+    "filtro": "!2vHqlW)1idY*y*4O4HFN67xU99.eV7pg.wr..vHD)i",
+    "parametros_filtro": {
+      "base": "withbody",
+      "include": ".total",
+      "unsafe": "false"
+    }
+  },
+  "status": "ok",
+  "erro": null,
+  "n_resultados": 1,
+  "n_coletados": 1,
+  "avisos": [],
+  "urls_coletadas": [
+    "https://dba.stackexchange.com/questions/200275/replicating-on-premise-sql-server-instance-with-hundreds-of-databases-to-an-azur"
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "url": "https://api.stackexchange.com/2.3/search/advanced?q=%22database+per+tenant%22+ETL&site=dba&sort=relevance&order=desc&pagesize=100&page=1&filter=%212vHqlW%291idY%2Ay%2A4O4HFN67xU99.eV7pg.wr..vHD%29i&key=***",
+      "corpo_enviado": null,
+      "tentativas_repetidas": [],
+      "status": 200,
+      "recebido_em": "2026-11-15T05:39:09+00:00",
+      "cabecalhos_resposta": {
+        "date": "Sun, 15 Nov 2026 05:39:09 GMT",
+        "content-type": "application/json; charset=utf-8"
+      },
+      "resposta": {
+        "items": [
+          {
+            "tags": [
+              "sql-server",
+              "replication",
+              "sql-server-2016",
+              "azure-sql-database"
+            ],
+            "owner": {
+              "account_id": 1442016,
+              "reputation": 1544,
+              "user_id": 37801,
+              "user_type": "registered",
+              "accept_rate": 61,
+              "profile_image": "https://www.gravatar.com/avatar/0630b517cab9cd3d61075abe62c87318?s=256&d=identicon&r=PG",
+              "display_name": "PicoDeGallo",
+              "link": "https://dba.stackexchange.com/users/37801/picodegallo"
+            },
+            "is_answered": true,
+            "view_count": 1667,
+            "answer_count": 1,
+            "score": 1,
+            "last_activity_date": 1649783659,
+            "creation_date": 1521050122,
+            "last_edit_date": 1521548162,
+            "question_id": 200275,
+            "content_license": "CC BY-SA 3.0",
+            "link": "https://dba.stackexchange.com/questions/200275/replicating-on-premise-sql-server-instance-with-hundreds-of-databases-to-an-azur",
+            "title": "Replicating on-premise SQL Server instance with hundreds of databases to an Azure SQL Managed Instance",
+            "body": "<p>I am wanting to replicate an entire SQL Server 2016 on-premise instance of databases (300+) to an <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance\" rel=\"nofollow noreferrer\">Azure SQL Managed Instance</a> for redundancy of a read-replica in case of on-premise downtime. It appears as though I can use <a href=\"https://learn.microsoft.com/en-us/azure/dms/tutorial-sql-server-to-managed-instance\" rel=\"nofollow noreferrer\">Azure Database Migration Service</a> in order to deploy multiple databases, but this seems to imply that this is a one-time migration. </p>\n\n<p>This will not be a one-time migration, and I am wanting to perform transaction replication with a Publish (on-premise SQL) and Subscriber (Azure SQL). <a href=\"https://learn.microsoft.com/en-us/azure/sql-database/sql-database-cloud-migrate\" rel=\"nofollow noreferrer\">Microsoft has outlined this method</a>, but Publications only allow for a single database to be selected. I would like to explore publishing the full instance of databases, and shipping the logs at a particular interval.</p>\n\n<p>Each of these databases share the same schema, so merging the data into a single database poses problems surrounding application configurations in the event we need to fail-over for read purposes. This is also a temporary solution until we are able to replicate our VMware cluster for Disaster Recovery, and our transactional throughput is on the lower side and is constrained to set working hours.</p>\n\n<p>Is my only option to create publications for each and every database, or can the Azure Data Migration Service be extended for replicating at regular intervals?</p>\n\n<p><strong>Edit:</strong> Another option I've been toying with is creating a single database with each individual tenant as a security schema and file group, and developing an ETL pipeline to pass the tenants to these matching security schemas. In essence I would mimic the database-per-tenant through tenant-per-schema, allowing me to only need to push a single database to the Azure SQL. This might cause more headaches than it would solve, though. Does anyone have experience with this at scale?</p>\n"
+          }
+        ],
+        "has_more": false,
+        "quota_max": 10000,
+        "quota_remaining": 9910,
+        "total": 1
+      }
+    }
+  ]
+}
