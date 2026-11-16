@@ -1,6 +1,6 @@
 # revisao-cinzenta-multitenant
 
-Protocolo, dados e scripts da revisão de literatura cinzenta do Trabalho de Conclusão de Curso *Impactos das Arquiteturas de Dados para Aplicações SaaS Multi-Tenant Baseadas em Bancos de Dados Relacionais na Engenharia de Dados*, de William Bernardo da Silva (Universidade de Brasília).
+Protocolo, dados e scripts da revisão de literatura cinzenta do Trabalho de Conclusão de Curso *Impactos das Arquiteturas de Dados para Aplicações Multi-Tenant Baseadas em Bancos de Dados Relacionais na Engenharia de Dados*, de William Bernardo da Silva (Universidade de Brasília).
 
 O TCC investiga como cada estratégia de isolamento multi-tenant (banco por tenant, esquema por tenant, esquema compartilhado) afeta a ingestão, a transformação e a modelagem dos dados. Esta revisão reúne relatos de praticantes que mostram que o problema existe e quem o enfrenta. A questão da revisão é:
 
